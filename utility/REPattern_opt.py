@@ -38,7 +38,7 @@ TYPE_1_P = re.compile(r"""
     #Attention : For string such as Send map-request to 149.20.48.61 (149.20.48.61) for 0.0.0.0 (0.0.0.0) ...
     #we use .+ at the end to match "(0.0.0.0) ..."
     Send\s+map-request\s+to\s+(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}).+for\s+(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}).+
-""", re.I|re.VERBOSE)
+""", re.I | re.VERBOSE)
 
 
 # The second Round format:
@@ -127,6 +127,10 @@ LOCATORS_P = re.compile(r"""
 """, re.I | re.VERBOSE)
 
 
+
+
+
+#======================The following strings are just the target our defined RE process
 type_1 = 'Date=2013/07/09 17:00:46EID=85.192.0.0Resolver=195.50.116.18Using source address (ITR-RLOC) 139.165.12.211Send map-request to 195.50.116.18 (195.50.116.18) for 85.192.0.0 (85.192.0.0) ...RECEIVED_FROM=195.50.116.18RTT=0.24900LOCATOR_COUNT=0MAPPING_ENTRY=2610:d0:1204::/48TTL=1AUTH=0MOBILE=0RESULT="Negative cache entry"ACTION=forward-native'
 type_2 = 'Date=2013/07/02 07:30:23EID=0.0.0.0Resolver=149.20.48.61Using source address (ITR-RLOC) 139.165.12.211Send map-request to 149.20.48.61 (149.20.48.61) for 0.0.0.0 (0.0.0.0) ...RECEIVED_FROM=149.20.48.61RTT=0.15700LOCATOR_COUNT=0MAPPING_ENTRY=0.0.0.0/3TTL=9AUTH=0MOBILE=0RESULT="Negative cache entry"ACTION=forward-native'
 type_3 = 'Date=2013/07/02 09:30:16EID=153.16.3.0Resolver=149.20.48.61Using source address (ITR-RLOC) 139.165.12.211Send map-request to 149.20.48.61 (149.20.48.61) for 153.16.3.0 (153.16.3.0) ...RECEIVED_FROM=128.122.208.144RTT=0.16800LOCATOR_COUNT=2MAPPING_ENTRY=153.16.3.0/24TTL=1440AUTH=1MOBILE=0!!!! LCAF AFI print skipped !!!!'
@@ -136,9 +140,9 @@ Send map-request to 149.20.48.61 (149.20.48.61) for 153.16.1.0 (153.16.1.0) ...\
 RECEIVED_FROM=129.250.26.242\nRTT=0.16500\nLOCATOR_COUNT=2\nMAPPING_ENTRY=153.16.1.0/24\n
 TTL=1440\nAUTH=1\nMOBILE=0\nLOCATOR0=129.250.1.255\nLOCATOR0_STATE=up\nLOCATOR0_PRIORITY=254\nLOCATOR0_WEIGHT=0\n
 LOCATOR1=129.250.26.242\nLOCATOR1_STATE=up\nLOCATOR1_PRIORITY=1\nLOCATOR1_WEIGHT=100\n""".replace("\n",'')
-print TYPE_1_P.findall(type_1)[0]
-#
-#
-print TYPE_2_P.findall(type_2)[0]
-# #print TYPE_3_P.findall(type_3)[0]
-# print LOCATORS_P.findall(type_4)[0]
+# print TYPE_1_P.findall(type_1)[0]
+# #
+# #
+# print TYPE_2_P.findall(type_2)[0]
+# # #print TYPE_3_P.findall(type_3)[0]
+# # print LOCATORS_P.findall(type_4)[0]
