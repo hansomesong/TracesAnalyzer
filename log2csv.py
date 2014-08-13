@@ -12,6 +12,6 @@ file_path3 ='/home/cloud/Documents/PlanetLab/Liege/mappings/planetlab1-EID-85.19
 
 #This file contains action=send-map-request
 file_path4 = "/home/cloud/Documents/PlanetLab/liege/mappings/planetlab1-EID-153.16.50.32-MR-202.51.247.10.log"
-target_path = csv_file_destDir+"error.csv"
+target_path = csv_file_destDir+"trial.csv"
 
 RoundInstanceFactory(file_path4).write2csv(target_path)

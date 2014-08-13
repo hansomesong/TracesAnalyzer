@@ -41,18 +41,17 @@ class RoundInstanceFactory:
             Because the round record is in one of the four known format, firstly we have to determine
             which RE expression to process the input string, and then
         '''
-        round = Round()
+        round = None
         if "No map-reply received" in target:
             '''If substring "No map-reply received is present in target string, we could judge this is Type 1 round record
                 we should rely TYPE_1_P regular expression to process this string
             "'''
             try:
-                round.date, round.EID, round.resolver, round.req_src, round.req_dst, round.req_for\
-                    = infoFieldExtractor(target, TYPE_1_P)[0]
-                round.type = 1
+                date, EID, resolver, req_src, req_dst, req_for = infoFieldExtractor(target, TYPE_1_P)[0]
+                round = RoundNoReply(date, EID, resolver, req_src, req_dst, req_for)
             except IndexError:
                 print "Error occurred when converting Type I Round from string :\n\t{0}\nThe current file :\t{1}".format(
-                    target,self.file_path)
+                    target, self.file_path)
         else:
             '''When target string does not includ substring as "No map-reply received", we could judge
                 this round contains a reply. Thus we could extract some obligatory attributes(rpy_src, RTT,locator_count)
@@ -72,15 +71,11 @@ class RoundInstanceFactory:
                     Therefore, we could use TYPE_2_P to process the input target string
                 '''
                 try:
-                    round.date, round.EID, round.resolver, round.req_src, round.req_dst, round.req_for, \
-                        round.rpy_src, round.RTT, round.locator_count, round.mapping_entry,\
-                        round.TTL, round.auth, round.mobile, round.result, round.action = infoFieldExtractor(target, TYPE_2_P)[0]
-                    if 'forward-native' in round.action:
-                        round.type = 20
-                    elif 'send-map-request' in round.action:
-                        round.type = 21
-                    else:
-                        round.type = 29
+                    date, EID, resolver, req_src, req_dst, req_for, rpy_src, RTT, locator_count, mapping_entry,\
+                        TTL, auth, mobile, result, action = infoFieldExtractor(target, TYPE_2_P)[0]
+                    round = RoundResultAction(date, EID, resolver, req_src, req_dst, req_for, rpy_src, RTT,
+                                              locator_count, mapping_entry,TTL, auth, mobile, result, action)
+
                 except IndexError:
                     print "Error occurred when converting TYPE 2 Round from string:"
                     print "\t{0}\nThe file being processed is :{1}".format(target,self.file_path)
@@ -99,11 +94,11 @@ class RoundInstanceFactory:
                     we could use TYPE_3_P to process this string
                 '''
                 try:
-                    round.date, round.EID, round.resolver, round.req_src, round.req_dst, round.req_for, \
-                        round.rpy_src, round.RTT, round.locator_count, round.mapping_entry,\
-                        round.TTL, round.auth, round.mobile = infoFieldExtractor(target, TYPE_3_P)[0]
-                    round.type = 3
-                    round.warn = "!!!! LCAF AFI print skipped !!!!"
+                    date, EID, resolver, req_src, req_dst, req_for, rpy_src, RTT, locator_count, mapping_entry,\
+                        TTL, auth, mobile = infoFieldExtractor(target, TYPE_3_P)[0]
+                    round = RoundNormalNoLocatorInfo(date, EID, resolver, req_src, req_dst, req_for, rpy_src, RTT, locator_count, mapping_entry,\
+                        TTL, auth, mobile)
+
                 except IndexError:
                     print "Error occurred when converting TYPE 3 Round from string:"
                     print "\t{0}\nThe file being processed is :{1}".format(target,self.file_path)
@@ -111,11 +106,10 @@ class RoundInstanceFactory:
             else:
                 '''We consider that the last case is to process round record containing locators information'''
                 try:
-                    round.date, round.EID, round.resolver, round.req_src, round.req_dst, round.req_for, \
-                        round.rpy_src, round.RTT, round.locator_count, round.mapping_entry,\
-                        round.TTL, round.auth, round.mobile = infoFieldExtractor(target, TYPE_3_P)[0]
-                    round.locators = self.locatorGenerate(target)
-                    round.type = 0
+                    date, EID, resolver, req_src, req_dst, req_for, rpy_src, RTT, locator_count, mapping_entry,\
+                        TTL, auth, mobile = infoFieldExtractor(target, TYPE_3_P)[0]
+                    round = RoundNormal(date, EID, resolver, req_src, req_dst, req_for, rpy_src, RTT, locator_count, mapping_entry,\
+                        TTL, auth, mobile, self.locatorGenerate(target))
                 except IndexError:
                     print "Error occurred when converting TYPE 0 Round from string:"
                     print "\t{0}\nThe file being processed is :{1}".format(target,self.file_path)
@@ -139,11 +133,8 @@ class RoundInstanceFactory:
         '''
         with open(file_path,'wb') as csvfile:
             spamwriter = csv.writer(csvfile, dialect='excel',delimiter=';')
-            spamwriter.writerow(
-                ['Round Type', 'Date', 'EID', 'Resolver','Request_SRC','Request_DST','Request_FOR','Reply_SRC',
-                 'RTT', 'LOCATOR_Count','MAPPING_ENTRY','TTL','AUTH', 'MOBILE'
-                ]
-            )            
+            csv_title = self.rounds[0].getAttrList()
+            spamwriter.writerow(csv_title)
             for round in self.rounds:
                 spamwriter.writerow(round.toList())
         
