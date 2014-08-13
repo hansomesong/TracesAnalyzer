@@ -91,7 +91,7 @@ class RoundNormalNoLocatorInfo(Round):
 
     def __init__(self, date, EID, resolver,req_src, req_dst, req_for,rpy_src, RTT, locator_count, mapping_entry,
              TTL, auth, mobile):
-        super(Round, self).__init__(date, EID, resolver, req_src, req_dst, req_for)
+        super(RoundNormalNoLocatorInfo, self).__init__(date, EID, resolver, req_src, req_dst, req_for)
         self.rpy_src = rpy_src
         self.RTT = RTT
         self.locator_count = locator_count

@@ -66,6 +66,10 @@ def main(traces_log_dir):
 
 
 if __name__ == "__main__":
+    # Some advices : it is better to implement a single process version to make sure all other things work well
+    # then consider to import multiple process support. Otherwise, it is difficult to debug when in problem.
+    # For example, I had committed an error in Round.py (super() method is subclass), in this file, it only shows
+    # job.get() is empty or similar.
     for key, value in traces_log.items():
         csv_file = csv_file_destDir+'statistic_{0}.csv'.format(key)
         main(traces_log[key])
