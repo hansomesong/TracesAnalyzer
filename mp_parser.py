@@ -17,8 +17,8 @@ from config.config import *
 # is to avoid the concurrence about the write access to target CSV file.
 def listener(q):
     with open(csv_file,'wb') as csvfile:
-        spamwriter = csv.writer(csvfile, dialect='excel',delimiter=';')
-        spamwriter.writerow(['Log File Name','Locator Count Coherence','Round Type Set'])
+        spamwriter = csv.writer(csvfile, dialect='excel', delimiter=';')
+        spamwriter.writerow(['Log File Name', 'EID', 'Resolver', 'Locator Count Coherence', 'Round Type Set', 'RLOC Set'])
         while 1:
             csv_row = q.get()
             if csv_row == "TERMINATE":
@@ -32,7 +32,7 @@ def worker(arg,q):
     '''stupidly simulates long running process'''
     R = RoundInstanceFactory(arg)
     #csv_row = [arg, R.isLocatorCoherent(), R.getRoundTypeSet()]
-    csv_row = [arg]
+    csv_row = [arg, R.EID, R.resolver]
     csv_row.extend(R.basicCheck())
     q.put(csv_row)
 

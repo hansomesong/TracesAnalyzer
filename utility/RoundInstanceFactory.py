@@ -13,6 +13,8 @@ class RoundInstanceFactory:
     def __init__(self, file_path):
         self.file_path = file_path
         self.rounds = self.roundCollectionGenerate(self.preprocess())
+        self.EID = self.rounds[0].EID
+        self.resolver = self.rounds[0].resolver
        
     def preprocess(self):
         '''This method is used to preprocess the input file, firstly read all lines into a single string
@@ -180,8 +182,8 @@ class RoundInstanceFactory:
                 locator_count = len(round.locators)
                 if len(locator_set) != locator_count:
                     flag = False
-                    #As long as incoherence is found in current log file, break the current for loop and return false
-        return [flag,type_set]
+                    #As long as incoherence is found in current log file, break the current for loop and return false$
+        return [flag, list(type_set)]
 
     def getLocatorAddrSet(self):
         import socket
