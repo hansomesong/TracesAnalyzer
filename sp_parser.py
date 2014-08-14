@@ -45,7 +45,7 @@ def processLogDirectory(logDirRoot, resultCSVPath):
                 file_path = os.path.join(logDirRoot,lists)
                 R = RoundInstanceFactory(file_path)
                 csv_row = [file_path]
-                csv_row.extend(R.basicCheck())
+                csv_row.extend([R.basicCheck(), R.getLocatorAddrSet()])
                 spamwriter.writerow(csv_row)
 
 csv_file = csv_file_destDir+'sp_statistic_v4.csv'

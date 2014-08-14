@@ -146,3 +146,19 @@ LOCATOR1=129.250.26.242\nLOCATOR1_STATE=up\nLOCATOR1_PRIORITY=1\nLOCATOR1_WEIGHT
 # print TYPE_2_P.findall(type_2)[0]
 # # #print TYPE_3_P.findall(type_3)[0]
 # # print LOCATORS_P.findall(type_4)[0]
+
+
+
+# RE to extract EID and Resolver address in log file
+
+name1 = 'planetlab1-EID-205.203.0.0-MR-149.20.48.77.log'
+name2 ='planetlab1-EID-205.203.0.0-MR-149.20.48.77.logplanetlab1-EID-153.16.23.48-MR-149.20.48.77.logplanetlab1-EID-153.16.21.0-MR-202.51.247.10.log'
+
+EID_RESOVLER_P = re.compile(r'planetlab\d+-EID-(\d+\.\d+\.\d+\.\d+)-MR-(\d+\.\d+\.\d+\.\d+)\.log', re.VERBOSE)
+
+
+# res = EID_RESOVLER_P.findall(name1)
+# print res
+#
+# res = EID_RESOVLER_P.findall(name2)
+# print res

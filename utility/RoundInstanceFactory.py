@@ -182,3 +182,14 @@ class RoundInstanceFactory:
                     flag = False
                     #As long as incoherence is found in current log file, break the current for loop and return false
         return [flag,type_set]
+
+    def getLocatorAddrSet(self):
+        import socket
+        reduced_rounds = [round for round in self.rounds if round.type == 'RoundNormal']
+        locatorAddrList = []
+        for round in reduced_rounds:
+            for locator in round.locators:
+                locatorAddrList.append(locator.addr)
+        res_set = set(locatorAddrList)
+        return sorted(list(res_set), key=lambda item: socket.inet_aton(item))
+
