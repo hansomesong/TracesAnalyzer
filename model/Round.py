@@ -112,7 +112,7 @@ class RoundNormalNoLocatorInfo(Round):
 
     def getAttrList(self):
         res = super(RoundNormalNoLocatorInfo, self).getAttrList()
-        res.extend(['Reply_SRC', 'RTT', 'LOCATOR_Count','MAPPING_ENTRY', 'TTL', 'AUTH', 'MOBILE'])
+        res.extend(['Reply_SRC', 'RTT', 'LOCATOR_Count','MAPPING_ENTRY', 'TTL', 'AUTH', 'MOBILE', 'WARNING'])
         return res
 
 class RoundNormal(Round):

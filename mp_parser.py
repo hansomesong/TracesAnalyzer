@@ -70,6 +70,17 @@ if __name__ == "__main__":
     # then consider to import multiple process support. Otherwise, it is difficult to debug when in problem.
     # For example, I had committed an error in Round.py (super() method is subclass), in this file, it only shows
     # job.get() is empty or similar.
+
+
+    # We plan to output all generated CSV into a directory named 'log'
+    # First, we need to check the existence of "log" directory, if not, create it
+    if not os.path.isdir("log"):
+        os.makedirs("log")
+
+    # Now we can make that "log" subdirectory is present in current directory
+    # We could accordingly to form the full path for our destination directory
+    csv_dst_dir = os.path.dirname(os.path.realpath(__file__))+'/log/'
+
     for key, value in traces_log.items():
-        csv_file = csv_file_destDir+'statistic_{0}.csv'.format(key)
+        csv_file = csv_dst_dir+'statistic_{0}.csv'.format(key)
         main(traces_log[key])

@@ -1,6 +1,7 @@
 '''In this python scirpt, we plan to define some globle variable'''
 
 
+import os
 csv_file_destDir = '/home/cloud/Documents/Codes/LISP/log/'
 
 
@@ -13,3 +14,11 @@ traces_log ={
     'wiilab' : '/home/cloud/Documents/PlanetLab/wiilab/mappings'
 
 }
+
+
+f = os.path.dirname(os.path.realpath(__file__))
+print f
+
+
+if not os.path.isdir("log"):
+    os.makedirs("log")
