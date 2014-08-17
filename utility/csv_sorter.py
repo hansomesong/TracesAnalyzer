@@ -1,7 +1,6 @@
 import csv
 import socket
 
-target = '/home/cloud/Documents/Codes/TracesAnalyzer/log/statistic_ucl.csv'
 
 def csv_sort_list(csv_file, delimiter=';'):
     '''Read target csv file into a list and return a sorted list to be written'''
@@ -31,6 +30,7 @@ def write_csv(dest_csv, csv_cont):
         for row in csv_cont[1]:
             writer.writerow(row)
 
-
-target_ed = target+".sort.csv"
-write_csv(target_ed, csv_sort_list(target))
+# Test part========================
+# target = '/home/cloud/Documents/Codes/TracesAnalyzer/log/statistic_ucl.csv'
+# target_ed = target+".sort.csv"
+# write_csv(target_ed, csv_sort_list(target))
