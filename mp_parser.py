@@ -6,6 +6,7 @@
 import multiprocessing as mp
 import os
 from utility.RoundInstanceFactory import *
+from utility.csv_sorter import *
 
 # we need some predefined variables stored in config/config.py, to know such as where store all log files
 from config.config import *
@@ -34,6 +35,7 @@ def worker(arg,q):
     #csv_row = [arg, R.isLocatorCoherent(), R.getRoundTypeSet()]
     csv_row = [arg, R.EID, R.resolver]
     csv_row.extend(R.basicCheck())
+    csv_row.extend(R.getLocatorAddrSet())
     q.put(csv_row)
 
 
@@ -41,7 +43,7 @@ def main(traces_log_dir):
     #must use Manager queue here, or will not work
     manager = mp.Manager()
     q = manager.Queue()
-    pool = mp.Pool(mp.cpu_count()+2)
+    pool = mp.Pool(mp.cpu_count()+12)
 
     #put listener to work first
     watcher = pool.apply_async(listener,(q,))
@@ -84,3 +86,8 @@ if __name__ == "__main__":
     for key, value in traces_log.items():
         csv_file = csv_dst_dir+'statistic_{0}.csv'.format(key)
         main(traces_log[key])
+
+        # Initially, the generated csv file, such as 'statistic_liege.csv' is unsorted.
+        # Thus, we call methods defined in python script : utility/csv_sorter.py to sort initial
+        # unsorted csv then overwrite the latter.
+        write_csv(csv_file, csv_sort_list(csv_file))

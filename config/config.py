@@ -16,8 +16,8 @@ traces_log ={
 }
 
 
-f = os.path.dirname(os.path.realpath(__file__))
-print f
+# f = os.path.dirname(os.path.realpath(__file__))
+# print f
 
 
 if not os.path.isdir("log"):
