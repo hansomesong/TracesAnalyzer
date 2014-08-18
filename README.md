@@ -1,15 +1,11 @@
-TracesAnalyzer
-==============
-
-*****************************************************Introduction******************************************************
+==============>Introduction
 This is a small project in python aiming to process and analyze a bunch of given LISP experimental trace log files.
 
 The 'mp_parser.py' script is the entrance of the whole program, it uses multiple-processing technique to process and
 analyze given LISP experimental results(in form of a serial of trace log files), finally output analysis results into
 some CSV files situated in the log directory.
 
-
-*****************************************************Glossary**********************************************************
+===============>Glossary
 
 Vantage: shorthand for LISP experiment vantage point, where people execute queries for 613 different EID and each query
 is simultaneously sent to 13 different resolvers. In the context of this program, vantage is simply refereed to as a directory
@@ -20,37 +16,39 @@ planetlab1-EID-153.16.14.0-MR-193.162.145.50.log.
 
 Round: A session between a certain machine and a resolver to query RLOC-related information for a given EID address.
 The following is a example of round:
-                            --- Round ID 1372750223 ----------------------------------->
-                            Date=2013/07/02 07:30:23
-                            EID=153.16.32.224
-                            Resolver=198.6.255.37
-                            Using source address (ITR-RLOC) 139.165.12.211
-                            Send map-request to 198.6.255.37 (198.6.255.37) for 153.16.32.224 (153.16.32.224) ...
-                            RECEIVED_FROM=192.162.230.11
-                            RTT=0.12000
-                            LOCATOR_COUNT=4
-                            MAPPING_ENTRY=153.16.32.224/28
-                            TTL=1440
-                            AUTH=1
-                            MOBILE=0
-                            LOCATOR0=192.162.230.11
-                            LOCATOR0_STATE=up
-                            LOCATOR0_PRIORITY=2
-                            LOCATOR0_WEIGHT=50
-                            LOCATOR1=192.162.230.12
-                            LOCATOR1_STATE=up
-                            LOCATOR1_PRIORITY=2
-                            LOCATOR1_WEIGHT=50
-                            LOCATOR2=192.162.230.13
-                            LOCATOR2_STATE=up
-                            LOCATOR2_PRIORITY=1
-                            LOCATOR2_WEIGHT=100
-                            LOCATOR3=192.162.230.14
-                            LOCATOR3_STATE=up
-                            LOCATOR3_PRIORITY=1
-                            LOCATOR3_WEIGHT=100
+                
+                --- Round ID 1372750223 ----------------------------------->
+                Date=2013/07/02 07:30:23
+                EID=153.16.32.224
+                Resolver=198.6.255.37
+                Using source address (ITR-RLOC) 139.165.12.211
+                Send map-request to 198.6.255.37 (198.6.255.37) for 153.16.32.224 (153.16.32.224) ...
+                RECEIVED_FROM=192.162.230.11
+                RTT=0.12000
+                LOCATOR_COUNT=4
+                MAPPING_ENTRY=153.16.32.224/28
+                TTL=1440
+                AUTH=1
+                MOBILE=0
+                LOCATOR0=192.162.230.11
+                LOCATOR0_STATE=up
+                LOCATOR0_PRIORITY=2
+                LOCATOR0_WEIGHT=50
+                LOCATOR1=192.162.230.12
+                LOCATOR1_STATE=up
+                LOCATOR1_PRIORITY=2
+                LOCATOR1_WEIGHT=50
+                LOCATOR2=192.162.230.13
+                LOCATOR2_STATE=up
+                LOCATOR2_PRIORITY=1
+                LOCATOR2_WEIGHT=100
+                LOCATOR3=192.162.230.14
+                LOCATOR3_STATE=up
+                LOCATOR3_PRIORITY=1
+                LOCATOR3_WEIGHT=100
 
 Normally, A round contains the following attributes:
+
                             date                : the datetime when this session is executed.
                             EID                 :
                             Resolver            :
