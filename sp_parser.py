@@ -35,18 +35,21 @@ def processLogDirectory(logDirRoot, resultCSVPath):
     
     #Do not forget to process uniquely log files...
     import csv
-    with open(resultCSVPath,'wb') as csvfile:
+    with open(resultCSVPath, 'wb') as csvfile:
         spamwriter = csv.writer(csvfile, dialect='excel',delimiter=';')
         spamwriter.writerow(['Log File Name','Locator Count Coherence','Round Type Set'])
-        for lists in os.listdir(logDirRoot):
+        for log_file in os.listdir(logDirRoot):
             #Do not forget to verify that the current file to be processed is a real log file
             #Otherwise this program may be collapsed.
-            if lists.endswith(".log"):
-                file_path = os.path.join(logDirRoot,lists)
+            if log_file.endswith(".log"):
+                file_path = os.path.join(logDirRoot,log_file)
                 R = RoundInstanceFactory(file_path)
                 csv_row = [file_path]
-                csv_row.extend([R.basicCheck(), R.getLocatorAddrSet()])
+                csv_row.append(R.isLocatorCoherent())
+                csv_row.append(R.round_type_list)
+                csv_row.extend(R.locator_addr_list)
                 spamwriter.writerow(csv_row)
+
 
 csv_file = csv_file_destDir+'sp_statistic_v4.csv'
 processLogDirectory(traces_log['liege'], csv_file)

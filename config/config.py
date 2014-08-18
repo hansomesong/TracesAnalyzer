@@ -2,7 +2,9 @@
 
 
 import os
-csv_file_destDir = '/home/cloud/Documents/Codes/LISP/log/'
+csv_file_destDir = '/home/cloud/Documents/Codes/TracesAnalyzer/log/'
+CSV_ALL_FILE = '/home/cloud/Documents/Codes/TracesAnalyzer/log/statistic_all.csv'
+
 
 
 traces_log ={

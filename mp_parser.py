@@ -19,7 +19,7 @@ from config.config import *
 def listener(q):
     with open(csv_file,'wb') as csvfile:
         spamwriter = csv.writer(csvfile, dialect='excel', delimiter=';')
-        spamwriter.writerow(['Vantage','Log File Name', 'EID', 'Resolver', 'Locator Count Coherence', 'Round Type Set', 'RLOC Set'])
+        spamwriter.writerow(['Vantage','Log File Name', 'EID', 'Resolver', 'Locator Count Consistence', 'Round Type Set', 'RLOC Set'])
         while 1:
             csv_row = q.get()
             if csv_row == "TERMINATE":
@@ -33,9 +33,10 @@ def worker(vantage,log_file,q):
     '''stupidly simulates long running process'''
     R = RoundInstanceFactory(log_file)
     #csv_row = [arg, R.isLocatorCoherent(), R.getRoundTypeSet()]
-    csv_row = [vantage,log_file, R.EID, R.resolver]
-    csv_row.extend(R.basicCheck())
-    csv_row.extend(R.getLocatorAddrSet())
+    csv_row = [vantage, log_file, R.EID, R.resolver]
+    csv_row.append(R.isLocatorCoherent())
+    csv_row.append(R.round_type_list)
+    csv_row.extend(R.locator_addr_list)
     q.put(csv_row)
 
 
@@ -84,6 +85,8 @@ if __name__ == "__main__":
     # We could accordingly to form the full path for our destination directory
     csv_dst_dir = os.path.dirname(os.path.realpath(__file__))+'/log/'
 
+
+
     for vantage, value in traces_log.items():
         csv_file = csv_dst_dir+'statistic_{0}.csv'.format(vantage)
         main(vantage,traces_log[vantage])
@@ -92,5 +95,20 @@ if __name__ == "__main__":
         # Thus, we call methods defined in python script : utility/csv_sorter.py to sort initial
         # unsorted csv then overwrite the latter.
         write_csv(csv_file, csv_sort_list(csv_file))
+
+    # Then generate a CSV file for all vantage experimental result
+
+    csv_all = []
+    for vantage, value in traces_log.items():
+        # Iterate all statistics CSV file for each vantage and retrieve all csv rows into a separate list
+        # named 'csv_all'
+        csv_file = csv_dst_dir+'statistic_{0}.csv'.format(vantage)
+        csv_header = csv_sort_list(csv_file)[0]
+        csv_all.extend(csv_sort_list(csv_file)[1])
+
+        # Still need to sort csv_all
+        csv_all = sorted(csv_all, key=lambda item: socket.inet_aton(item[2])+socket.inet_aton(item[3]))
+    write_csv(CSV_ALL_FILE, [csv_header, csv_all])
+
 
 

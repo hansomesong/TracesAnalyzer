@@ -9,12 +9,20 @@ from REPattern_opt import *
 
 class RoundInstanceFactory:
     """This is a factory class whose objective is to generate a list of Round instance from a input file"""
+
+    # Maybe in the future, we could define a LogFile class to reduce the volume of the current class
     
     def __init__(self, file_path):
         self.file_path = file_path
         self.rounds = self.roundCollectionGenerate(self.preprocess())
+
+        # It is much more pratique to define some attributes for a log file
         self.EID = self.rounds[0].EID
         self.resolver = self.rounds[0].resolver
+        self.round_type_list = self.getRoundTypeList()
+        # A sorted list including all locator addressses appeared in a logfile.
+        # This list could be empty if the target logfile does not contain RoundNormal type round
+        self.locator_addr_list = self.getLocatorAddrSet()
        
     def preprocess(self):
         '''This method is used to preprocess the input file, firstly read all lines into a single string
@@ -142,33 +150,33 @@ class RoundInstanceFactory:
         
         
     def isLocatorCoherent(self):
-        '''This method is uniquely meaningful for file log containg locators information
-            By default, we consider that a log file is always coherent in terms of locators count.
-            For type I round(No map-reply message), round has no reply, thus we regard it as coherent in terms of locators.
-            For type II round(Negative Cache entry), round has reply but has not locators info. locator_count = 0
-            For type III round(LCAF AFI print skipped), round has locators info(locator_count > 0), however locators info is not printed
-                we still think it is coherent
-            For type IV round(has locators list), should judge locator_count and the length of locators
-        '''
-        flag = True
+        '''This method is uniquely meaningful for file log containg locators information'''
+
+        # By default, we consider RLOC-set consistence is always false
+        flag = False
         locator_set = set()
-        locator_count = 0
-        for round in self.rounds:
-            #Attention! make sure that round.locators is not None type, otherwise an exception will thrown.
-            if round.locators:
+        locator_count_set = set()
+        # if round type include types other than RoundNormal, return directly false
+        if len(self.round_type_list) == 1 and ('RoundNormal' in self.round_type_list):
+            # All rounds inside the logfile has the same value for locator_count
+            # According to the above 'if' statement, all rounds in the attribute 'rounds' are in RoundNormal type.
+            #print 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+            for round in self.rounds:
                 locator_set = locator_set | set(round.locators)
-                locator_count = len(round.locators)
-                if len(locator_set) != locator_count:
-                    flag = False
-                    #As long as incoherence is found in current log file, break the current for loop and return false
-                    break
+                locator_count_set = locator_count_set | set([round.locator_count])
+            # All rounds inside the logfile has the same value for locator_count
+            # The number of RLOC addresses appeared inside the logfile is same to locator_count.
+            # Do not forget element in locator_count_set is in type : string
+            if len(locator_count_set) == 1 and list(locator_count_set)[0] == str(len(locator_set)):
+                flag = True
         return flag
     
-    def getRoundTypeSet(self):
+    def getRoundTypeList(self):
         type_set = set()
         for round in self.rounds:
-            type_set = type_set | set([round.type])   
-        return type_set
+            type_set = type_set | set([round.type])
+        # Finally convert a set into list and return the latter.
+        return list(type_set)
 
     def basicCheck(self):
         type_set = set()
