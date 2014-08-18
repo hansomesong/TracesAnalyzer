@@ -1,4 +1,5 @@
 ==============>Introduction
+
 This is a small project in python aiming to process and analyze a bunch of given LISP experimental trace log files.
 
 The 'mp_parser.py' script is the entrance of the whole program, it uses multiple-processing technique to process and
@@ -66,6 +67,7 @@ Normally, A round contains the following attributes:
 
 Round Type : There exists multiple round types according to the content of round's reply:
             RoundNoReply : caused by network connection, a round has no reply for EID, for example :
+            
                             --- Round ID 1373014821 ----------------------------------->
                             Date=2013/07/05 09:00:21
                             EID=0.0.0.0
@@ -78,6 +80,7 @@ Round Type : There exists multiple round types according to the content of round
 
 
             RoundResultAction: A round has a reply, but this reply does not include RLOC-related information, for example:
+            
                             --- Round ID 1373013038 ----------------------------------->
                             Date=2013/07/05 08:30:38
                             EID=0.0.0.0
@@ -95,6 +98,7 @@ Round Type : There exists multiple round types according to the content of round
                             ACTION=forward-native
             RoundNormalNoLocatorInfo : A round has a reply, and this reply theoretically contains locator-related information
                 However, due to some cause unknown, the locators contents are not printed, for example:
+                
                             --- Round ID 1372759258 ----------------------------------->
                             Date=2013/07/02 10:00:58
                             EID=153.16.3.0
@@ -109,6 +113,7 @@ Round Type : There exists multiple round types according to the content of round
                             AUTH=1
                             MOBILE=0
                             !!!! LCAF AFI print skipped !!!!
+                            
                 Note that locator_count is 2, but we could not check out the content of its included locators information
 
             
@@ -118,6 +123,7 @@ Round Type : There exists multiple round types according to the content of round
 
 Locator: An information collection including locator address, locator state(up or down), locator priority(integer from 1 to 255 )
 locator weight. for example :
+
                             ...
                             LOCATOR0=192.162.230.11
                             LOCATOR0_STATE=up
@@ -128,6 +134,7 @@ locator weight. for example :
 
 Intra-logfile RLOC-Set consistence : This characteristic is defined at logfile level. A logfile is judged Intra-logfile
 RLOC-set consistence if and only if the same log file satisfies the following critiera:
+
         1, The logfile contains uniquely RoundNormal types round.
         2, All rounds inside the logfile has the same value for locator_count
         3, The number of RLOC addresses appeared inside the logfile is same to locator_count.
