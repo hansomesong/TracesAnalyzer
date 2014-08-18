@@ -96,8 +96,13 @@ if __name__ == "__main__":
         # unsorted csv then overwrite the latter.
         write_csv(csv_file, csv_sort_list(csv_file))
 
-    # Then generate a CSV file for all vantage experimental result
 
+
+
+
+
+
+    # Then generate a CSV file for all vantage experimental result
     csv_all = []
     for vantage, value in traces_log.items():
         # Iterate all statistics CSV file for each vantage and retrieve all csv rows into a separate list

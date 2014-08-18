@@ -3,7 +3,7 @@
 
 
 class LogFile(object):
-    def __init__(self, vantage, file_path):
+    def __init__(self, vantage, file_path, rounds):
         # Instance attribute 'vantage' stores the name of the vantage point
         self.vantage = vantage
 
@@ -11,13 +11,16 @@ class LogFile(object):
         self.file_path = file_path
 
         # Instance attribute 'rounds' is a list including all round type instances in this log file.
-        self.rounds = self.roundCollectionGenerate(self.preprocess())
+        # Other utility script, LogFileHelper (previously named RoundInstanceFactory), is in charge of providing round list.
+        self.rounds = rounds
 
-        # It is much more pratique to define some attributes for a log file
         self.EID = self.rounds[0].EID
         self.resolver = self.rounds[0].resolver
+
+
         self.round_type_list = self.getRoundTypeList()
         # A sorted list including all locator addressses appeared in a logfile.
         # This list could be empty if the target logfile does not contain RoundNormal type round
         self.locator_addr_list = self.getLocatorAddrSet()
 
+# Test part==========================

@@ -32,6 +32,20 @@ def write_csv(dest_csv, csv_cont):
         for row in csv_cont[1]:
             writer.writerow(row)
 
+
+def get_locator_list_by_eid_resolver(csv_body_list, eid, resolver):
+    for csv_row in csv_body_list:
+        # csv_row is a list whose content is like:
+        # ['temple','/home/cloud/Documents/PlanetLab/temple/mappings/planetlab2-EID-37.76.0.0-MR-198.6.255.37.log',
+        # '37.76.0.0,'198.6.255.37','False',	"['RoundResultAction']" ]
+        if eid in csv_body_list and resolver in csv_body_list:
+            # Currently, RLOC set is beginning at index 6 in csv_row list
+            # Attention ; if the csv row format changes in the future, do not forget to modify the following instruction
+            # Finally, return a locator address list
+            return csv_row[6:]
+
+
+
 # Test part========================
 # target = '/home/cloud/Documents/Codes/TracesAnalyzer/log/statistic_ucl.csv'
 # target_ed = target+".sort.csv"

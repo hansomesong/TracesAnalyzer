@@ -4,7 +4,7 @@
 import os
 csv_file_destDir = '/home/cloud/Documents/Codes/TracesAnalyzer/log/'
 CSV_ALL_FILE = '/home/cloud/Documents/Codes/TracesAnalyzer/log/statistic_all.csv'
-
+CSV_FILE_DESTDIR =  '/home/cloud/Documents/Codes/TracesAnalyzer/log/'
 
 
 traces_log ={
