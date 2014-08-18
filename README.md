@@ -126,8 +126,7 @@ Round Type : There exists multiple round types according to the content of round
             A round contains all information in which we are interested, refer to example given in item 'Round'
 
 
-Locator: An information collection including locator address, locator state(up or down), locator priority(integer from 1 to 255 )
-locator weight. for example :
+Locator: An information collection including locator address, locator state(up or down), locator priority(integer from 1 to 255 ) locator weight. A round's reply may contain multiple locators. for example :
 
                             ...
                             LOCATOR0=192.162.230.11
@@ -149,13 +148,10 @@ Inter-logfile RLOC-set consistence : This characteristic is defined in the inter
 
 ===============>Capacity
 
-This program should be able to realize the following comparison, respectively:
+This program should be able to realize the following comparison or verification, respectively:
 
+First, the program verifies that in each logfile(in all vantage directory), whether every round is consistent in terms of intra-logfile RLOC set consistence.(Refer to item 'Intra-logfile RLOC-set consistance' in glossary section)
 
-这个脚本应该具备执行三种比较的能力,分别是:
+Second, this program is also able to check, in the same vantage, whether for a certain EID, all 13 different resovlers return the same RLOC set.
 
-第一, 同一个logfile中， 以时间为变量，比较并确认，每一个Round的关于RLOC（即Locator）的信息都是一致的，具体说来
-
-我们认为，一个目标文件，需满足严格的条件才能具有，在RLOC Set(即 Locator address set)层面一致性的性质。当且仅当，该目标logfile中仅含有Normal Round（Normal型Round是指，在向某一Resolver问询某一EID的exchange中，该request收到了Reply，并且Reply中y必定包含Locator相关的信息域，例如locator_addr, locator_priority,etc.）， 并且所有Round中的locator_count信息域的值均一致（不能出现某一次Round的locator_count为1，另一次locator_count为2或其他取值。），该logfile中出现的locator addr的数目也跟locator_count一致
-如果目标logfile中含有多种Round类型，则判定该实验结果，在RLOC上不一致
-如果目标logfile中
+Third, it should be able to examine that for all the vantage point, for the same EID, all 13 different resolvers give the same reply.
