@@ -96,6 +96,7 @@ Round Type : There exists multiple round types according to the content of round
                             MOBILE=0
                             RESULT="Negative cache entry"
                             ACTION=forward-native
+                            
             RoundNormalNoLocatorInfo : A round has a reply, and this reply theoretically contains locator-related information
                 However, due to some cause unknown, the locators contents are not printed, for example:
                 
@@ -142,11 +143,9 @@ RLOC-set consistence if and only if the same log file satisfies the following cr
 Inter-logfile RLOC-set consistence : This characteristic is defined in the interior of a vantage directory :
 
 
+===============>Capacity
 
-
-
-*****************************************************Capacity**********************************************************
-According to selene's demands, this program should be able to realize the following comparison, respectively:
+This program should be able to realize the following comparison, respectively:
 
 
 这个脚本应该具备执行三种比较的能力,分别是:
