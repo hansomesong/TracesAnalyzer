@@ -1,16 +1,12 @@
 TracesAnalyzer
 ==============
 
-This is a small project in python aiming to process and analyze a bunch of given LISP experimental trace log files
+*****************************************************Introduction******************************************************
+This is a small project in python aiming to process and analyze a bunch of given LISP experimental trace log files.
 
 The 'mp_parser.py' script is the entrance of the whole program, it uses multiple-processing technique to process and
 analyze given LISP experimental results(in form of a serial of trace log files), finally output analysis results into
 some CSV files situated in the log directory.
-
-According to selene's demand, mp_parser should be able to realize three kinds of comparison:
-
-1, The intra-logfile comparison: verify whether
-
 
 
 *****************************************************Glossary**********************************************************
@@ -28,7 +24,6 @@ The following is a example of round:
                             Date=2013/07/02 07:30:23
                             EID=153.16.32.224
                             Resolver=198.6.255.37
-
                             Using source address (ITR-RLOC) 139.165.12.211
                             Send map-request to 198.6.255.37 (198.6.255.37) for 153.16.32.224 (153.16.32.224) ...
                             RECEIVED_FROM=192.162.230.11
@@ -56,22 +51,20 @@ The following is a example of round:
                             LOCATOR3_WEIGHT=100
 
 Normally, A round contains the following attributes:
-                            date        : the datetime when this session is executed.
-                            EID         :
-                            Resolver    :
-                            request src :
-                            request dst : namely the value of Resolver
-                            request for : namely the value of EID
-                            reply src   : the address who gives RLOC-related information for a query for EID. It could be
-                                            different with the Resolver address.
-                            RTT         : Round Trip Time, the delay between the send of a query and the reception of its reply
-                            Locator_count: The length of RLOC Set. It could be simply interpreted that the reply for a EID
-                                            query contains 'Locator_count' different locator addresses.
-                            Mapping_entry:  ??
-                            TTL             : Time to live
-                            Auth    :???
-                            Mobile  :???
-                            locator : refer to item for locator.
+                            date                : the datetime when this session is executed.
+                            EID                 :
+                            Resolver            :
+                            request src         :
+                            request dst         : namely the value of Resolver
+                            request for         : namely the value of EID
+                            reply src           : the address who gives RLOC-related information for a query for EID. It                                                     could be different with the Resolver address.
+                            RTT                 : Round Trip Time, the delay between the send of a query and the                                                            reception of its reply
+                            Locator_count       : The length of RLOC Set. It could be simply interpreted that the reply                                                     for a EID query contains Locator_count different locator addresses.
+                            Mapping_entry       :  ??
+                            TTL                 : Time to live
+                            Auth                :???
+                            Mobile              :???
+                            locator             : refer to item for locator.
 
 Round Type : There exists multiple round types according to the content of round's reply:
             RoundNoReply : caused by network connection, a round has no reply for EID, for example :
@@ -79,19 +72,18 @@ Round Type : There exists multiple round types according to the content of round
                             Date=2013/07/05 09:00:21
                             EID=0.0.0.0
                             Resolver=149.20.48.61
-
                             Using source address (ITR-RLOC) 139.165.12.211
                             Send map-request to 149.20.48.61 (149.20.48.61) for 0.0.0.0 (0.0.0.0) ...
                             Send map-request to 149.20.48.61 (149.20.48.61) for 0.0.0.0 (0.0.0.0) ...
                             Send map-request to 149.20.48.61 (149.20.48.61) for 0.0.0.0 (0.0.0.0) ...
-                            *** No map-reply received ***
+                             No map-reply received 
+
 
             RoundResultAction: A round has a reply, but this reply does not include RLOC-related information, for example:
                             --- Round ID 1373013038 ----------------------------------->
                             Date=2013/07/05 08:30:38
                             EID=0.0.0.0
                             Resolver=149.20.48.61
-
                             Using source address (ITR-RLOC) 139.165.12.211
                             Send map-request to 149.20.48.61 (149.20.48.61) for 0.0.0.0 (0.0.0.0) ...
                             RECEIVED_FROM=149.20.48.61
@@ -109,7 +101,6 @@ Round Type : There exists multiple round types according to the content of round
                             Date=2013/07/02 10:00:58
                             EID=153.16.3.0
                             Resolver=149.20.48.61
-
                             Using source address (ITR-RLOC) 139.165.12.211
                             Send map-request to 149.20.48.61 (149.20.48.61) for 153.16.3.0 (153.16.3.0) ...
                             RECEIVED_FROM=128.122.208.144
@@ -122,6 +113,8 @@ Round Type : There exists multiple round types according to the content of round
                             !!!! LCAF AFI print skipped !!!!
                 Note that locator_count is 2, but we could not check out the content of its included locators information
 
+            
+            
             RoundNormal : A round contains all information in which we are interested, refer to example given in item 'Round'
 
 
