@@ -56,9 +56,9 @@ Normally, A round contains the following attributes:
                             request src         :
                             request dst         : namely the value of Resolver
                             request for         : namely the value of EID
-                            reply src           : the address who gives RLOC-related information for a query for EID. It                                                     could be different with the Resolver address.
-                            RTT                 : Round Trip Time, the delay between the send of a query and the                                                            reception of its reply
-                            Locator_count       : The length of RLOC Set. It could be simply interpreted that the reply                                                     for a EID query contains Locator_count different locator addresses.
+                            reply src           : the address who gives RLOC-related information for a query for EID. It could be different with the Resolver address.
+                            RTT                 : Round Trip Time, the delay between the send of a query and the reception of its reply
+                            Locator_count       : The length of RLOC Set. It could be simply interpreted that the reply for a EID query contains Locator_count different locator addresses.
                             Mapping_entry       :  ??
                             TTL                 : Time to live
                             Auth                :???
@@ -66,7 +66,9 @@ Normally, A round contains the following attributes:
                             locator             : refer to item for locator.
 
 Round Type : There exists multiple round types according to the content of round's reply:
-            RoundNoReply : caused by network connection, a round has no reply for EID, for example :
+
+            RoundNoReply :
+            caused by network connection, a round has no reply for EID, for example :
             
                             --- Round ID 1373014821 ----------------------------------->
                             Date=2013/07/05 09:00:21
@@ -79,7 +81,8 @@ Round Type : There exists multiple round types according to the content of round
                              No map-reply received 
 
 
-            RoundResultAction: A round has a reply, but this reply does not include RLOC-related information, for example:
+            RoundResultAction: 
+            A round has a reply, but this reply does not include RLOC-related information, for example:
             
                             --- Round ID 1373013038 ----------------------------------->
                             Date=2013/07/05 08:30:38
@@ -97,8 +100,8 @@ Round Type : There exists multiple round types according to the content of round
                             RESULT="Negative cache entry"
                             ACTION=forward-native
                             
-            RoundNormalNoLocatorInfo : A round has a reply, and this reply theoretically contains locator-related information
-                However, due to some cause unknown, the locators contents are not printed, for example:
+            RoundNormalNoLocatorInfo: 
+            A round has a reply, and this reply theoretically contains locator-related information, however, due to some cause unknown, the locators contents are not printed, for example:
                 
                             --- Round ID 1372759258 ----------------------------------->
                             Date=2013/07/02 10:00:58
@@ -119,7 +122,8 @@ Round Type : There exists multiple round types according to the content of round
 
             
             
-            RoundNormal : A round contains all information in which we are interested, refer to example given in item 'Round'
+            RoundNormal:
+            A round contains all information in which we are interested, refer to example given in item 'Round'
 
 
 Locator: An information collection including locator address, locator state(up or down), locator priority(integer from 1 to 255 )
