@@ -33,12 +33,12 @@ def write_csv(dest_csv, csv_cont):
             writer.writerow(row)
 
 
-def get_locator_list_by_eid_resolver(csv_body_list, eid, resolver):
+def get_locator_list_by_vantage_eid_resolver(csv_body_list, vantage, eid, resolver):
     for csv_row in csv_body_list:
         # csv_row is a list whose content is like:
         # ['temple','/home/cloud/Documents/PlanetLab/temple/mappings/planetlab2-EID-37.76.0.0-MR-198.6.255.37.log',
         # '37.76.0.0,'198.6.255.37','False',	"['RoundResultAction']" ]
-        if eid in csv_body_list and resolver in csv_body_list:
+        if eid in csv_row and resolver in csv_row and vantage in csv_row:
             # Currently, RLOC set is beginning at index 6 in csv_row list
             # Attention ; if the csv row format changes in the future, do not forget to modify the following instruction
             # Finally, return a locator address list
@@ -51,7 +51,7 @@ def get_locator_list_by_eid_resolver(csv_body_list, eid, resolver):
 # target_ed = target+".sort.csv"
 # write_csv(target_ed, csv_sort_list(target))
 
-# csv_dst_dir = '/home/cloud/Documents/Codes/TracesAnalyzer/log/'
+csv_dst_dir = '/home/cloud/Documents/Codes/TracesAnalyzer/log/'
 # csv_all_file = '/home/cloud/Documents/Codes/TracesAnalyzer/log/statistic_all.csv'
 #
 # csv_all = []
@@ -70,4 +70,26 @@ def get_locator_list_by_eid_resolver(csv_body_list, eid, resolver):
 #
 # csv_all = sorted(csv_all, key=lambda item: socket.inet_aton(item[2])+socket.inet_aton(item[3]))
 # write_csv(csv_all_file, [['sss'], csv_all])
+
+
+
+# Test method get_locator_list_by_eid_resolver
+
+
+csv_file = csv_dst_dir+'statistic_all.csv'
+
+csv_body = csv_sort_list(csv_file)[1]
+
+eid = '0.0.0.0'
+resolver = '149.20.48.61'
+
+
+print
+print get_locator_list_by_vantage_eid_resolver(csv_body,'liege', eid, resolver)
+
+eid_locator_addr_set = set(get_locator_list_by_vantage_eid_resolver(csv_body, 'liege', eid, resolver))
+print eid_locator_addr_set
+
+
+
 
