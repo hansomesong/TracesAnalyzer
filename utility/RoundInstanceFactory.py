@@ -83,7 +83,7 @@ class RoundInstanceFactory:
                 try:
                     date, EID, resolver, req_src, req_dst, req_for, rpy_src, RTT, locator_count, mapping_entry,\
                         TTL, auth, mobile, result, action = infoFieldExtractor(target, TYPE_2_P)[0]
-                    round = RoundResultAction(date, EID, resolver, req_src, req_dst, req_for, rpy_src, RTT,
+                    round = NegativeReply(date, EID, resolver, req_src, req_dst, req_for, rpy_src, RTT,
                                               locator_count, mapping_entry,TTL, auth, mobile, result, action)
 
                 except IndexError:
@@ -106,7 +106,7 @@ class RoundInstanceFactory:
                 try:
                     date, EID, resolver, req_src, req_dst, req_for, rpy_src, RTT, locator_count, mapping_entry,\
                         TTL, auth, mobile = infoFieldExtractor(target, TYPE_3_P)[0]
-                    round = RoundNormalNoLocatorInfo(date, EID, resolver, req_src, req_dst, req_for, rpy_src, RTT, locator_count, mapping_entry,\
+                    round = PrintSkipped(date, EID, resolver, req_src, req_dst, req_for, rpy_src, RTT, locator_count, mapping_entry,\
                         TTL, auth, mobile)
 
                 except IndexError:

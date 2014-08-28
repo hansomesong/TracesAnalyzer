@@ -46,17 +46,17 @@ print "Test Round:"
 print Round(date, EID,resolver, req_src, req_dst, req_for).toList()
 print "Test RoundNoReply"
 print RoundNoReply(date, EID,resolver, req_src, req_dst, req_for).toList()
-print "Test RoundResultAction"
-print RoundResultAction(date, EID, resolver,req_src, req_dst, req_for,rpy_src, RTT, locator_count, mapping_entry,
+print "Test NegativeReply"
+print NegativeReply(date, EID, resolver,req_src, req_dst, req_for,rpy_src, RTT, locator_count, mapping_entry,
                  TTL, auth, mobile, result, action).toList()
-print RoundResultAction(date, EID, resolver,req_src, req_dst, req_for,rpy_src, RTT, locator_count, mapping_entry,
+print NegativeReply(date, EID, resolver,req_src, req_dst, req_for,rpy_src, RTT, locator_count, mapping_entry,
                  TTL, auth, mobile, result, action).__dict__.keys()
-print RoundResultAction(date, EID, resolver,req_src, req_dst, req_for, rpy_src, RTT, locator_count, mapping_entry,
+print NegativeReply(date, EID, resolver,req_src, req_dst, req_for, rpy_src, RTT, locator_count, mapping_entry,
                  TTL, auth, mobile, result, action).__getattribute__('date')
 
-print RoundResultAction.__dict__
+print NegativeReply.__dict__
 
 print "Test RoundNormal"
 
-print RoundResultAction(date, EID, resolver,req_src, req_dst, req_for,rpy_src, RTT, locator_count, mapping_entry,
+print NegativeReply(date, EID, resolver,req_src, req_dst, req_for,rpy_src, RTT, locator_count, mapping_entry,
                  TTL, auth, mobile, result, action).toList()

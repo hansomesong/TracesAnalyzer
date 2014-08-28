@@ -37,7 +37,7 @@ def get_locator_list_by_vantage_eid_resolver(csv_body_list, vantage, eid, resolv
     for csv_row in csv_body_list:
         # csv_row is a list whose content is like:
         # ['temple','/home/cloud/Documents/PlanetLab/temple/mappings/planetlab2-EID-37.76.0.0-MR-198.6.255.37.log',
-        # '37.76.0.0,'198.6.255.37','False',	"['RoundResultAction']" ]
+        # '37.76.0.0,'198.6.255.37','False',	"['NegativeReply']" ]
         if eid in csv_row and resolver in csv_row and vantage in csv_row:
             # Currently, RLOC set is beginning at index 6 in csv_row list
             # Attention ; if the csv row format changes in the future, do not forget to modify the following instruction

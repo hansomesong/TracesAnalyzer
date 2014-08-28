@@ -59,11 +59,11 @@ class RoundNoReply(Round):
         return res
 
 
-class RoundResultAction(Round):
+class NegativeReply(Round):
 
     def __init__(self, date, EID, resolver,req_src, req_dst, req_for,rpy_src, RTT, locator_count, mapping_entry,
              TTL, auth, mobile, result, action):
-        super(RoundResultAction, self).__init__(date, EID, resolver, req_src, req_dst, req_for)
+        super(NegativeReply, self).__init__(date, EID, resolver, req_src, req_dst, req_for)
         self.rpy_src = rpy_src
         self.RTT = RTT
         self.locator_count = locator_count
@@ -75,7 +75,7 @@ class RoundResultAction(Round):
         self.action = action
 
     def toList(self):
-        round_attribute_list = super(RoundResultAction, self).toList()
+        round_attribute_list = super(NegativeReply, self).toList()
         round_attribute_list.extend(
                 [self.rpy_src, self.RTT, self.locator_count, self.mapping_entry,
                  self.TTL, self.auth, self.mobile, self.result, self.action]
@@ -83,15 +83,15 @@ class RoundResultAction(Round):
         return round_attribute_list
 
     def getAttrList(self):
-        res = super(RoundResultAction, self).getAttrList()
+        res = super(NegativeReply, self).getAttrList()
         res.extend(['Reply_SRC', 'RTT', 'LOCATOR_Count','MAPPING_ENTRY', 'TTL', 'AUTH', 'MOBILE', 'Result', 'Action'])
         return res
 
-class RoundNormalNoLocatorInfo(Round):
+class PrintSkipped(Round):
 
     def __init__(self, date, EID, resolver,req_src, req_dst, req_for,rpy_src, RTT, locator_count, mapping_entry,
              TTL, auth, mobile):
-        super(RoundNormalNoLocatorInfo, self).__init__(date, EID, resolver, req_src, req_dst, req_for)
+        super(PrintSkipped, self).__init__(date, EID, resolver, req_src, req_dst, req_for)
         self.rpy_src = rpy_src
         self.RTT = RTT
         self.locator_count = locator_count
@@ -103,7 +103,7 @@ class RoundNormalNoLocatorInfo(Round):
         self.warn= '!!!! LCAF AFI print skipped !!!!'
 
     def toList(self):
-        round_attribute_list = super(RoundNormalNoLocatorInfo, self).toList()
+        round_attribute_list = super(PrintSkipped, self).toList()
         round_attribute_list.extend(
                 [self.rpy_src, self.RTT, self.locator_count, self.mapping_entry,
                  self.TTL, self.auth, self.mobile, self.warn]
@@ -111,7 +111,7 @@ class RoundNormalNoLocatorInfo(Round):
         return round_attribute_list
 
     def getAttrList(self):
-        res = super(RoundNormalNoLocatorInfo, self).getAttrList()
+        res = super(PrintSkipped, self).getAttrList()
         res.extend(['Reply_SRC', 'RTT', 'LOCATOR_Count','MAPPING_ENTRY', 'TTL', 'AUTH', 'MOBILE', 'WARNING'])
         return res
 
