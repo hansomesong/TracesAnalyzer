@@ -127,6 +127,7 @@ Round Type : There exists multiple round types according to the content of round
 
 
 Locator: An information collection including locator address, locator state(up or down), locator priority(integer from 1 to 255 ) locator weight. A round's reply may contain multiple locators. Attention: locator address could be in IPV6 format. for example :
+
                             ...
                             LOCATOR0=192.162.230.11
                             LOCATOR0_STATE=up
@@ -172,6 +173,7 @@ Third, it should be able to examine that for all the vantage point, for the same
 
 
 ================>Analysis
+
 "/PlanetLab/liege/mappings/planetlab1-EID-153.16.14.0-MR-149.20.48.61.log" file is very representative.
 
 First, at the beginning of file, rounds are always in RoundNoReply type, then locator_count is changed constantly among 1, 2, 3
