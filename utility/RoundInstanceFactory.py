@@ -149,26 +149,52 @@ class RoundInstanceFactory:
                 spamwriter.writerow(round.toList())
         
         
-    def isLocatorCoherent(self):
-        '''This method is uniquely meaningful for file log containg locators information'''
+    # def isLocatorCoherent(self):
+    #     '''This method is uniquely meaningful for file log containg locators information'''
+    #
+    #     # By default, we consider RLOC-set consistence is always false
+    #     flag = False
+    #     locator_set = set()
+    #     locator_count_set = set()
+    #     # if round type include types other than RoundNormal, return directly false
+    #     if len(self.round_type_list) == 1 and ('RoundNormal' in self.round_type_list):
+    #         # All rounds inside the logfile has the same value for locator_count
+    #         # According to the above 'if' statement, all rounds in the attribute 'rounds' are in RoundNormal type.
+    #         #print 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+    #         for round in self.rounds:
+    #             locator_set = locator_set | set(round.locators)
+    #             locator_count_set = locator_count_set | set([round.locator_count])
+    #         # All rounds inside the logfile has the same value for locator_count
+    #         # The number of RLOC addresses appeared inside the logfile is same to locator_count.
+    #         # Do not forget element in locator_count_set is in type : string
+    #         if len(locator_count_set) == 1 and list(locator_count_set)[0] == str(len(locator_set)):
+    #             flag = True
+    #     return flag
 
-        # By default, we consider RLOC-set consistence is always false
-        flag = False
+
+    def isLocatorCoherent(self):
+        #   There exists some quirks about this methode
+        #   We are not sure about the definition of Locator Set Coherence characteristics. In this method,
+        #   we choose a loose condition for locator set coherence.
+
+        # By default, we consider RLOC-set consistence is always True
+        flag = True
         locator_set = set()
         locator_count_set = set()
-        # if round type include types other than RoundNormal, return directly false
-        if len(self.round_type_list) == 1 and ('RoundNormal' in self.round_type_list):
+        # if round type list does not include 'RoundNormal', return directly True
+        if 'RoundNormal' in self.round_type_list:
             # All rounds inside the logfile has the same value for locator_count
             # According to the above 'if' statement, all rounds in the attribute 'rounds' are in RoundNormal type.
             #print 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
             for round in self.rounds:
-                locator_set = locator_set | set(round.locators)
-                locator_count_set = locator_count_set | set([round.locator_count])
+                if round.type == 'RoundNormal':
+                    locator_set = locator_set | set(round.locators)
+                    locator_count_set = locator_count_set | set([round.locator_count])
             # All rounds inside the logfile has the same value for locator_count
             # The number of RLOC addresses appeared inside the logfile is same to locator_count.
             # Do not forget element in locator_count_set is in type : string
-            if len(locator_count_set) == 1 and list(locator_count_set)[0] == str(len(locator_set)):
-                flag = True
+            if len(locator_count_set) != 1 or list(locator_count_set)[0] != str(len(locator_set)):
+                flag = False
         return flag
     
     def getRoundTypeList(self):
@@ -194,6 +220,7 @@ class RoundInstanceFactory:
         return [flag, list(type_set)]
 
     def getLocatorAddrSet(self):
+        # Attention : RLOC Address set may contain some IPV6 addresses, which bring some difficulties when sorting
         import socket
         reduced_rounds = [round for round in self.rounds if round.type == 'RoundNormal']
         locatorAddrList = []
@@ -201,5 +228,5 @@ class RoundInstanceFactory:
             for locator in round.locators:
                 locatorAddrList.append(locator.addr)
         res_set = set(locatorAddrList)
-        return sorted(list(res_set), key=lambda item: socket.inet_aton(item))
-
+        #return sorted(list(res_set), key=lambda item: socket.inet_aton(item))
+        return list(res_set)

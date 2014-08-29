@@ -119,8 +119,10 @@ TYPE_3_P = re.compile(r"""
     # LOCATOR1_PRIORITY=1
     # LOCATOR1_WEIGHT=100
 #However, we could user TYPE_3_P and the following LOCATORS_P to treat this kind of round record
+#Attention : Locator address could be in formant IPV6, such as 'LOCATOR2=2001:9e0:8500:b00::1' for example in file :
+#/home/cloud/Documents/PlanetLab/liege/mappings/planetlab1-EID-37.77.56.32-MR-149.20.48.61.log
 LOCATORS_P = re.compile(r"""
-    LOCATOR[-_:]*(\d+)\s*=\s*(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})
+    LOCATOR[-_:]*(\d+)\s*=\s*([a-f0-9:.]+)
     \s*LOCATOR[-_:]*\d+_STATE\s*=\s*(\w+)
     LOCATOR[-_:]*\d+_PRIORITY\s*=\s*(\d+)
     LOCATOR[-_:]*\d+_WEIGHT\s*=\s*(\d+)

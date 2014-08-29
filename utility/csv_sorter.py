@@ -51,7 +51,7 @@ def get_locator_list_by_vantage_eid_resolver(csv_body_list, vantage, eid, resolv
 # target_ed = target+".sort.csv"
 # write_csv(target_ed, csv_sort_list(target))
 
-csv_dst_dir = '/home/cloud/Documents/Codes/TracesAnalyzer/log/'
+# csv_dst_dir = '/home/cloud/Documents/Codes/TracesAnalyzer/log/'
 # csv_all_file = '/home/cloud/Documents/Codes/TracesAnalyzer/log/statistic_all.csv'
 #
 # csv_all = []
@@ -76,19 +76,19 @@ csv_dst_dir = '/home/cloud/Documents/Codes/TracesAnalyzer/log/'
 # Test method get_locator_list_by_eid_resolver
 
 
-csv_file = csv_dst_dir+'statistic_all.csv'
-
-csv_body = csv_sort_list(csv_file)[1]
-
-eid = '0.0.0.0'
-resolver = '149.20.48.61'
-
-
-print
-print get_locator_list_by_vantage_eid_resolver(csv_body,'liege', eid, resolver)
-
-eid_locator_addr_set = set(get_locator_list_by_vantage_eid_resolver(csv_body, 'liege', eid, resolver))
-print eid_locator_addr_set
+# csv_file = csv_dst_dir+'statistic_all.csv'
+#
+# csv_body = csv_sort_list(csv_file)[1]
+#
+# eid = '0.0.0.0'
+# resolver = '149.20.48.61'
+#
+#
+# print
+# print get_locator_list_by_vantage_eid_resolver(csv_body,'liege', eid, resolver)
+#
+# eid_locator_addr_set = set(get_locator_list_by_vantage_eid_resolver(csv_body, 'liege', eid, resolver))
+# print eid_locator_addr_set
 
 
 

@@ -57,7 +57,7 @@ def main(vantage,traces_log_dir):
     #Otherwise this program may be collapsed.
         if lists.endswith(".log"):
             lists = os.path.join(traces_log_dir, lists)
-            job = pool.apply_async(worker,(vantage,lists,q))
+            job = pool.apply_async(worker, (vantage,lists,q))
             jobs.append(job)
 
     #collect results from the workers through the pool result queue
@@ -88,7 +88,7 @@ if __name__ == "__main__":
 
 
     for vantage, value in traces_log.items():
-        csv_file = csv_dst_dir+'statistic_{0}.csv'.format(vantage)
+        csv_file = csv_dst_dir+'comparison_time_{0}.csv'.format(vantage)
         main(vantage,traces_log[vantage])
 
         # Initially, the generated csv file, such as 'statistic_liege.csv' is unsorted.
@@ -96,18 +96,12 @@ if __name__ == "__main__":
         # unsorted csv then overwrite the latter.
         write_csv(csv_file, csv_sort_list(csv_file))
 
-
-
-
-
-
-
     # Then generate a CSV file for all vantage experimental result
     csv_all = []
     for vantage, value in traces_log.items():
         # Iterate all statistics CSV file for each vantage and retrieve all csv rows into a separate list
         # named 'csv_all'
-        csv_file = csv_dst_dir+'statistic_{0}.csv'.format(vantage)
+        csv_file = csv_dst_dir+'comparison_time_{0}.csv'.format(vantage)
         csv_header = csv_sort_list(csv_file)[0]
         csv_all.extend(csv_sort_list(csv_file)[1])
 

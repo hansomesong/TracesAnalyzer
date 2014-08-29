@@ -28,11 +28,11 @@ for vantage_name, value in traces_log.items():
     # Iterate all statistics CSV file for each vantage and retrieve all csv rows into a separate list
     # named 'csv_all'
     eids, resolvers = get_eid_resolver_sort_list(vantage_name)
-    csv_file = CSV_FILE_DESTDIR+'statistic_{0}.csv'.format(vantage_name)
+    csv_file = CSV_FILE_DESTDIR+'comparison_time_{0}.csv'.format(vantage_name)
     csv_header = csv_sort_list(csv_file)[0]
     csv_body = csv_sort_list(csv_file)[1]
 
-    with open(CSV_FILE_DESTDIR+'{0}_RLOC.csv'.format(vantage_name),'wb') as cf:
+    with open(CSV_FILE_DESTDIR+'comparison_map_resolver_in_{0}.csv'.format(vantage_name),'wb') as cf:
         spamwriter = csv.writer(cf, dialect='excel', delimiter=';')
         spamwriter.writerow(['Vantage', 'EID', 'Locator Count Consistence'])
         # Define a set to store RLOC addre
@@ -73,7 +73,7 @@ eids, resolvers = get_eid_resolver_sort_list('liege')
 
 csv_body = csv_sort_list(target_csv)[1]
 
-with open(CSV_FILE_DESTDIR+'ALL_RLOC.csv','wb') as cf:
+with open(CSV_FILE_DESTDIR+'comparison_among_vantage_point.csv','wb') as cf:
     spamwriter = csv.writer(cf, dialect='excel', delimiter=';')
     spamwriter.writerow(['EID', 'Resolver', 'Locator Count Consistence'])
     # Define a set to store RLOC addre

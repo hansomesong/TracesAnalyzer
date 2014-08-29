@@ -126,14 +126,27 @@ Round Type : There exists multiple round types according to the content of round
             A round contains all information in which we are interested, refer to example given in item 'Round'
 
 
-Locator: An information collection including locator address, locator state(up or down), locator priority(integer from 1 to 255 ) locator weight. A round's reply may contain multiple locators. for example :
-
+Locator: An information collection including locator address, locator state(up or down), locator priority(integer from 1 to 255 ) locator weight. A round's reply may contain multiple locators. Attention: locator address could be in IPV6 format. for example :
                             ...
                             LOCATOR0=192.162.230.11
                             LOCATOR0_STATE=up
                             LOCATOR0_PRIORITY=2
                             LOCATOR0_WEIGHT=50
                             ...
+                            or
+                            LOCATOR0=87.195.196.77
+                            LOCATOR0_STATE=up
+                            LOCATOR0_PRIORITY=50
+                            LOCATOR0_WEIGHT=100
+                            LOCATOR1=95.97.83.93
+                            LOCATOR1_STATE=up
+                            LOCATOR1_PRIORITY=10
+                            LOCATOR1_WEIGHT=100
+                            LOCATOR2=2001:9e0:8500:b00::1
+                            LOCATOR2_STATE=up
+                            LOCATOR2_PRIORITY=50
+                            LOCATOR2_WEIGHT=100
+
 
 
 Intra-logfile RLOC-Set consistence : This characteristic is defined at logfile level. A logfile is judged Intra-logfile
@@ -155,3 +168,12 @@ First, the program verifies that in each logfile(in all vantage directory), whet
 Second, this program is also able to check, in the same vantage, whether for a certain EID, all 13 different resovlers return the same RLOC set.
 
 Third, it should be able to examine that for all the vantage point, for the same EID, all 13 different resolvers give the same reply.
+
+
+
+================>Analysis
+"/PlanetLab/liege/mappings/planetlab1-EID-153.16.14.0-MR-149.20.48.61.log" file is very representative.
+
+First, at the beginning of file, rounds are always in RoundNoReply type, then locator_count is changed constantly among 1, 2, 3
+
+"/PlanetLab/liege/mappings/planetlab1-EID-37.77.56.32-MR-149.20.48.61.log" contains IPV6 RLOC address.
