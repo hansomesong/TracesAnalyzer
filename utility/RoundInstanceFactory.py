@@ -16,13 +16,16 @@ class RoundInstanceFactory:
         self.file_path = file_path
         self.rounds = self.roundCollectionGenerate(self.preprocess())
 
-        # It is much more pratique to define some attributes for a log file
+        # It is much more convenient to define some attributes for a log file
         self.EID = self.rounds[0].EID
         self.resolver = self.rounds[0].resolver
         self.round_type_list = self.getRoundTypeList()
         # A sorted list including all locator addressses appeared in a logfile.
         # This list could be empty if the target logfile does not contain RoundNormal type round
         self.locator_addr_list = self.getLocatorAddrSet()
+        # Since these 2 variables are also used in another method, we make them as 2 object variables from isLocatorCoherent(self) here
+        self.locator_set = set()
+        self.locator_count_set = set()
        
     def preprocess(self):
         '''This method is used to preprocess the input file, firstly read all lines into a single string
@@ -47,7 +50,7 @@ class RoundInstanceFactory:
         return rounds
 
     def roundGenerate(self, target):
-        '''This method is used to convert a input string(named target) into a Round instance.
+        '''This method is used to convert an input string(named target) into a Round instance.
             Because the round record is in one of the four known format, firstly we have to determine
             which RE expression to process the input string, and then
         '''
@@ -173,14 +176,17 @@ class RoundInstanceFactory:
 
 
     def isLocatorCoherent(self):
-        #   There exists some quirks about this methode
+        #   There exists some quirks about this method
         #   We are not sure about the definition of Locator Set Coherence characteristics. In this method,
         #   we choose a loose condition for locator set coherence.
 
         # By default, we consider RLOC-set consistence is always True
         flag = True
-        locator_set = set()
-        locator_count_set = set()
+
+        # Since these 2 variables are also used in another method, we make them as 2 object variables
+        # locator_set = set()
+        # locator_count_set = set()
+
         # if round type list does not include 'RoundNormal', return directly True
         if 'RoundNormal' in self.round_type_list:
             # All rounds inside the logfile has the same value for locator_count
@@ -188,15 +194,29 @@ class RoundInstanceFactory:
             #print 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
             for round in self.rounds:
                 if round.type == 'RoundNormal':
-                    locator_set = locator_set | set(round.locators)
-                    locator_count_set = locator_count_set | set([round.locator_count])
+                    self.locator_set = self.locator_set | set(round.locators)
+                    self.locator_count_set = self.locator_count_set | set([round.locator_count])
             # All rounds inside the logfile has the same value for locator_count
             # The number of RLOC addresses appeared inside the logfile is same to locator_count.
             # Do not forget element in locator_count_set is in type : string
-            if len(locator_count_set) != 1 or list(locator_count_set)[0] != str(len(locator_set)):
+            # len(locator_count_set) != 1 can judge whether the number of locator changes
+            # list(locator_count_set)[0] != str(len(locator_set)) can judge whether the content of RLOC are same
+            if len(self.locator_count_set) != 1 or list(self.locator_count_set)[0] != str(len(self.locator_set)):
                 flag = False
         return flag
-    
+
+
+    # To get the locator_count_set
+    def getLocatorCountSet(self):
+        # return len(self.locator_count_set)
+        return list(self.locator_count_set)
+
+    # To get the locator_set
+    def getLocatorSet(self):
+        # return len(self.locator_set)
+        return [str(element) for element in list(self.locator_set)]
+
+
     def getRoundTypeList(self):
         type_set = set()
         for round in self.rounds:
@@ -204,6 +224,7 @@ class RoundInstanceFactory:
         # Finally convert a set into list and return the latter.
         return list(type_set)
 
+    # It isn't used anymore
     def basicCheck(self):
         type_set = set()
         flag = True

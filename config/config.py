@@ -1,22 +1,29 @@
-'''In this python scirpt, we plan to define some globle variable'''
+'''In this python script, we plan to define some globl variables'''
 
 
 import os
-csv_file_destDir = '/home/cloud/Documents/Codes/TracesAnalyzer/log/'
-CSV_ALL_FILE = '/home/cloud/Documents/Codes/TracesAnalyzer/log/statistic_all.csv'
-CSV_FILE_DESTDIR =  '/home/cloud/Documents/Codes/TracesAnalyzer/log/'
-
+csv_file_destDir = '/Users/yueli/Documents/Codes/TracesAnalyzer/log/'
+CSV_ALL_FILE = '/Users/yueli/Documents/Codes/TracesAnalyzer/log/statistic_all.csv'
+CSV_FILE_DESTDIR =  '/Users/yueli/Documents/Codes/TracesAnalyzer/log/'
 
 traces_log ={
 
-    'liege' : '/home/cloud/Documents/PlanetLab/liege/mappings',
-    'temple' : '/home/cloud/Documents/PlanetLab/temple/mappings',
-    'ucl' : '/home/cloud/Documents/PlanetLab/ucl/mappings',
-    'umass' : '/home/cloud/Documents/PlanetLab/umass/mappings',
-    'wiilab' : '/home/cloud/Documents/PlanetLab/wiilab/mappings'
+    'liege' : '/Users/yueli/Documents/Codes/PlanetLab/liege/mappings',
+    'temple' : '/Users/yueli/Documents/Codes/PlanetLab/temple/mappings',
+    'ucl' : '/Users/yueli/Documents/Codes/PlanetLab/ucl/mappings',
+    'umass' : '/Users/yueli/Documents/Codes/PlanetLab/umass/mappings',
+    'wiilab' : '/Users/yueli/Documents/Codes/PlanetLab/wiilab/mappings'
 
 }
-
+# traces_log ={
+#
+#     'liege' : '/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings',
+#     'temple' : '/Users/yueli/Documents/Codes/PlanetLab_test/temple/mappings',
+#     'ucl' : '/Users/yueli/Documents/Codes/PlanetLab_test/ucl/mappings',
+#     'umass' : '/Users/yueli/Documents/Codes/PlanetLab_test/umass/mappings',
+#     'wiilab' : '/Users/yueli/Documents/Codes/PlanetLab_test/wiilab/mappings'
+#
+# }
 
 # f = os.path.dirname(os.path.realpath(__file__))
 # print f

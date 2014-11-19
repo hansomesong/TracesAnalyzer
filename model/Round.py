@@ -41,9 +41,9 @@ class Round(object):
 
 # To leverage the polymorphic of OOP, we plan use different subclass to represent every found type.
 class RoundNoReply(Round):
-    def __init__(self,date, EID, resolver, req_src, req_dst, req_for):
+    def __init__(self, date, EID, resolver, req_src, req_dst, req_for):
 
-        super(RoundNoReply,self).__init__(date, EID, resolver, req_src, req_dst, req_for)
+        super(RoundNoReply, self).__init__(date, EID, resolver, req_src, req_dst, req_for)
         self.error = "*** No map-reply received ***"
         self.type = self.__class__.__name__
 

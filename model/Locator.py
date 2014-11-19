@@ -31,6 +31,14 @@ class Locator:
     def __hash__(self):
         return hash(self.id) ^ hash(self.addr) ^ hash(self.state) ^ hash(self.priority) ^ hash(self.weight)
 
-    
+    def __str__(self):
+        # Just return the Locator's address
+        # return self.addr
+
+        # Return the Locator's all the infomation
+        res = "LOCATOR{0}={1},LOCATOR{0}_STATE={2},LOCATOR{0}_PRIORITY={3},LOCATOR{0}_WEIGHT={4},".format(self.id,self.addr,self.state,self.priority,self.weight)
+        return res
+
+
     
     

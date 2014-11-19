@@ -19,7 +19,7 @@ from config.config import *
 def listener(q):
     with open(csv_file,'wb') as csvfile:
         spamwriter = csv.writer(csvfile, dialect='excel', delimiter=';')
-        spamwriter.writerow(['Vantage','Log File Name', 'EID', 'Resolver', 'Locator Count Consistence', 'Round Type Set', 'RLOC Set'])
+        spamwriter.writerow(['Vantage','Log File Name', 'EID', 'Resolver', 'Locator Count Consistence', 'Round Type Set', 'Different Locator Count', 'Different Locator', 'RLOC Set'])
         while 1:
             csv_row = q.get()
             if csv_row == "TERMINATE":
@@ -36,6 +36,9 @@ def worker(vantage,log_file,q):
     csv_row = [vantage, log_file, R.EID, R.resolver]
     csv_row.append(R.isLocatorCoherent())
     csv_row.append(R.round_type_list)
+    # Here add 2 rows: locator_count_set and locator_set
+    csv_row.append(R.getLocatorCountSet())
+    csv_row.append(R.getLocatorSet())
     csv_row.extend(R.locator_addr_list)
     q.put(csv_row)
 

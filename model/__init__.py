@@ -1,5 +1,5 @@
 # About the role of __init__.py
-# The __init__.py files are required to make python treat the directories as containing packages.
+# The __init__.py files are required to make python treat the directories as packages.
 # This is done to prevent directories with a common name, such as string, from unintentionally hiding
 # valid modules that occur later on the module search path. In the simplest case,__init__.py could
 # just be an empty file
@@ -101,7 +101,7 @@
 # *Round could be represented by a class
 # *Round is composed by its own attributes(Date, EID, Resolver), a request and its reply
 # *Request information could be abstracted as Request instance which contains attributes: request source@ dst@ and for@
-# *Similarily,Reply information could be stored in an instance of Reply Class
+# *Similarily, Reply information could be stored in an instance of Reply Class
 # *Reply instance is various: it may be None, may contains RLOC information(locator information)
 
 # Although separating a

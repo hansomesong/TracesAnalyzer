@@ -47,7 +47,7 @@ eids = sorted(list(eid_set), key=lambda item: socket.inet_aton(item))
 
 # For a given EID, if having map-reply, 13 different resolvers return the same suite RLOC for the given EID???
 with open("trial-reduced.csv", 'wb') as csvfile:
-    spamwriter = csv.writer(csvfile, dialect='excel',delimiter=';')
+    spamwriter = csv.writer(csvfile, dialect='excel', delimiter=';')
     for eid in eids:
         spamwriter.writerow([])
         for resolver in resovlers:

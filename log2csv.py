@@ -9,7 +9,7 @@ from config.config import *
 import os
 import argparse
 
-parser = argparse.ArgumentParser(description='This utility is devoted to convert a input LISP trace log file into a formatted CSV file.')
+parser = argparse.ArgumentParser(description='This utility is devoted to convert an input LISP trace log file into a formatted CSV file.')
 parser.add_argument('log', action="store", help='indicate the LISP trace log file path.')
 parser.add_argument('--dst', action="store",dest='destination', default="log/", help='indicate which directory stores the generated files.' )
 

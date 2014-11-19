@@ -1,0 +1,27 @@
+Vantage;Log File Name;EID;Resolver;Locator Count Consistence;Round Type Set;RLOC Set
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-0.0.0.0-MR-149.20.48.61.log;0.0.0.0;149.20.48.61;True;['NegativeReply', 'RoundNoReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-0.0.0.0-MR-149.20.48.77.log;0.0.0.0;149.20.48.77;True;['NegativeReply', 'RoundNoReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-0.0.0.0-MR-173.36.254.164.log;0.0.0.0;173.36.254.164;True;['RoundNoReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-0.0.0.0-MR-193.162.145.50.log;0.0.0.0;193.162.145.50;True;['RoundNoReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-0.0.0.0-MR-195.50.116.18.log;0.0.0.0;195.50.116.18;True;['NegativeReply', 'RoundNoReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-0.0.0.0-MR-198.6.255.37.log;0.0.0.0;198.6.255.37;True;['NegativeReply', 'RoundNoReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-0.0.0.0-MR-198.6.255.40.log;0.0.0.0;198.6.255.40;True;['NegativeReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-0.0.0.0-MR-202.51.247.10.log;0.0.0.0;202.51.247.10;True;['RoundNoReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-0.0.0.0-MR-202.214.86.252.log;0.0.0.0;202.214.86.252;True;['NegativeReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-0.0.0.0-MR-206.223.132.89.log;0.0.0.0;206.223.132.89;True;['NegativeReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-0.0.0.0-MR-217.8.97.6.log;0.0.0.0;217.8.97.6;True;['NegativeReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-0.0.0.0-MR-217.8.98.42.log;0.0.0.0;217.8.98.42;True;['RoundNoReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-0.0.0.0-MR-217.8.98.46.log;0.0.0.0;217.8.98.46;True;['RoundNoReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-32.0.0.0-MR-149.20.48.61.log;32.0.0.0;149.20.48.61;True;['NegativeReply', 'RoundNoReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-32.0.0.0-MR-149.20.48.77.log;32.0.0.0;149.20.48.77;True;['NegativeReply', 'RoundNoReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-32.0.0.0-MR-173.36.254.164.log;32.0.0.0;173.36.254.164;True;['RoundNoReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-32.0.0.0-MR-193.162.145.50.log;32.0.0.0;193.162.145.50;True;['RoundNoReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-32.0.0.0-MR-195.50.116.18.log;32.0.0.0;195.50.116.18;True;['NegativeReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-32.0.0.0-MR-198.6.255.37.log;32.0.0.0;198.6.255.37;True;['NegativeReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-32.0.0.0-MR-198.6.255.40.log;32.0.0.0;198.6.255.40;True;['NegativeReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-32.0.0.0-MR-202.51.247.10.log;32.0.0.0;202.51.247.10;True;['RoundNoReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-32.0.0.0-MR-202.214.86.252.log;32.0.0.0;202.214.86.252;True;['NegativeReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-32.0.0.0-MR-206.223.132.89.log;32.0.0.0;206.223.132.89;True;['NegativeReply', 'RoundNoReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-32.0.0.0-MR-217.8.97.6.log;32.0.0.0;217.8.97.6;True;['NegativeReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-32.0.0.0-MR-217.8.98.42.log;32.0.0.0;217.8.98.42;True;['RoundNoReply'];0;0
+liege;/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings/planetlab1-EID-32.0.0.0-MR-217.8.98.46.log;32.0.0.0;217.8.98.46;True;['RoundNoReply'];0;0
