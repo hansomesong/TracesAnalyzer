@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # This script leverages multiple process technique to accelerate LISP/Planet experimental log file.
 # To achieve this, we employ process pool and queue functionality, provided by python.
 # The script is coded by inspiring from the following link:
@@ -12,18 +13,33 @@ from utility.csv_sorter import *
 from config.config import *
 
 
-
 # Although many processes could involve in the treatment of log file, we have only one process responsible for
 # writing logfile-related entry(a row in the context of CSV file) into the given CSV file. The advantage of this
 # is to avoid the concurrence about the write access to target CSV file.
 def listener(q):
     with open(csv_file,'wb') as csvfile:
         spamwriter = csv.writer(csvfile, dialect='excel', delimiter=';')
-        spamwriter.writerow(['Vantage','Log File Name', 'EID', 'Resolver', 'Locator Count Consistence', 'Round Type Set'
-            , 'Different Locator Count', 'Different Locator','Locator count flap', 'Locators flap' 'RLOC Set'])
+        # 创建 输出 csv文件的 第一行
+        spamwriter.writerow(
+            [   'Vantage',
+                'Log File Name',
+                'EID',
+                'Resolver',
+                'Locator Count Consistence',
+                'Round Type Set',
+                'Different Locator Count',
+                'Locators Count Set',
+                'Different Locators',
+                'Locators set',
+                'Locator count flap',
+                'Locators flap',
+                'RLOC Set'
+            ]
+        )
 
         while 1:
             csv_row = q.get()
+            # 如果从 (被N多个进程共享的) result queue 中提取到了 字符串 ‘TERMINATE’，那么结束listener进程
             if csv_row == "TERMINATE":
                 break
             spamwriter.writerow(csv_row)
@@ -36,15 +52,22 @@ def worker(vantage,log_file,q):
     R = RoundInstanceFactory(log_file)
     #csv_row = [arg, R.isLocatorCoherent(), R.getRoundTypeSet()]
     csv_row = [vantage, log_file, R.EID, R.resolver]
-    csv_row.append(R.isLocatorCoherent())
-    csv_row.append(R.round_type_list)
+    csv_row.append(R.isLocatorCoherent())  # print 'Locator Count Consistence'
+    csv_row.append(R.round_type_list)   # print 'Round Type Set'
+
     # Here add 2 rows: locator_count_set and locator_set
-    csv_row.append(R.getLocatorCountSet())
-    csv_row.append(R.getLocatorSet())
+    csv_row.append(len(R.locator_count_set)) # print 'Different Locators Count'
+    csv_row.append(R.getLocatorCountSet()) # print 'Locators Count Set'
+
+    csv_row.append(len(R.locator_set))    # print 'Different locators'
+    csv_row.append(R.getLocatorSet())       # print 'Locators set'
+
     # Here add 2 rows: locator_count_set and locator_set
     csv_row.append(R.isLocatorCountFlap())
     csv_row.append(R.isLocatorsFlap())
+
     csv_row.extend(R.locator_addr_list)
+
     q.put(csv_row)
 
 
