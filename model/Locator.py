@@ -1,4 +1,4 @@
-class Locator:
+class Locator(object):
     """This data structure is used to represent the locator contained  in a LISP map-reply.
     Its format could be like:
         LOCATOR0=129.250.1.255
@@ -36,8 +36,13 @@ class Locator:
         # return self.addr
 
         # Return the Locator's all the infomation
-        res = "LOCATOR{0}={1},LOCATOR{0}_STATE={2},LOCATOR{0}_PRIORITY={3},LOCATOR{0}_WEIGHT={4},".format(self.id,self.addr,self.state,self.priority,self.weight)
+        res = "LOCATOR{0}={1},LOCATOR{0}_STATE={2},LOCATOR{0}_PRIORITY={3},LOCATOR{0}_WEIGHT={4}".format(self.id,self.addr,self.state,self.priority,self.weight)
         return res
+
+
+    # I don't know how to make this object iterable...
+    # def __iter__(self):
+    #     return
 
 
     

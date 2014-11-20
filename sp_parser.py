@@ -37,7 +37,7 @@ def processLogDirectory(logDirRoot, resultCSVPath):
     import csv
     with open(resultCSVPath, 'wb') as csvfile:
         spamwriter = csv.writer(csvfile, dialect='excel',delimiter=';')
-        spamwriter.writerow(['Log File Name','Locator Count Coherence','Round Type Set'])
+        spamwriter.writerow(['Log File Name','Locator Count Coherence','Round Type Set', 'Different Locator Count', 'Different Locator','Locator count flap'])
         for log_file in os.listdir(logDirRoot):
             #Do not forget to verify that the current file to be processed is a real log file
             #Otherwise this program may be collapsed.
@@ -47,6 +47,10 @@ def processLogDirectory(logDirRoot, resultCSVPath):
                 csv_row = [file_path]
                 csv_row.append(R.isLocatorCoherent())
                 csv_row.append(R.round_type_list)
+                csv_row.append(R.getLocatorCountSet())
+                csv_row.append(R.getLocatorSet())
+                csv_row.append(R.isLocatorCountFlap())
+                csv_row.append(R.isLocatorsFlap())
                 csv_row.extend(R.locator_addr_list)
                 spamwriter.writerow(csv_row)
 

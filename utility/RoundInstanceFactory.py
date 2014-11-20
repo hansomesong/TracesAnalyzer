@@ -1,5 +1,10 @@
+# -*- coding: utf-8 -*-
 import csv
 import sys
+# This module is used to compare list, because in method : isLocatorsFlap()
+# we need to compare locators list (Locator object as element)
+# refer to this link: http://stackoverflow.com/questions/9623114/python-are-two-lists-equal
+import collections
 sys.path.append('../')
 
 #If we use syntax such as 'import Request', when executing Python
@@ -23,7 +28,8 @@ class RoundInstanceFactory:
         # A sorted list including all locator addressses appeared in a logfile.
         # This list could be empty if the target logfile does not contain RoundNormal type round
         self.locator_addr_list = self.getLocatorAddrSet()
-        # Since these 2 variables are also used in another method, we make them as 2 object variables from isLocatorCoherent(self) here
+        # Since these 2 variables are also used in another method, we make them as 2 object variables from
+        # isLocatorCoherent(self) here
         self.locator_set = set()
         self.locator_count_set = set()
        
@@ -224,22 +230,6 @@ class RoundInstanceFactory:
         # Finally convert a set into list and return the latter.
         return list(type_set)
 
-    # It isn't used anymore
-    def basicCheck(self):
-        type_set = set()
-        flag = True
-        locator_set = set()
-        locator_count = 0
-        for round in self.rounds:
-            type_set = type_set | set([round.type])
-            if round.locators:
-                locator_set = locator_set | set(round.locators)
-                locator_count = len(round.locators)
-                if len(locator_set) != locator_count:
-                    flag = False
-                    #As long as incoherence is found in current log file, break the current for loop and return false$
-        return [flag, list(type_set)]
-
     def getLocatorAddrSet(self):
         # Attention : RLOC Address set may contain some IPV6 addresses, which bring some difficulties when sorting
         import socket
@@ -251,3 +241,96 @@ class RoundInstanceFactory:
         res_set = set(locatorAddrList)
         #return sorted(list(res_set), key=lambda item: socket.inet_aton(item))
         return list(res_set)
+
+
+    # Accordin to Yue's demand, add a new method
+    # This method is used to detect the flap of locator and locator_count
+
+    def isLocatorCountFlap(self):
+        # 所谓的 Locator Count Flap 是指 某一个 locator count的值在改变之后，又再次出现。
+        # 假设 一个文件中出现的 locator count的取值依次是 1，2，3，1 我们说该文件具有 locator count flap的特性。
+        # 需要注意的是： 只有 含有 RoundNormal型的 Log File 才具有 locator count flap的性质。
+        # 如果没有roundnormal 型的round,直接返回 None.
+
+        # 思路是： 遍历 rounds 这个list，将其中出现的locator_count值写到另外一个叫做
+        # locator_count_sequence 的list中。只有在当前locator_count的值不等于 locator_count_sequence[-1]
+        # 的情况下，才可以写入到目标list中。
+        # 只遍历含有locator_count这个attribute的Round,也即是 RoundNormal 类型的
+        # 获取 locator_count list (也许含有重复的元素)，比如 [1,1,1,2,2,2,2,3,3,3,1,1,2,2,3,3]
+        # 所谓 Locator count flap 就是指 这类列表 [1,1,1,2,2,2,2,3,3,3,1,1,2,2,3,3]
+
+        #
+        locator_count_flap = False
+        # reduce_rounds = [round for round in self.rounds if round.type == 'RoundNormal']
+        # locator_count_values = []
+        # for round in reduce_rounds:
+        #     locator_count_values.append(round.locator_count)
+        locator_count_values = [round.locator_count for round in self.rounds if round.type == 'RoundNormal' ]
+
+        # 如果当前处理的logfile中不含有RoundNormal类型的Round,那么locator_count_values将会是空list.
+        # 该方法将直接返回 None, 如果不为空，则继续处理判断是 True or false
+        if len(locator_count_values) > 0:
+            locator_count_sequence = list(locator_count_values[0])
+            for count in locator_count_values[1:]:
+                if count != locator_count_sequence[-1]:
+                    locator_count_sequence.append(count)
+
+            # 以 [1,1,1,2,2,2,2,3,3,3,1,1,2,2,3,3] 为例, locator_count_sequence = [1,2,3,1,2,3]
+            # 如果locator_count_sequence去除重复前后, 长度保持不变。说明locator_count_sequence不再有重复元素
+            # 该logfile也就不具有 locator count flap的性质。
+            # 该方法将返回 True,否则返回 False
+            if len(list(set(locator_count_sequence))) != len(locator_count_sequence):
+                locator_count_flap = True
+        return locator_count_flap
+
+    def isLocatorsFlap(self):
+        # Locator flape 指的是 某一个Locator变化后 再次出现，假设A B C代表三个不同的Locator
+        # 序列 [A A] [B B] [B C] [C A] [A A] 可以视为 locators flap
+
+        # 默认 一个文件(不管包含不包含RoundNormal类型的Round)是不具备的 Locators flap 性质的
+        # 只有在含有 RoundNormal 并且满足某些条件的情况下 才可以视为是 Locators flap为True的
+        locators_flap = False
+        locators = [round.locators for round in self.rounds if round.type == 'RoundNormal']
+
+        # 同样的，如果locators为lenght为零的话，说明该logfile中并不包含RoundNormal类型的Round
+        # Locators flap对该logfile没有意义，该方法直接返回 None
+        if len(locators) > 0:
+            # 以locators的第一个元素初始化 locators_sequence
+            # 注意： 如果是 locators_sequence = list(locators[0])，程序会有问题。。
+            # 换言之， 操作符[] 和 list() 在某些场合下不等效！！！
+            locators_sequence = [locators[0]]
+            # http://stackoverflow.com/questions/9623114/python-are-two-lists-equal
+            # compare 采用 collections module提供的方法来判断两个list 是否相等。
+            # 如果两个list含有的元素一致（不考虑顺序）， 则compare(x,y)返回 True
+            compare = lambda x, y: collections.Counter(x) == collections.Counter(y)
+
+            # 和isLocatorCountFlap()方法类似，我们遍历所有的 locators，如果当前处理的locators和最近一次添加到locators_sequence
+            # 的元素不一样，则将locators添加至 locators_sequence 之中
+            for current in locators[1:]:
+                # 本来current中的元素都是一个个locator，如果不把这个locator转换成str的话，貌似compare不管用。。。
+                # current = [str(element) for element in current]
+                # print current
+                # target = [str(element) for element in locators_sequence[-1]]
+                # print target
+                if not compare(current, locators_sequence[-1]):
+                    # 如果current和 locators_sequence最后一个元素不同，则将current添加至 locators_sequence 之中
+                     locators_sequence.append(current)
+
+            # Now 序列 序列 [A A] [B B] [B B][B C] [C A] [A A] => [A A] [B B] [B C] [C A] [A A]
+            # 遍历 locators_sequence 看看 是否有元素 重复出现，如果是 locator_flap = True,并且返回。。
+            while len(locators_sequence) > 1:
+                current = locators_sequence.pop()
+                # print "current", [str(element) for element in current]
+                # print "locators length", len(locators_sequence)
+                # print "current locators's content:"
+                # for x in locators_sequence:
+                #     print [str(y) for y in x]
+                if current in locators_sequence:
+                    locators_flap = True
+                    #print "In if-condition", [str(element) for element in current]
+                    break
+        return locators_flap
+
+
+
+
