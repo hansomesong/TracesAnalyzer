@@ -210,9 +210,9 @@ plt.yticks([-1, 0], ('Negative Reply', 'No Map Reply'))
 #                       '2001:660:3302:2826:24f3:ed5c:1f4e:9bb2', '192.168.1.67',
 #                       '2001:660:3302:2826:78d8:2479:d14f:d2e5', '0.0.0.0', '2001:660:3302:2826:2ca0:8b67:bce1:4453',
 #                       '2001:660:3302:2826:75e0:6094:2a2d:46da', '2001:660:3302:2826:5dd:f3fb:9480:f41f'))
-# plt.yticks(response, ('Negative Reply', 'No Map Reply', 'RLOC set 1', 'RLOC set 2', 'RLOC set 3', 'RLOC set 4',
-#                       'RLOC set 5', 'RLOC set 6', 'RLOC set 7', 'RLOC set 8', 'RLOC set 9', 'RLOC set 10',
-#                       'RLOC set 11', 'RLOC set 12', 'RLOC set 13'))
+plt.yticks(response, ('Negative Reply', 'No Map Reply', 'Locator 1', 'Locator 2', 'Locator 3', 'Locator 4',
+                      'Locator 5', 'Locator 6', 'Locator 7', 'Locator 8', 'Locator 9', 'Locator 10',
+                      'Locator 11', 'Locator 12', 'Locator 13'))
 
 plt.legend()
 
@@ -220,5 +220,5 @@ plt.legend()
 # plt.annotate('Negative Reply',xy=(0,-0.98),xytext=(0, -0.5),arrowprops=dict(arrowstyle="->"))
 # plt.annotate('No Map Reply',xy=(0,0.02),xytext=(0, 0.5),arrowprops=dict(arrowstyle="->"))
 
-# plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_VP/Plot_variable_VP.pdf")
+# plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot_new/Plot_variable_VP/Plot_variable_VP.pdf")
 plt.show()

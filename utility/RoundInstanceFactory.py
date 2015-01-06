@@ -194,7 +194,9 @@ class RoundInstanceFactory:
         # locator_count_set = set()
 
         # if round type list does not include 'RoundNormal', return directly True
-        if 'RoundNormal' in self.round_type_list:
+
+        # if 'RoundNormal' in self.round_type_list:
+        if ('RoundNormal' in self.round_type_list) and ('NegativeReply' and 'PrintSkipped' not in self.round_type_list):
             # All rounds inside the logfile has the same value for locator_count
             # According to the above 'if' statement, all rounds in the attribute 'rounds' are in RoundNormal type.
             #print 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
@@ -210,6 +212,27 @@ class RoundInstanceFactory:
             if len(self.locator_count_set) != 1 or list(self.locator_count_set)[0] != str(len(self.locator_set)):
                 flag = False
         return flag
+
+        # if 'RoundNormal' in self.round_type_list:
+        #     if 'NegativeReply' or 'PrintSkipped' in self.round_type_list:
+        #         flag = False
+        #         return flag
+        #     else:
+        #         # All rounds inside the logfile has the same value for locator_count
+        #         # According to the above 'if' statement, all rounds in the attribute 'rounds' are in RoundNormal type.
+        #         #print 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+        #         for round in self.rounds:
+        #             if round.type == 'RoundNormal':
+        #                 self.locator_set = self.locator_set | set(round.locators)
+        #                 self.locator_count_set = self.locator_count_set | set([round.locator_count])
+        #         # All rounds inside the logfile has the same value for locator_count
+        #         # The number of RLOC addresses appeared inside the logfile is same to locator_count.
+        #         # Do not forget element in locator_count_set is in type : string
+        #         # len(locator_count_set) != 1 can judge whether the number of locator changes
+        #         # list(locator_count_set)[0] != str(len(locator_set)) can judge whether the content of RLOC are same
+        #         if len(self.locator_count_set) != 1 or list(self.locator_count_set)[0] != str(len(self.locator_set)):
+        #             flag = False
+        # return flag
 
 
     # To get the locator_count_set
@@ -250,7 +273,7 @@ class RoundInstanceFactory:
         # 所谓的 Locator Count Flap 是指 某一个 locator count的值在改变之后，又再次出现。
         # 假设 一个文件中出现的 locator count的取值依次是 1，2，3，1 我们说该文件具有 locator count flap的特性。
         # 需要注意的是： 只有 含有 RoundNormal型的 Log File 才具有 locator count flap的性质。
-        # 如果没有roundnormal 型的round,直接返回 None.
+        # 如果没有Roundnormal 型的round,直接返回 None.
 
         # 思路是： 遍历 rounds 这个list，将其中出现的locator_count值写到另外一个叫做
         # locator_count_sequence 的list中。只有在当前locator_count的值不等于 locator_count_sequence[-1]
