@@ -38,15 +38,15 @@ traces_log ={
 if not os.path.isdir("log"):
     os.makedirs("log")
 
-# csv_file_destDir = '/Users/qsong/Documents/yueli/TracesAnalyzer/log/'
-# CSV_ALL_FILE = '/Users/qsong/Documents/yueli/TracesAnalyzer/log/statistic_all.csv'
-# CSV_FILE_DESTDIR =  '/Users/qsong/Documents/yueli/TracesAnalyzer/log/'
+csv_file_destDir = '/Users/qsong/Documents/TracesAnalyzer/log/'
+CSV_ALL_FILE = '/Users/qsong/Documents/TracesAnalyzer/log/statistic_all.csv'
+CSV_FILE_DESTDIR =  '/Users/qsong/Documents/TracesAnalyzer/log/'
 # #
 #
-# traces_log ={
-#      'liege' : '/Users/qsong/Documents/PlanetLab/liege/mappings',
-#      'temple' : '/Users/qsong/Documents/PlanetLab/temple/mappings',
-#      'ucl' : '/Users/qsong/Documents/PlanetLab/ucl/mappings',
-#      'umass' : '/Users/qsong/Documents/PlanetLab/umass/mappings',
-#      'wiilab' : '/Users/qsong/Documents/PlanetLab/wiilab/mappings'
-# }
+traces_log ={
+      'liege' : '/Users/qsong/Documents/PlanetLab/liege/mappings',
+      'temple' : '/Users/qsong/Documents/PlanetLab/temple/mappings',
+      'ucl' : '/Users/qsong/Documents/PlanetLab/ucl/mappings',
+      'umass' : '/Users/qsong/Documents/PlanetLab/umass/mappings',
+      'wiilab' : '/Users/qsong/Documents/PlanetLab/wiilab/mappings'
+}

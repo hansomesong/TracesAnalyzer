@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #We need to the two following module to convert a datetime string to a timestamp
 import time
 import datetime
@@ -14,7 +15,11 @@ class Round(object):
     def __init__(self, date, EID, resolver,req_src, req_dst, req_for):
     # The parent class Round always contais attributes as following:
     # date, EID, resolver, request_source@, request_destination@, request_for@
-        self.date = date
+    # 将string类型转换datetime类型， 对date属性
+    # 输入参数date形式为 '2013/07/18 23:30:18'，因为我们不可以保证 date还有time之间有多少个空格
+    # 所以我们决定删除date和time之间所有的空格，即"".join(date.split(" "))，然后采用格式"%d/%m/%Y%H:%M:%S"
+    # 将处理之后的字符串解析为datetime数据类型
+        self.date = datetime.datetime.strptime("".join(date.split(" ")), "%Y/%m/%d%H:%M:%S")
         self.EID = EID
         self.resolver = resolver
         self.req_src = req_src
@@ -27,7 +32,7 @@ class Round(object):
     def toList(self):
     # Whatever the round type is, it always contains the following basic attributes.
         round_attribute_list = [
-             self.type, self.date, self.EID, self.resolver, self.req_src, self.req_dst, self.req_for
+             self.type, self.date.__str__(), self.EID, self.resolver, self.req_src, self.req_dst, self.req_for
          ]
         return round_attribute_list
 

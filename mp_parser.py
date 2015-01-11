@@ -5,7 +5,6 @@
 # http://stackoverflow.com/questions/13446445/python-multiprocessing-safely-writing-to-a-file
 
 import multiprocessing as mp
-import os
 from utility.RoundInstanceFactory import *
 from utility.csv_sorter import *
 
@@ -17,22 +16,26 @@ from config.config import *
 # writing logfile-related entry(a row in the context of CSV file) into the given CSV file. The advantage of this
 # is to avoid the concurrence about the write access to target CSV file.
 def listener(q):
-    with open(csv_file,'wb') as csvfile:
+    with open(csv_file, 'wb') as csvfile:
         spamwriter = csv.writer(csvfile, dialect='excel', delimiter=';')
         # 创建 输出 csv文件的 第一行
         spamwriter.writerow(
-            [   'Vantage',
+            [
+                'Vantage',
                 'Log File Name',
                 'EID',
                 'Resolver',
-                'Locator Count Consistence',
+                'Coherence',
+                'RLOC set Consistence',
+                'TE coherent',
                 'Round Type Set',
                 'Different Locator Count',
                 'Locators Count Set',
                 'Different Locators',
                 'Locators set',
-                'Locator count flap',
-                'Locators flap',
+                #'Locator count flap',
+                #'Locators flap',
+                'case',
                 'RLOC Set'
             ]
         )
@@ -50,9 +53,11 @@ def listener(q):
 def worker(vantage,log_file,q):
     '''stupidly simulates long running process'''
     R = RoundInstanceFactory(log_file)
-    #csv_row = [arg, R.isLocatorCoherent(), R.getRoundTypeSet()]
+    #csv_row = [arg, R.isRLOCSetCoherent(), R.getRoundTypeSet()]
     csv_row = [vantage, log_file, R.EID, R.resolver]
-    csv_row.append(R.isLocatorCoherent())  # print 'Locator Count Consistence'
+    csv_row.append(R.coherent)
+    csv_row.append(R.RLOCSetCoherent)  # print 'Locator Count Consistence'
+    csv_row.append(R.TECoherent)       # print 'TE coherent'
     csv_row.append(R.round_type_list)   # print 'Round Type Set'
 
     # Here add 2 rows: locator_count_set and locator_set
@@ -62,9 +67,13 @@ def worker(vantage,log_file,q):
     csv_row.append(len(R.locator_set))    # print 'Different locators'
     csv_row.append(R.getLocatorSet())       # print 'Locators set'
 
-    # Here add 2 rows: locator_count_set and locator_set
-    csv_row.append(R.isLocatorCountFlap())
-    csv_row.append(R.isLocatorsFlap())
+    #Here add 2 rows: locator_count_set and locator_set
+    #csv_row.append(R.isLocatorCountFlap())
+    #csv_row.append(R.isLocatorsFlap())
+
+
+    # Add judge logfile case
+    csv_row.append(R.case)
 
     csv_row.extend(R.locator_addr_list)
 
@@ -105,8 +114,6 @@ if __name__ == "__main__":
     # then consider to import multiple process support. Otherwise, it is difficult to debug when in problem.
     # For example, I had committed an error in Round.py (super() method is subclass), in this file, it only shows
     # job.get() is empty or similar.
-
-
     # We plan to output all generated CSV into a directory named 'log'
     # First, we need to check the existence of "log" directory, if not, create it
     if not os.path.isdir("log"):
@@ -116,11 +123,9 @@ if __name__ == "__main__":
     # We could accordingly to form the full path for our destination directory
     csv_dst_dir = os.path.dirname(os.path.realpath(__file__))+'/log/'
 
-
-
     for vantage, value in traces_log.items():
         csv_file = csv_dst_dir+'comparison_time_{0}.csv'.format(vantage)
-        main(vantage,traces_log[vantage])
+        main(vantage, traces_log[vantage])
 
         # Initially, the generated csv file, such as 'statistic_liege.csv' is unsorted.
         # Thus, we call methods defined in python script : utility/csv_sorter.py to sort initial
@@ -136,8 +141,10 @@ if __name__ == "__main__":
         csv_header = csv_sort_list(csv_file)[0]
         csv_all.extend(csv_sort_list(csv_file)[1])
 
-        # Still need to sort csv_all
-        csv_all = sorted(csv_all, key=lambda item: socket.inet_aton(item[2])+socket.inet_aton(item[3]))
+
+    # 当对所有观测点文件夹结束之后
+    # Still need to sort csv_all
+    csv_all = sorted(csv_all, key=lambda item: socket.inet_aton(item[2])+socket.inet_aton(item[3]))
     write_csv(CSV_ALL_FILE, [csv_header, csv_all])
 
 
