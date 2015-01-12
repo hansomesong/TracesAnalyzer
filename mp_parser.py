@@ -87,7 +87,7 @@ def main(vantage,traces_log_dir):
     pool = mp.Pool(mp.cpu_count()+12)
 
     #put listener to work first
-    watcher = pool.apply_async(listener,(q,))
+    watcher = pool.apply_async(listener, (q,))
 
     #fire off workers
     jobs = []
@@ -97,7 +97,7 @@ def main(vantage,traces_log_dir):
     #Otherwise this program may be collapsed.
         if lists.endswith(".log"):
             lists = os.path.join(traces_log_dir, lists)
-            job = pool.apply_async(worker, (vantage,lists,q))
+            job = pool.apply_async(worker, (vantage, lists, q))
             jobs.append(job)
 
     #collect results from the workers through the pool result queue

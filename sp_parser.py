@@ -14,7 +14,7 @@ from config.config import *
 
 def generateMultiCSVRows(logDirRoot):
     res_str = []
-    res_str.append(['Log File Name','Locator Count Coherence','Round Type Set'])
+    res_str.append(['Log File Name', 'Locator Count Coherence', 'Round Type Set'])
     for lists in os.listdir(logDirRoot):
         if lists.endswith(".log"):
             file_path = os.path.join(logDirRoot,lists)

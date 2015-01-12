@@ -196,7 +196,7 @@ class RoundInstanceFactory:
                 # 实际运行证明：使用list/set comprehension效率确实要比传统的for loop效率高
                 self.locator_set = {locator for round in self.rounds if round.type == 'RoundNormal'
                                     for locator in round.locators}
-                self.locator_count_set = set([round.locator_count for round in self.rounds if round.type == 'RoundNormal'])
+                self.locator_count_set = {round.locator_count for round in self.rounds if round.type == 'RoundNormal'}
                 # All rounds inside the logfile has the same value for locator_count
                 # The number of RLOC addresses appeared inside the logfile is same to locator_count.
                 # Do not forget element in locator_count_set is in type : string
@@ -419,8 +419,12 @@ class RoundInstanceFactory:
                 # 第一步，讲rounds按照日期分割为多个子集，每个子集仅包含当日记录的实验结果
                 # 对每个子集统计其相应的locator_count以及Locators (包含在Normal类型)变化的总数
                 # 第一步 获得当前log中出现过得所有的 date
-                # 遍历只含有 RoundNormal类型的 rounds_reduced,获取logfile中出现过的日期
-                date_list = set([round_obj.date for round_obj in rounds_reduced])
+                # 遍历只含有 RoundNormal类型的 rounds_reduced,获取logfile中出现过的日期,并排序
+                date_list = sorted(list(set([round_obj.date.date() for round_obj in rounds_reduced])))
+                #print date_list
+
+                ## 测试date_list是否执行正确
+                #print [date]
 
                 # 创建round_all_day，其element为包含同一天记录的round的list
                 # 采用Nested list comprehension提高程序效率 (可读性则不是太好)
@@ -430,8 +434,9 @@ class RoundInstanceFactory:
                 #     round_day = [round_obj for round_obj in rounds_reduced if round_obj.date == day]
                 #     rounds_all_day.append(round_day)
 
-                rounds_all_day = [[round_obj for round_obj in rounds_reduced if round_obj.date == day]
+                rounds_all_day = [[round_obj for round_obj in rounds_reduced if round_obj.date.date() == day]
                                   for day in date_list]
+                #print rounds_all_day
 
                 # 定义一个名为compare的lambda函数，用来比较 两个list是否相等，这里面list将会是locator list
                 # 该compare函数采用collections module提供的方法来判断两个list 是否相等。
@@ -444,34 +449,19 @@ class RoundInstanceFactory:
                 locators_change = []
 
                 for round_day in rounds_all_day:
-                    # #统计locator_count
-                    # locator_count_day_list = [round_obj.locator_count for round_obj in round_day]
-                    # referent_count = locator_count_day_list[0]
-                    # tmp_list = []
-                    # for locator_count in locator_count_day_list[1:]:
-                    #     if locator_count == referent_count:
-                    #         tmp_list.append(False)
-                    #     else:
-                    #         tmp_list.append(True)
-                    #     referent_count = locator_count
-                    # locator_count_change.append(tmp_list)
-
                     # 统计locators(locator list)的变化情况
                     locators_day_list = [round_obj.locators for round_obj in round_day]
                     referent_locators = locators_day_list[0]
                     tmp_list = []
                     for locators in locators_day_list[1:]:
-                        if compare(locators, referent_locators):
-                            # 如果当前locators和参考locators(即当前项的前一项)相比结果为True说明没有发生变化
-                            # 是故将False添加进 tmp_list
-                            tmp_list.append(False)
-                        else:
-                            tmp_list.append(True)
+                        # 如果当前locators和参考locators(即当前项的前一项)相比结果为True说明没有发生变化
+                        # 是故将False添加进 tmp_list
+                        tmp_list.append(compare(locators, referent_locators))
                         # 结束循环之际，记得修改 参考locators,不然每一项都是和第一项相比的
                         referent_locators = locators
                     locators_change.append(tmp_list)
 
-                change_number_day = [element.count(True) for element in locators_change]
+                change_number_day = [element.count(False) for element in locators_change]
                 if max(change_number_day) > 3:
                     case = '4'
                 else:

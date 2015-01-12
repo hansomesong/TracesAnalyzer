@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #Attention! RoundInstanceFactory is in fact a python script where defines uniquely a python class
 #If we want to instantiate this class, use its method
 #Using syntax like "from RoundInstanceFactory import *" instead of "import RoundInstanceFactory"
@@ -27,3 +28,6 @@ print 'generated csv file\'s full path   =', csv_file_path
 
 
 RoundInstanceFactory(args.log).write2csv(csv_file_path)
+
+# 测是函数
+
