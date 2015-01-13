@@ -3,19 +3,19 @@
 
 
 import os
-csv_file_destDir = '/Users/yueli/Documents/Codes/TracesAnalyzer/log/'
-CSV_ALL_FILE = '/Users/yueli/Documents/Codes/TracesAnalyzer/log/statistic_all.csv'
-CSV_FILE_DESTDIR =  '/Users/yueli/Documents/Codes/TracesAnalyzer/log/'
-
-traces_log ={
-
-    'liege' : '/Users/yueli/Documents/Codes/Luigi_Codes/PlanetLab_20140716/liege/mappings',
-    'temple' : '/Users/yueli/Documents/Codes/Luigi_Codes/PlanetLab_20140716/temple/mappings',
-    'ucl' : '/Users/yueli/Documents/Codes/Luigi_Codes/PlanetLab_20140716/ucl/mappings',
-    'umass' : '/Users/yueli/Documents/Codes/Luigi_Codes/PlanetLab_20140716/umass/mappings',
-    'wiilab' : '/Users/yueli/Documents/Codes/Luigi_Codes/PlanetLab_20140716/wiilab/mappings'
-
-}
+# csv_file_destDir = '/Users/yueli/Documents/Codes/TracesAnalyzer/log/'
+# CSV_ALL_FILE = '/Users/yueli/Documents/Codes/TracesAnalyzer/log/statistic_all.csv'
+# CSV_FILE_DESTDIR =  '/Users/yueli/Documents/Codes/TracesAnalyzer/log/'
+#
+# traces_log ={
+#
+#     'liege' : '/Users/yueli/Documents/Codes/Luigi_Codes/PlanetLab_20140716/liege/mappings',
+#     'temple' : '/Users/yueli/Documents/Codes/Luigi_Codes/PlanetLab_20140716/temple/mappings',
+#     'ucl' : '/Users/yueli/Documents/Codes/Luigi_Codes/PlanetLab_20140716/ucl/mappings',
+#     'umass' : '/Users/yueli/Documents/Codes/Luigi_Codes/PlanetLab_20140716/umass/mappings',
+#     'wiilab' : '/Users/yueli/Documents/Codes/Luigi_Codes/PlanetLab_20140716/wiilab/mappings'
+#
+# }
 
 # csv_file_destDir = '/Users/yueli/Documents/Codes/TracesAnalyzer/test_log/'
 # CSV_ALL_FILE = '/Users/yueli/Documents/Codes/TracesAnalyzer/test_log/statistic_all.csv'

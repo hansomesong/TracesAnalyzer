@@ -89,7 +89,7 @@ class NegativeReply(Round):
 
     def getAttrList(self):
         res = super(NegativeReply, self).getAttrList()
-        res.extend(['Reply_SRC', 'RTT', 'LOCATOR_Count','MAPPING_ENTRY', 'TTL', 'AUTH', 'MOBILE', 'Result', 'Action'])
+        res.extend(['Reply_SRC', 'RTT', 'LOCATOR_Count', 'MAPPING_ENTRY', 'TTL', 'AUTH', 'MOBILE', 'Result', 'Action'])
         return res
 
 class PrintSkipped(Round):
@@ -117,7 +117,7 @@ class PrintSkipped(Round):
 
     def getAttrList(self):
         res = super(PrintSkipped, self).getAttrList()
-        res.extend(['Reply_SRC', 'RTT', 'LOCATOR_Count','MAPPING_ENTRY', 'TTL', 'AUTH', 'MOBILE', 'WARNING'])
+        res.extend(['Reply_SRC', 'RTT', 'LOCATOR_Count', 'MAPPING_ENTRY', 'TTL', 'AUTH', 'MOBILE', 'WARNING'])
         return res
 
 class RoundNormal(Round):
@@ -149,8 +149,8 @@ class RoundNormal(Round):
 
     def getAttrList(self):
         res = super(RoundNormal, self).getAttrList()
-        res.extend(['Reply_SRC', 'RTT', 'LOCATOR_Count','MAPPING_ENTRY', 'TTL', 'AUTH', 'MOBILE',
-                    'Locator_Number','Locator_Addr','Locator_State', 'Locator_Priority', 'Locator_Weight'])
+        res.extend(['Reply_SRC', 'RTT', 'LOCATOR_Count', 'MAPPING_ENTRY', 'TTL', 'AUTH', 'MOBILE',
+                    'Locator_ID', 'Locator_Addr', 'Locator_State', 'Locator_Priority', 'Locator_Weight'])
         return res
 
 

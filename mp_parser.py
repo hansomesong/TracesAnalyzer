@@ -58,16 +58,16 @@ def worker(vantage,log_file,q):
     csv_row.append(R.coherent)
     csv_row.append(R.RLOCSetCoherent)  # print 'Locator Count Consistence'
     csv_row.append(R.TECoherent)       # print 'TE coherent'
-    csv_row.append(R.round_type_list)   # print 'Round Type Set'
+    csv_row.append(",".join(R.round_type_list))   # print 'Round Type List'
 
-    # Here add 2 rows: locator_count_set and locator_set
-    csv_row.append(len(R.locator_count_set)) # print 'Different Locators Count'
-    csv_row.append(R.getLocatorCountSet()) # print 'Locators Count Set'
+    # Here add 2 rows: locator_count_list and locator_list
+    csv_row.append(len(R.locator_count_list)) # print 'Different Locators Count'
+    csv_row.append(",".join(R.locator_count_list)) # print 'Locators Count Set'
 
-    csv_row.append(len(R.locator_set))    # print 'Different locators'
+    csv_row.append(len(R.locator_list))    # print 'Different locators'
     csv_row.append(R.getLocatorSet())       # print 'Locators set'
 
-    #Here add 2 rows: locator_count_set and locator_set
+    #Here add 2 rows: locator_count_list and locator_list
     #csv_row.append(R.isLocatorCountFlap())
     #csv_row.append(R.isLocatorsFlap())
 

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-import csv
-import sys
 # This module is used to compare list, because in method : isLocatorsFlap()
 # we need to compare locators list (Locator object as element)
 # refer to this link: http://stackoverflow.com/questions/9623114/python-are-two-lists-equal
+import csv
+import sys
 import collections
+from operator import itemgetter, attrgetter
 sys.path.append('../')
 
 #If we use syntax such as 'import Request', when executing Python
@@ -24,14 +25,44 @@ class RoundInstanceFactory:
         # It is much more convenient to define some attributes for a log file
         self.EID = self.rounds[0].EID
         self.resolver = self.rounds[0].resolver
-        self.round_type_list = self.getRoundTypeList()
-        # A sorted list including all locator addressses appeared in a logfile.
+
+        # round_type_list，list数据类型，包含出现在logfile中所有round的类型
+        self.round_type_list = list(
+            set([round_obj.type for round_obj in self.rounds])
+        )
+
+        # A sorted list including all RLOC address appeared in a logfile.
         # This list could be empty if the target logfile does not contain RoundNormal type round
-        self.locator_addr_list = self.getLocatorAddrSet()
-        # Since these 2 variables are also used in another method, we make them as 2 object variables from
-        # isRLOCSetCoherent(self) here
-        self.locator_set = set()
-        self.locator_count_set = set()
+        # 注意： 因为其中含有IPV6地址，所以排序是个问题
+        self.locator_addr_list = list(
+            set(
+                [locator.addr for round_obj in self.rounds if round_obj.type == 'RoundNormal'
+                 for locator in round_obj.locators]
+            )
+        )
+
+        # locator_list, list 数据类型，存储当前logfile中出现的所有不同的Locator对象
+        # for round in self.rounds:
+        # 以下if语句避免处理NoReply的情况
+        # if round.type == 'RoundNormal':
+        #         self.locator_list = self.locator_list.union(set(round.locators))
+        #         self.locator_count_list = self.locator_count_list.union(set([round.locator_count]))
+        # 其实在python中，大括号(curly braces)不仅可以用来创建dictionary还可以用来创建set,其等效于set()
+        # 因为round.locators本身已经list了，如果需要用set comprehension 来创建set的话，就不可以用set([])
+        # 实际运行证明：使用list/set comprehension效率确实要比传统的for loop效率高
+        self.locator_list = list({
+            locator for round_obj in self.rounds if round_obj.type == 'RoundNormal'
+                for locator in round_obj.locators
+        })
+
+        # 按照locator的attribute id对locator_list进行排序
+        # 参考链接：https://docs.python.org/2/howto/sorting.html
+        self.locator_list = sorted(self.locator_list, key=attrgetter('id'))
+
+        # locator_count_list, list数据类型，存储着当前logfile中出现的所有的locator_count取值
+        self.locator_count_list = list({
+            round_obj.locator_count for round_obj in self.rounds if round_obj.type == 'RoundNormal'
+        })
         # 定义 RLOCSetCoherent 以及 TECoherent 对象属性
         # 注意 调用isRLOCSetCoherent()之前，self.rounds以及self.round_type_list 应该被创建好
         self.RLOCSetCoherent = self.isRLOCSetCoherent()
@@ -165,10 +196,12 @@ class RoundInstanceFactory:
                 spamwriter.writerow(round.toList())
 
     def isRLOCSetCoherent(self):
-        #   There exists some quirks about this method
-        #   We are not sure about the definition of Locator Set Coherence characteristics. In this method,
-        #   we choose a loose condition for locator set coherence.
-
+        """
+            By default, RLOC set for a logfile is coherent(True), except for the following situations:
+                1, There exists more than one possible values for locator count attribute in this logfile
+                2, The only value of locator count attribute of this logfile is different with the length of
+                    RLOC address set.
+        """
         # By default, we consider RLOC-set consistence is always True
         flag = True
 
@@ -184,56 +217,17 @@ class RoundInstanceFactory:
             # 如果文件中 含有RoundNormal却又不包含'NegativeReply'以及'PrintSkipped'（有可能含有NoReply）
             # 这种情况下 需要进一步的判断来确定 RLOC set是否为 Coherent
             if ('NegativeReply' and 'PrintSkipped') not in self.round_type_list:
-                # All rounds inside the logfile has the same value for locator_count
-                # According to the above 'if' statement, all rounds in the attribute 'rounds' are in RoundNormal type.
-                # for round in self.rounds:
-                #     # 以下if语句避免处理NoReply的情况
-                #     if round.type == 'RoundNormal':
-                #         self.locator_set = self.locator_set.union(set(round.locators))
-                #         self.locator_count_set = self.locator_count_set.union(set([round.locator_count]))
-                # 其实在python中，大括号(curly braces)不仅可以用来创建dictionary还可以用来创建set,其等效于set()
-                # 因为round.locators本身已经list了，如果需要用set comprehension 来创建set的话，就不可以用set([])
-                # 实际运行证明：使用list/set comprehension效率确实要比传统的for loop效率高
-                self.locator_set = {locator for round in self.rounds if round.type == 'RoundNormal'
-                                    for locator in round.locators}
-                self.locator_count_set = {round.locator_count for round in self.rounds if round.type == 'RoundNormal'}
-                # All rounds inside the logfile has the same value for locator_count
-                # The number of RLOC addresses appeared inside the logfile is same to locator_count.
-                # Do not forget element in locator_count_set is in type : string
-                # len(locator_count_set) != 1 can judge whether the number of locator changes
-                # list(locator_count_set)[0] != str(len(locator_set)) can judge whether the content of RLOC are same
-                if len(self.locator_count_set) != 1 or list(self.locator_count_set)[0] != str(len(self.locator_set)):
+                # 注意locator_count_list中所有元素均为string类型
+                # len(locator_count_list) != 1 can judge whether the number of locator changes
+                # list(locator_count_list)[0] != str(len(locator_list)) can judge whether the content of RLOC are same
+                if len(self.locator_count_list) != 1 or self.locator_count_list[0] != str(len(self.locator_addr_list)):
                     flag = False
         return flag
 
-    # To get the locator_count_set
-    def getLocatorCountSet(self):
-        # return len(self.locator_count_set)
-        return list(self.locator_count_set)
-
-    # To get the locator_set
+    # To get the locator_list
     def getLocatorSet(self):
-        # return len(self.locator_set)
-        return [str(element) for element in list(self.locator_set)]
-
-
-    def getRoundTypeList(self):
-        # 首先将当前文件中出现的所有的type写入到list中，然后借助set()去重
-        # type_set = set()
-        # for round in self.rounds:
-        #     type_set = type_set | set([round.type])
-        # # Finally convert a set into list and return the latter.
-        types = [round_obj.type for round_obj in self.rounds]
-        return list(set(types))
-
-    def getLocatorAddrSet(self):
-        # Attention : RLOC Address set may contain some IPV6 addresses, which bring some difficulties when sorting
-        # 参考链接：http://www.pythoncentral.io/list-comprehension-in-python/
-        # 运行结果显示，以下语句工作正常
-        reduced_rounds = [round for round in self.rounds if round.type == 'RoundNormal']
-        res_set = set([locator.addr for round_obj in reduced_rounds for locator in round_obj.locators])
-        #return sorted(list(res_set), key=lambda item: socket.inet_aton(item))
-        return list(res_set)
+        # return len(self.locator_list)
+        return "#".join([str(element) for element in self.locator_list])
 
 
     # Accordin to Yue's demand, add a new method
@@ -344,6 +338,17 @@ class RoundInstanceFactory:
         # as result
         # 如果 该日志的 LocatorCoherent属性为True, 我们看看是否有可能 TECoherent会变为False。
         # 如果 LocatorCoherent属性为False, 那么毫无悬念 TECoherent结果为False
+
+        # 方法中定义方法，用以比较Locator,我们只根据 id, state, priority和state(TE相关的参数）来判断比较
+        def customized_eq(self, other):
+            return self.id == other.id and self.state == other.state and self.priority == other.priority and self.weight == other.weight
+
+        def customized_hash(self):
+            return hash(self.id) ^ hash(self.state) ^ hash(self.priority) ^ hash(self.weight)
+
+        Locator.__hash__ = customized_hash
+        Locator.__eq__ = customized_eq
+
         if flag is True:
             locators = [round.locators for round in self.rounds if round.type == 'RoundNormal']
             # 同样的，如果locators为lenght为零的话，说明该logfile中并不包含RoundNormal类型的Round
@@ -392,11 +397,19 @@ class RoundInstanceFactory:
                 locators list发生变化 (包含RLOC address的变化以及诸如weight, priority 还有 status的变化)
 
                 其实我觉得只要看locators list发生的变化就好了。。。因为如果 locator list 从A B C变化到 A B C D那么势必locator_count
-                会从3变到4。所以将 locator_count的变化次数和 RLOC变化次数相加没有意义
-
-
+                会从3变到4。所以将 locator_count的变化次数和 RLOC变化次数相加没有意
         '''
         # 如果该logfile是coherent的，属于case0
+        # 需要定义如何比较Locator对象
+        def customized_eq(self, other):
+            return self.__dict__ == other.__dict__
+
+        def customized_hash(self):
+            return hash(self.id) ^ hash(self.addr) ^ hash(self.state) ^ hash(self.priority) ^ hash(self.weight)
+
+        Locator.__hash__ = customized_hash
+        Locator.__eq__ = customized_eq
+
         if self.coherent:
             return '0'
 
@@ -428,12 +441,6 @@ class RoundInstanceFactory:
 
                 # 创建round_all_day，其element为包含同一天记录的round的list
                 # 采用Nested list comprehension提高程序效率 (可读性则不是太好)
-                # 该list comprehension等同于以下代码块
-                # rounds_all_day = []
-                # for day in date_list:
-                #     round_day = [round_obj for round_obj in rounds_reduced if round_obj.date == day]
-                #     rounds_all_day.append(round_day)
-
                 rounds_all_day = [[round_obj for round_obj in rounds_reduced if round_obj.date.date() == day]
                                   for day in date_list]
                 #print rounds_all_day
