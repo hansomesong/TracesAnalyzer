@@ -7,6 +7,7 @@
 import multiprocessing as mp
 from utility.RoundInstanceFactory import *
 from utility.csv_sorter import *
+import sys
 
 # we need some predefined variables stored in config/config.py, to know such as where store all log files
 from config.config import *
@@ -50,7 +51,7 @@ def listener(q):
 # In our process pool, except the one in charge of writing records into CSV file, all rest processes are used
 # to treat log file stored in a certain directory. Every time a process processes a log file, it store the retrieved
 # information into a QUEUE data structure, which will be served by listener process.
-def worker(vantage,log_file,q):
+def worker(vantage, log_file, q):
     '''stupidly simulates long running process'''
     R = RoundInstanceFactory(log_file)
     #csv_row = [arg, R.isRLOCSetCoherent(), R.getRoundTypeSet()]
@@ -74,13 +75,14 @@ def worker(vantage,log_file,q):
 
     # Add judge logfile case
     csv_row.append(R.case)
+    csv_row.append(sys.getsizeof(R))
 
     csv_row.extend(R.locator_addr_list)
 
     q.put(csv_row)
 
 
-def main(vantage,traces_log_dir):
+def main(vantage, traces_log_dir):
     #must use Manager queue here, or will not work
     manager = mp.Manager()
     q = manager.Queue()

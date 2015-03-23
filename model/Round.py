@@ -143,7 +143,7 @@ class RoundNormal(Round):
                  self.TTL, self.auth, self.mobile]
         )
         for locator in self.locators:
-            round_attribute_list.extend(locator.toList())
+            round_attribute_list.append(locator.toList())
         return round_attribute_list
 
 

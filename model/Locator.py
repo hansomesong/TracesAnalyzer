@@ -23,8 +23,11 @@ class Locator(object):
         res = "LOCATOR{0}={1}\nLOCATOR{0}_STATE={2}\nLOCATOR{0}_PRIORITY={3}\nLOCATOR{0}_WEIGHT={4}\n".format(self.id,self.addr,self.state,self.priority,self.weight)
         return res
     
+    # def toList(self):
+    #     return [self.id, self.addr, self.state, self.priority, self.weight]
+
     def toList(self):
-        return [self.id, self.addr, self.state, self.priority, self.weight]
+        return ",".join([self.id, self.addr, self.state, self.priority, self.weight])
 
     # 重大修改：
     # 为了能灵活的比较Locator对象，比如仅按照addr或者id来比较，我们决定在运行的时候再定义__hash__以及__eq__
@@ -94,6 +97,12 @@ if __name__ == '__main__':
     # print len(locator_list)
     for locator in locator_set:
         print locator
+
+    import sys
+    print sys.getsizeof(l1)
+    print sys.getsizeof(locator_set)
+    print sys.getsizeof(set([1,2,3,4,8,8,8,8]))
+    print sys.getsizeof(list())
 
 
 

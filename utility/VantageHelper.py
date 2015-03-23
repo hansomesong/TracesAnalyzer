@@ -28,15 +28,20 @@ class LogFile(object):
         self.vantage = csv_row[0]
         # Instance attribute 'file_path' stores the absolute path to this log file
         self.file_path = csv_row[1]
-        self.EID = csv_row[2]
+        self.eid = csv_row[2]
         self.resolver = csv_row[3]
         self.coherent = csv_row[4]
         self.RLOC_set_coherent = csv_row[5]
         self.TE_coherent = csv_row[6]
-        self.round_type_list = csv_row[7]
+        self.round_type_list = csv_row[7].split(',')
         # A sorted list including all locator addressses appeared in a logfile.
         # This list could be empty if the target logfile does not contain RoundNormal type round
         self.locators_str = csv_row[11]
+
+    def __repr__(self):
+        return "{0};{1};{2};{3};{4};{5}".format(
+            self.vantage, self.file_path, self.eid, self.resolver, self.round_type_list, self.locators_str
+        )
 
 
 def csv_sort_list(csv_file, delimiter=';'):
@@ -127,68 +132,109 @@ def get_eid_resolver_sort_list(vantage_name):
     return eids, resolvers
 
 if __name__ == '__main__':
+    # for vantage_name, value in traces_log.items():
+    #     # Iterate all statistics CSV file for each vantage and retrieve all csv rows into a separate list
+    #     # named 'csv_all'
+    #     eids, resolvers = get_eid_resolver_sort_list(vantage_name)
+    #     csv_file = CSV_FILE_DESTDIR+'comparison_time_{0}.csv'.format(vantage_name)
+    #     csv_header = csv_sort_list(csv_file)[0]
+    #     csv_body = csv_sort_list(csv_file)[1]
+    #
+    #     with open(CSV_FILE_DESTDIR+'comparison_map_resolver_in_{0}.csv'.format(vantage_name), 'wb') as cf:
+    #         spamwriter = csv.writer(cf, dialect='excel', delimiter=';')
+    #         spamwriter.writerow(['Vantage', 'EID', 'Locator Count Consistence'])
+    #         # Define a set to store RLOC addre
+    #         # ==================
+    #
+    #         # ==================
+    #         locator_addr_set = set()
+    #         for eid in eids:
+    #             # Initially, we consider locator_addr_consistence is True
+    #             # Then iterate all 13 different resolvers to get respective locator address set
+    #             # If one (eid, resolver) pair returns a different locator address set other than the one returned by
+    #             # pair(eid, resolvers[0]), we change the flag 'locator_addr_consistence' into false ane break.
+    #             locator_addr_consistence = True
+    #
+    #             # For each eid, firstly choose the a comparison reference
+    #             eid_locator_addr_set = set(
+    #                 get_locator_list_by_vantage_eid_resolver(csv_body, vantage_name, eid, resolvers[0])
+    #             )
+    #             for resolver in resolvers[1:]:
+    #                 if eid_locator_addr_set != set(get_locator_list_by_vantage_eid_resolver(csv_body, vantage_name, eid, resolver)):
+    #                     locator_addr_consistence = False
+    #                     break
+    #             spamwriter.writerow([vantage_name, eid, locator_addr_consistence])
+    #
+    #
+    # # 以下部分代码，用以对5个vantage point的traces进行比价，并将比较结果写入到CSV文件中
+    # # Analyze statistic_all.csv to verify that for the same (eid, resolver) pair, all 5 vantage points have seen the
+    # # same result.
+    # target_csv = CSV_FILE_DESTDIR+'statistic_all.csv'
+    # eids, resolvers = get_eid_resolver_sort_list('liege')
+    #
+    # csv_body = csv_sort_list(target_csv)[1]
+    #
+    # with open(CSV_FILE_DESTDIR+'comparison_among_vantage_point.csv', 'wb') as cf:
+    #     spamwriter = csv.writer(cf, dialect='excel', delimiter=';')
+    #     spamwriter.writerow(['EID', 'Resolver', 'Locator Count Consistence'])
+    #     # Define a set to store RLOC addre
+    #     locator_addr_set = set()
+    #     for eid in eids:
+    #         # Initially, we consider locator_addr_consistence is True
+    #         # Then iterate all 13 different resolvers to get respective locator address set
+    #         # If one (eid, resolver) pair returns a different locator address set other than the one returned by
+    #         # pair(eid, resolvers[0]), we change the flag 'locator_addr_consistence' into false ane break.
+    #         for resolver in resolvers:
+    #             # choose liege vantage's as comparison reference.
+    #             locator_addr_consistence = True
+    #             #print eid, resolver
+    #             eid_locator_addr_set = set(get_locator_list_by_vantage_eid_resolver(csv_body, 'liege', eid, resolver))
+    #             for vantage_name in traces_log.keys():
+    #                 if eid_locator_addr_set != set(get_locator_list_by_vantage_eid_resolver(csv_body, vantage_name, eid, resolver)):
+    #                     locator_addr_consistence = False
+    #                     break
+    #             spamwriter.writerow([eid, resolver, locator_addr_consistence])
     for vantage_name, value in traces_log.items():
         # Iterate all statistics CSV file for each vantage and retrieve all csv rows into a separate list
         # named 'csv_all'
         eids, resolvers = get_eid_resolver_sort_list(vantage_name)
+
+        print len(eids)
+
         csv_file = CSV_FILE_DESTDIR+'comparison_time_{0}.csv'.format(vantage_name)
-        csv_header = csv_sort_list(csv_file)[0]
-        csv_body = csv_sort_list(csv_file)[1]
 
-        with open(CSV_FILE_DESTDIR+'comparison_map_resolver_in_{0}.csv'.format(vantage_name), 'wb') as cf:
-            spamwriter = csv.writer(cf, dialect='excel', delimiter=';')
-            spamwriter.writerow(['Vantage', 'EID', 'Locator Count Consistence'])
-            # Define a set to store RLOC addre
-            # ==================
-
-            # ==================
-            locator_addr_set = set()
-            for eid in eids:
-                # Initially, we consider locator_addr_consistence is True
-                # Then iterate all 13 different resolvers to get respective locator address set
-                # If one (eid, resolver) pair returns a different locator address set other than the one returned by
-                # pair(eid, resolvers[0]), we change the flag 'locator_addr_consistence' into false ane break.
-                locator_addr_consistence = True
-
-                # For each eid, firstly choose the a comparison reference
-                eid_locator_addr_set = set(
-                    get_locator_list_by_vantage_eid_resolver(csv_body, vantage_name, eid, resolvers[0])
-                )
-                for resolver in resolvers[1:]:
-                    if eid_locator_addr_set != set(get_locator_list_by_vantage_eid_resolver(csv_body, vantage_name, eid, resolver)):
-                        locator_addr_consistence = False
-                        break
-                spamwriter.writerow([vantage_name, eid, locator_addr_consistence])
-
-
-    # 以下部分代码，用以对5个vantage point的traces进行比价，并将比较结果写入到CSV文件中
-    # Analyze statistic_all.csv to verify that for the same (eid, resolver) pair, all 5 vantage points have seen the
-    # same result.
-    target_csv = CSV_FILE_DESTDIR+'statistic_all.csv'
-    eids, resolvers = get_eid_resolver_sort_list('liege')
-
-    csv_body = csv_sort_list(target_csv)[1]
-
-    with open(CSV_FILE_DESTDIR+'comparison_among_vantage_point.csv', 'wb') as cf:
-        spamwriter = csv.writer(cf, dialect='excel', delimiter=';')
-        spamwriter.writerow(['EID', 'Resolver', 'Locator Count Consistence'])
-        # Define a set to store RLOC addre
-        locator_addr_set = set()
+        logfile_list = csv_logfile_list(csv_file)
+        logfile_dict = dict()
         for eid in eids:
-            # Initially, we consider locator_addr_consistence is True
-            # Then iterate all 13 different resolvers to get respective locator address set
-            # If one (eid, resolver) pair returns a different locator address set other than the one returned by
-            # pair(eid, resolvers[0]), we change the flag 'locator_addr_consistence' into false ane break.
-            for resolver in resolvers:
-                # choose liege vantage's as comparison reference.
-                locator_addr_consistence = True
-                #print eid, resolver
-                eid_locator_addr_set = set(get_locator_list_by_vantage_eid_resolver(csv_body, 'liege', eid, resolver))
-                for vantage_name in traces_log.keys():
-                    if eid_locator_addr_set != set(get_locator_list_by_vantage_eid_resolver(csv_body, vantage_name, eid, resolver)):
-                        locator_addr_consistence = False
-                        break
-                spamwriter.writerow([eid, resolver, locator_addr_consistence])
+            logfile_dict[eid] =[]
+            for logfile in logfile_list:
+                if logfile.eid == eid:
+                    logfile_dict[eid].append(logfile)
+
+        # grouped_logfile_list = [[logfile] for eid in eids for logfile in logfile_list if logfile.eid == eid]
+        for eid in eids:
+
+            print len(logfile_dict[eid])
+
+        for eid, logfiles in logfile_dict.iteritems():
+            coherent = True
+            logfile.round_type_list = [round_type for logfile in logfiles for round_type in logfile.round_type_list
+                                           if round_type != 'RoundNoReply'
+            ]
+            print logfile
+
+
+
+
+
+
+
+        # print len(grouped_logfile_list[0])
+        #
+        # for logfile in logfile_list:
+        #     print logfile
+
+
 
 
 

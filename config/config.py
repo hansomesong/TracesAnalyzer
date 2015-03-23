@@ -45,8 +45,8 @@ CSV_FILE_DESTDIR =  '/Users/qsong/Documents/TracesAnalyzer/log/'
 #
 traces_log ={
       'liege' : '/Users/qsong/Documents/PlanetLab/liege/mappings',
-      'temple' : '/Users/qsong/Documents/PlanetLab/temple/mappings',
-      'ucl' : '/Users/qsong/Documents/PlanetLab/ucl/mappings',
-      'umass' : '/Users/qsong/Documents/PlanetLab/umass/mappings',
-      'wiilab' : '/Users/qsong/Documents/PlanetLab/wiilab/mappings'
+      # 'temple' : '/Users/qsong/Documents/PlanetLab/temple/mappings',
+      # 'ucl' : '/Users/qsong/Documents/PlanetLab/ucl/mappings',
+      # 'umass' : '/Users/qsong/Documents/PlanetLab/umass/mappings',
+      # 'wiilab' : '/Users/qsong/Documents/PlanetLab/wiilab/mappings'
 }
