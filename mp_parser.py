@@ -36,6 +36,9 @@ def listener(q):
                 'Locators set',
                 #'Locator count flap',
                 #'Locators flap',
+                'new deployement number',
+                'change time',
+                'change pattern',
                 'case',
                 'RLOC Set'
             ]
@@ -72,6 +75,8 @@ def worker(vantage, log_file, q):
     #csv_row.append(R.isLocatorCountFlap())
     #csv_row.append(R.isLocatorsFlap())
 
+    #nd_number, change_time, pattern = R.statistics_new_deployment()
+    csv_row.extend(R.statistics_new_deployment())
 
     # Add judge logfile case
     csv_row.append(R.case)

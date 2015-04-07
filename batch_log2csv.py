@@ -31,7 +31,6 @@ def main(csv_traces_dir, traces_log_dir):
 
 
 if __name__ == '__main__':
-
     # 获取程序开始时间
     start_time = time.clock()
 

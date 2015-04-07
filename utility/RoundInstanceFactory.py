@@ -477,6 +477,36 @@ class RoundInstanceFactory:
                 return case
 
 
+    # 2015-04-01：Add new functions to count new deployement number, change time and change pattern
+    # New deployment refers to a transition from normal type to negative or from negative to normal
+    # at a certain instant (No reply type is skipped)
+    def statistics_new_deployment(self):
+        if "RoundNormal" in self.round_type_list and "NegativeReply" in self.round_type_list:
+            count = 0
+            pattern = []
+            times = []
+            # select the first element whose type is not RoundNoReply as the initial_ref
+            initial_ref = self.rounds[0].type
+            i = 1
+            while initial_ref is 'RoundNoReply':
+                initial_ref = self.rounds[i].type
+                i = i+1
+            pattern.append(self.rounds[i-1].type)
+
+            # 注意 compare the inequality of two string, should use operator '!=' instead of 'is not'
+            for j in range(i, len(self.rounds)):
+                # print j, entries[j][0], initial_ref, entries[j][0] != initial_ref
+                if self.rounds[j].type != 'RoundNoReply' and self.rounds[j].type != initial_ref:
+                    count += 1
+                    initial_ref = self.rounds[j].type
+                    pattern.append(self.rounds[j].type)
+                    times.append(self.rounds[j].date.strftime("%d/%m/%Y %H:%M:%S"))
+
+            return [count, ','.join(times), '->'.join(pattern)]
+        else:
+            return [0, 0, 0]
+
+
 
 
 

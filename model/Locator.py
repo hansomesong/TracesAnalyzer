@@ -20,7 +20,9 @@ class Locator(object):
         self.weight = weight
         
     def toString(self):
-        res = "LOCATOR{0}={1}\nLOCATOR{0}_STATE={2}\nLOCATOR{0}_PRIORITY={3}\nLOCATOR{0}_WEIGHT={4}\n".format(self.id,self.addr,self.state,self.priority,self.weight)
+        res = "LOCATOR{0}={1}\nLOCATOR{0}_STATE={2}\nLOCATOR{0}_PRIORITY={3}\nLOCATOR{0}_WEIGHT={4}\n".format(
+            self.id, self.addr, self.state, self.priority, self.weight
+        )
         return res
     
     # def toList(self):
