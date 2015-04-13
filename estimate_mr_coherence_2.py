@@ -109,8 +109,8 @@ if __name__ == '__main__':
     for mr in MRs:
         tmp.append([x[1] for x in MRs[mr]])
     tmp = np.array(tmp).transpose()
-    for line in tmp:
-        logger.debug(" ".join(["{0:2s}".format(str(x)) for x in line]))
+    for i, line in enumerate(tmp):
+        logger.debug("{0:4s}:".format(str(i+1))+" ".join(["{0:4s}".format(str(x)) for x in line]))
 
     print len(tmp)
 
@@ -127,7 +127,7 @@ if __name__ == '__main__':
     plt.plot(x_axis, means, 'r')
     plt.bar(x_axis, vars, width=0)
     plt.xlim(0, max(x_axis)+4)
-    plt.ylim(0, max(vars)+5)
+    plt.ylim(0, max(vars)*1.1)
     plt.grid()
     plt.show()
 
