@@ -112,7 +112,7 @@ if __name__ == '__main__':
         tmp.append([x[1] for x in MRs[mr]])
     tmp = np.array(tmp).transpose()
     for i, line in enumerate(tmp):
-        logger.debug("{0:4s}:".format(str(i+1))+" ".join(["{0:4s}".format(str(x)) for x in line]))
+        logger.debug("{0:4s}:".format(str(i+1))+" ".join(["{0:4s}".format(str(x)) for x in line]) + "| {0:4s}:".format(str(np.mean(line))))
 
     print len(tmp)
 
@@ -128,29 +128,37 @@ if __name__ == '__main__':
     stds_p = list(map(lambda x: x[0]+x[1], zip(means, stds)))
     stds_n = list(map(lambda x: x[0]-x[1], zip(means, stds)))
 
+    # To test the periodicity
     print means
-    print "Mean_all =", np.mean(means)
+    print "Mean_means =", np.mean(means)
+    print "Mean_stds =", np.mean(stds)
+    print "Mean_means + 2*Mean_stds:", np.mean(means) + 2*np.mean(stds)
+    mean_means = []
+    for i in range(0, 802):
+        mean_means.append(np.mean(means))
+    print "length of mean_means:", mean_means.__len__()
 
-    # # 将802个实验时刻对应的 随机变量均值、方差画图
-    # plt.figure(1)
-    # x_axis = range(1, 803, 1)
-    # plt.plot(x_axis, means, color='red')
+    # 将802个实验时刻对应的 随机变量均值、方差画图
+    plt.figure(1)
+    x_axis = range(1, 803, 1)
+    plt.plot(x_axis, means, color='red')
     # # plt.bar(x_axis, stds, color='black', width=0)
     # plt.plot(x_axis, stds_p, color='black')
     # plt.plot(x_axis, stds_n, color='black')
+    plt.plot(x_axis, mean_means, color='black')
     # print "means =", means
     # print "stds =", stds
     # print "stds_p =", stds_p
     # print "stds_n =", stds_n
     # # plt.bar(x_axis, vars, width=0) #####
     # # plt.ylim(min(stds_n)-1, max(stds_p)+1)
-    # plt.xlim(0, x_axis.__len__())
-    # plt.xlabel("Experiment number")
-    # plt.ylabel("Means/Standard deviation of numbers of change")
-    # plt.title("Means/Standard deviation of numbers of change due to New Deployment")
-    # plt.grid()
-    # plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Estimate_MR_Coherence2.pdf")
-    # plt.show()
+    plt.xlim(0, x_axis.__len__())
+    plt.xlabel("Experiment number")
+    plt.ylabel("Means/Standard deviation of numbers of change")
+    plt.title("Means/Standard deviation of numbers of change due to New Deployment")
+    plt.grid()
+    # plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Estimate_MR_Coherence_periodicity.pdf")
+    plt.show()
 
 
 
