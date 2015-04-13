@@ -116,8 +116,6 @@ if __name__ == '__main__':
 
     print len(tmp)
 
-    xxx = [index_value+1 for index_value, mean_value in enumerate([np.mean(line) for line in tmp]) if mean_value >= 5]
-    print xxx
 
     # 将802个时刻每个时刻的new deployement number视为一个随机变量，每个随机变量有13个sample
     vars = []
@@ -136,10 +134,26 @@ if __name__ == '__main__':
     print "Mean_means =", np.mean(means)
     print "Mean_stds =", np.mean(stds)
     print "Mean_means + 2*Mean_stds:", np.mean(means) + 2*np.mean(stds)
+
+    xxx = [index_value+1 for index_value, mean_value in enumerate([np.mean(line) for line in tmp]) if mean_value >= (np.mean(means) + 2*np.mean(stds))]
+    print xxx
+
     mean_means = []
     for i in range(0, 802):
         mean_means.append(np.mean(means))
     print "length of mean_means:", mean_means.__len__()
+
+    mean_stds = []
+    for i in range(0, 802):
+        mean_stds.append(np.std(means))
+    print "length of mean_stds:", mean_stds.__len__()
+
+    mean_2std_blue =[]
+    for i in range(0, 802):
+        mean_2std_blue.append(np.mean(means) + 2*np.mean(stds))
+    print "length of mean_2std_blue:", mean_2std_blue.__len__()
+    # mean_2std_blue = list(map(lambda x: x[0]+2*x[1], zip(mean_means, mean_stds)))
+    print "mean_2std_blue:", mean_2std_blue
 
     # 将802个实验时刻对应的 随机变量均值、方差画图
     plt.figure(1)
@@ -148,7 +162,7 @@ if __name__ == '__main__':
     # # plt.bar(x_axis, stds, color='black', width=0)
     # plt.plot(x_axis, stds_p, color='black')
     # plt.plot(x_axis, stds_n, color='black')
-    plt.plot(x_axis, mean_means, color='black')
+    plt.plot(x_axis, mean_2std_blue, color='blue')
     # print "means =", means
     # print "stds =", stds
     # print "stds_p =", stds_p
@@ -161,7 +175,7 @@ if __name__ == '__main__':
     plt.title("Means/Standard deviation of numbers of change due to New Deployment")
     plt.grid()
     # plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Estimate_MR_Coherence_periodicity.pdf")
-    # plt.show()
+    plt.show()
 
 
 
