@@ -116,6 +116,9 @@ if __name__ == '__main__':
 
     print len(tmp)
 
+    xxx = [index_value+1 for index_value, mean_value in enumerate([np.mean(line) for line in tmp]) if mean_value >= 5]
+    print xxx
+
     # 将802个时刻每个时刻的new deployement number视为一个随机变量，每个随机变量有13个sample
     vars = []
     stds = [] ######
@@ -158,7 +161,7 @@ if __name__ == '__main__':
     plt.title("Means/Standard deviation of numbers of change due to New Deployment")
     plt.grid()
     # plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Estimate_MR_Coherence_periodicity.pdf")
-    plt.show()
+    # plt.show()
 
 
 
