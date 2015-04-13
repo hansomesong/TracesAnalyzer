@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-__author__ = 'qsong'
+__author__ = 'yueli'
 # 本脚本用来衡量 13个Map resolver在发生new depolyment事件情况下的一致性情况
 # 所谓一致性，是指在任一时刻，当
 
@@ -74,10 +74,11 @@ if __name__ == '__main__':
                 # 不考虑时间的秒位
                 mp_resolver = tmp[3]
                 change_time = [datetime.datetime.strptime(x, "%d/%m/%Y %H:%M:%S").strftime("%d/%m/%Y %H:%M")
-                               for x in tmp[13].split(",") if x != '0']
+                               for x in tmp[13].split(",") if x != '0'] # strptime把字符串格式改写成datatime格式；strftime把datatime格式改写成字符串格式
                 change_time = [datetime.datetime.strptime(x, "%d/%m/%Y %H:%M")
                                for x in change_time]
-                MRs[mp_resolver].extend(change_time)
+                MRs[mp_resolver].extend(change_time) # 给13个不同的MR分别加入datatime格式的change time
+
 
         # MRs[mp_resolver] = map(
         #     lambda x: (int((x[0]-datetime.datetime(2013, 7, 2, 7, 30)).total_seconds()/1800+1), x[1]), MRs[mp_resolver]
@@ -92,6 +93,7 @@ if __name__ == '__main__':
         logger.debug(mp_resolver+'-->'+", ".join([x.strftime("%d/%m/%Y %H:%M") for x in [y[0] for y in MRs[mp_resolver]]]))
         MRs[mp_resolver] = map(
             lambda x: (int((x[0]-datetime.datetime(2013, 7, 2, 7, 30)).total_seconds()/1800+1), x[1]), MRs[mp_resolver]
+            # lambda x: (int((x[0]-datetime.datetime(2013, 7, 2, 7, 30)).total_seconds()/1800+1), x[1]/613.0/5.0), MRs[mp_resolver]
         )
         logger.debug("Experiment number format")
         logger.debug(mp_resolver+'-->'+", ".join([str(x[0]) for x in MRs[mp_resolver]]))
@@ -116,20 +118,39 @@ if __name__ == '__main__':
 
     # 将802个时刻每个时刻的new deployement number视为一个随机变量，每个随机变量有13个sample
     vars = []
+    stds = [] ######
     means = []
     for mr_line in tmp:
         vars.append(np.var(mr_line))
+        stds.append(np.std(mr_line)) ######
         means.append(np.mean(mr_line))
 
-    # 将802个实验时刻对应的 随机变量均值、方差画图
-    plt.figure(1)
-    x_axis = range(1, 803, 1)
-    plt.plot(x_axis, means, 'r')
-    plt.bar(x_axis, vars, width=0)
-    plt.xlim(0, max(x_axis)+4)
-    plt.ylim(0, max(vars)+5)
-    plt.grid()
-    plt.show()
+    stds_p = list(map(lambda x: x[0]+x[1], zip(means, stds)))
+    stds_n = list(map(lambda x: x[0]-x[1], zip(means, stds)))
+
+    print means
+    print "Mean_all =", np.mean(means)
+
+    # # 将802个实验时刻对应的 随机变量均值、方差画图
+    # plt.figure(1)
+    # x_axis = range(1, 803, 1)
+    # plt.plot(x_axis, means, color='red')
+    # # plt.bar(x_axis, stds, color='black', width=0)
+    # plt.plot(x_axis, stds_p, color='black')
+    # plt.plot(x_axis, stds_n, color='black')
+    # print "means =", means
+    # print "stds =", stds
+    # print "stds_p =", stds_p
+    # print "stds_n =", stds_n
+    # # plt.bar(x_axis, vars, width=0) #####
+    # # plt.ylim(min(stds_n)-1, max(stds_p)+1)
+    # plt.xlim(0, x_axis.__len__())
+    # plt.xlabel("Experiment number")
+    # plt.ylabel("Means/Standard deviation of numbers of change")
+    # plt.title("Means/Standard deviation of numbers of change due to New Deployment")
+    # plt.grid()
+    # plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Estimate_MR_Coherence2.pdf")
+    # plt.show()
 
 
 
