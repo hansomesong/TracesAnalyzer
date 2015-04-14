@@ -9,6 +9,7 @@ import collections
 import datetime
 import matplotlib.pyplot as plt
 import numpy as np
+import pylab as pl
 
 if __name__ == '__main__':
 
@@ -155,26 +156,52 @@ if __name__ == '__main__':
     # mean_2std_blue = list(map(lambda x: x[0]+2*x[1], zip(mean_means, mean_stds)))
     print "mean_2std_blue:", mean_2std_blue
 
-    # 将802个实验时刻对应的 随机变量均值、方差画图
-    plt.figure(1)
-    x_axis = range(1, 803, 1)
-    plt.plot(x_axis, means, color='red')
-    # # plt.bar(x_axis, stds, color='black', width=0)
-    # plt.plot(x_axis, stds_p, color='black')
-    # plt.plot(x_axis, stds_n, color='black')
-    plt.plot(x_axis, mean_2std_blue, color='blue')
-    # print "means =", means
-    # print "stds =", stds
-    # print "stds_p =", stds_p
-    # print "stds_n =", stds_n
-    # # plt.bar(x_axis, vars, width=0) #####
-    # # plt.ylim(min(stds_n)-1, max(stds_p)+1)
-    plt.xlim(0, x_axis.__len__())
-    plt.xlabel("Experiment number")
-    plt.ylabel("Means/Standard deviation of numbers of change")
-    plt.title("Means/Standard deviation of numbers of change due to New Deployment")
-    plt.grid()
-    # plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Estimate_MR_Coherence_periodicity.pdf")
+    # 快速傅立叶变换
+    sampling_rate = 1
+    fft_size = 802
+    x_axis = range(1, 803, 1) # 时间点
+    means_fourier = np.fft.rfft(means)/fft_size # 对实数信号进行FFT计算, 为了正确显示波形能量，还需要将rfft函数的结果除以fft_size
+    freqs = np.linspace(0, sampling_rate/2, fft_size/2+1) # rfft函数的返回值是N/2+1个复数，分别表示从0(Hz)到sampling_rate/2(Hz)的N/2+1点频率的成分, 频域上的x轴
+    # xfp = 20*np.log10(np.clip(np.abs(xf), 1e-20, 1e100)) # 计算每个频率分量的幅值，并通过 20*np.log10() 将其转换为以db单位的值。为了防止0幅值的成分造成log10无法计算，我们调用np.clip对xf的幅值进行上下限处理
+    means_fp = np.abs(means_fourier)
+
+
+    pl.figure(figsize=(8,4))
+    pl.subplot(211)
+    pl.plot(x_axis, means)
+    pl.xlabel(u"时间(秒)")
+    pl.title(u"156.25Hz和234.375Hz的波形和频谱")
+
+    pl.subplot(212)
+    pl.plot(freqs, means_fp)
+    pl.xlim(-0.55, 0.55)
+    pl.xlabel(u"频率(Hz)")
+    pl.subplots_adjust(hspace=0.4)
+    pl.show()
+
+
+
+
+    # # 将802个实验时刻对应的 随机变量均值、方差画图
+    # plt.figure(1)
+    # x_axis = range(1, 803, 1)
+    # plt.plot(x_axis, means, color='red')
+    # # # plt.bar(x_axis, stds, color='black', width=0)
+    # # plt.plot(x_axis, stds_p, color='black')
+    # # plt.plot(x_axis, stds_n, color='black')
+    # plt.plot(x_axis, mean_2std_blue, color='blue')
+    # # print "means =", means
+    # # print "stds =", stds
+    # # print "stds_p =", stds_p
+    # # print "stds_n =", stds_n
+    # # # plt.bar(x_axis, vars, width=0) #####
+    # # # plt.ylim(min(stds_n)-1, max(stds_p)+1)
+    # plt.xlim(0, x_axis.__len__())
+    # plt.xlabel("Experiment number")
+    # plt.ylabel("Mean of numbers of change")
+    # plt.title("Test of periodicity")
+    # plt.grid()
+    # # plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Estimate_MR_Coherence_periodicity.pdf")
     plt.show()
 
 
