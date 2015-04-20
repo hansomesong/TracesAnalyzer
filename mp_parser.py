@@ -26,6 +26,7 @@ def listener(q):
                 'Log File Name',
                 'EID',
                 'Resolver',
+                'MAPPING_ENTRY',
                 'Coherence',
                 'RLOC set Consistence',
                 'TE coherent',
@@ -59,6 +60,7 @@ def worker(vantage, log_file, q):
     R = RoundInstanceFactory(log_file)
     #csv_row = [arg, R.isRLOCSetCoherent(), R.getRoundTypeSet()]
     csv_row = [vantage, log_file, R.EID, R.resolver]
+    csv_row.append(",".join(R.MAPPING_ENTRY)) # Yue added MAPPING_ENTRY into CSV files
     csv_row.append(R.coherent)
     csv_row.append(R.RLOCSetCoherent)  # print 'Locator Count Consistence'
     csv_row.append(R.TECoherent)       # print 'TE coherent'

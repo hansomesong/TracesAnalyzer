@@ -25,6 +25,7 @@ class RoundInstanceFactory:
         # It is much more convenient to define some attributes for a log file
         self.EID = self.rounds[0].EID
         self.resolver = self.rounds[0].resolver
+        self.MAPPING_ENTRY = self.getMappingEntry()
 
         # round_type_list，list数据类型，包含出现在logfile中所有round的类型
         self.round_type_list = list(
@@ -70,7 +71,18 @@ class RoundInstanceFactory:
         # self.RLOCSetCoherent 与 self.TECoherent 逻辑与 的结果作为 评判logfile是否为Coherent
         self.coherent = self.RLOCSetCoherent and self.TECoherent
         self.case = self.jugeLogCase()
-       
+
+    # Yue add a function to get MAPPING_ENTRY
+    def getMappingEntry(self):
+        mappingEntrylist = []
+        for round_obj in self.rounds:
+            if round_obj.type == 'RoundNoReply':
+                mappingEntrylist.append(None)
+            else:
+                mappingEntrylist.append(round_obj.mapping_entry)
+        return list(set(mappingEntrylist))
+
+
     def preprocess(self):
         '''
             This method is used to preprocess the input file, firstly read all lines into a single string
