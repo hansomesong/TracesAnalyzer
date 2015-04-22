@@ -76,9 +76,7 @@ class RoundInstanceFactory:
     def getMappingEntry(self):
         mappingEntrylist = []
         for round_obj in self.rounds:
-            if round_obj.type == 'RoundNoReply':
-                mappingEntrylist.append(None)
-            else:
+            if round_obj.type != 'RoundNoReply':
                 mappingEntrylist.append(round_obj.mapping_entry)
         return list(set(mappingEntrylist))
 

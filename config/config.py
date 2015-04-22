@@ -50,3 +50,18 @@ traces_log ={
         'umass' : '/Users/qsong/Documents/PlanetLab/umass/mappings',
         'wiilab' : '/Users/qsong/Documents/PlanetLab/wiilab/mappings'
 }
+
+# Describe corresponding relationship between column name and digital index
+# in files such as 'comparison_time_<VANTAGE>.csv'
+LOG_TIME_COLUMN ={
+    'vantage': 0,
+    'log_file_name': 1,
+    'eid': 2,
+    'resolver': 3,
+    'mapping_entry': 4,
+    'coherence': 5,
+    'rloc_set_coherence': 6,
+    'te_coherence': 7,
+    'round_type_set':8
+
+}

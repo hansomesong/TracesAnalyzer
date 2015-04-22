@@ -1,6 +1,5 @@
 import csv
 import socket
-
 import sys
 sys.path.append('../')
 from config.config import *
@@ -21,7 +20,13 @@ def csv_sort_list(csv_file, delimiter=';'):
 
         # Firstly, sort all csv rows according to (EID, resolver) pair. Here we rely on python lambda technique
         # and socket module's inet_aton function. Ask for google for more information
-        csv_body = sorted(csv_body, key=lambda item: socket.inet_aton(item[2])+socket.inet_aton(item[3]))
+        try:
+            csv_body = sorted(csv_body, key=lambda item: socket.inet_aton(item[2])+socket.inet_aton(item[3]))
+        except:
+            print 'illegal IP address string passed to inet_aton'
+            for line in csv_body:
+                print line
+
         return [csv_header, csv_body]
 
 def write_csv(dest_csv, csv_cont):
