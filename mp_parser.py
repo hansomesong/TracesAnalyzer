@@ -132,9 +132,9 @@ if __name__ == "__main__":
     # We could accordingly to form the full path for our destination directory
     csv_dst_dir = os.path.dirname(os.path.realpath(__file__))+'/log/'
 
-    for vantage, value in traces_log.items():
+    for vantage, value in TRACES_LOG.items():
         csv_file = csv_dst_dir+'comparison_time_{0}.csv'.format(vantage)
-        main(vantage, traces_log[vantage])
+        main(vantage, TRACES_LOG[vantage])
 
         # Initially, the generated csv file, such as 'statistic_liege.csv' is unsorted.
         # Thus, we call methods defined in python script : utility/csv_sorter.py to sort initial
@@ -143,7 +143,7 @@ if __name__ == "__main__":
 
     # Then generate a CSV file for all vantage experimental result
     csv_all = []
-    for vantage, value in traces_log.items():
+    for vantage, value in TRACES_LOG.items():
         # Iterate all statistics CSV file for each vantage and retrieve all csv rows into a separate list
         # named 'csv_all'
         csv_file = csv_dst_dir+'comparison_time_{0}.csv'.format(vantage)

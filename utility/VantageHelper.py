@@ -117,7 +117,7 @@ def get_locator_list_by_vantage_eid_resolver(csv_body_list, vantage, eid, resolv
 def get_eid_resolver_sort_list(vantage_name):
     # 获取某个vantage试验结果traces的路径
     # 变量 traces_log是在config.py中定义的
-    logDirRoot = traces_log[vantage_name]
+    logDirRoot = TRACES_LOG[vantage_name]
     # 获取logDirRoot指定的文件夹下的全部文件名，放入到一个list中
     logFilePathList = os.listdir(logDirRoot)
     # 将上一步所得的list中所有元素拼接成一个长字符串，存储至target当中
@@ -132,7 +132,7 @@ def get_eid_resolver_sort_list(vantage_name):
     return eids, resolvers
 
 if __name__ == '__main__':
-    # for vantage_name, value in traces_log.items():
+    # for vantage_name, value in TRACES_LOG.items():
     #     # Iterate all statistics CSV file for each vantage and retrieve all csv rows into a separate list
     #     # named 'csv_all'
     #     eids, resolvers = get_eid_resolver_sort_list(vantage_name)
@@ -189,12 +189,12 @@ if __name__ == '__main__':
     #             locator_addr_consistence = True
     #             #print eid, resolver
     #             eid_locator_addr_set = set(get_locator_list_by_vantage_eid_resolver(csv_body, 'liege', eid, resolver))
-    #             for vantage_name in traces_log.keys():
+    #             for vantage_name in TRACES_LOG.keys():
     #                 if eid_locator_addr_set != set(get_locator_list_by_vantage_eid_resolver(csv_body, vantage_name, eid, resolver)):
     #                     locator_addr_consistence = False
     #                     break
     #             spamwriter.writerow([eid, resolver, locator_addr_consistence])
-    for vantage_name, value in traces_log.items():
+    for vantage_name, value in TRACES_LOG.items():
         # Iterate all statistics CSV file for each vantage and retrieve all csv rows into a separate list
         # named 'csv_all'
         eids, resolvers = get_eid_resolver_sort_list(vantage_name)

@@ -3,52 +3,36 @@
 
 
 import os
-# csv_file_destDir = '/Users/yueli/Documents/Codes/TracesAnalyzer/log/'
-# CSV_ALL_FILE = '/Users/yueli/Documents/Codes/TracesAnalyzer/log/statistic_all.csv'
-# CSV_FILE_DESTDIR =  '/Users/yueli/Documents/Codes/TracesAnalyzer/log/'
-#
-# traces_log ={
-#
-#     'liege' : '/Users/yueli/Documents/Codes/Luigi_Codes/PlanetLab_20140716/liege/mappings',
-#     'temple' : '/Users/yueli/Documents/Codes/Luigi_Codes/PlanetLab_20140716/temple/mappings',
-#     'ucl' : '/Users/yueli/Documents/Codes/Luigi_Codes/PlanetLab_20140716/ucl/mappings',
-#     'umass' : '/Users/yueli/Documents/Codes/Luigi_Codes/PlanetLab_20140716/umass/mappings',
-#     'wiilab' : '/Users/yueli/Documents/Codes/Luigi_Codes/PlanetLab_20140716/wiilab/mappings'
-#
-# }
 
-# csv_file_destDir = '/Users/yueli/Documents/Codes/TracesAnalyzer/test_log/'
-# CSV_ALL_FILE = '/Users/yueli/Documents/Codes/TracesAnalyzer/test_log/statistic_all.csv'
-# CSV_FILE_DESTDIR =  '/Users/yueli/Documents/Codes/TracesAnalyzer/test_log/'
-#
-# traces_log ={
-#
-#     'liege' : '/Users/yueli/Documents/Codes/PlanetLab_test/liege/mappings',
-#     'temple' : '/Users/yueli/Documents/Codes/PlanetLab_test/temple/mappings',
-#     'ucl' : '/Users/yueli/Documents/Codes/PlanetLab_test/ucl/mappings',
-#     'umass' : '/Users/yueli/Documents/Codes/PlanetLab_test/umass/mappings',
-#     'wiilab' : '/Users/yueli/Documents/Codes/PlanetLab_test/wiilab/mappings'
-#
-# }
+# 读取 环境变量 ‘PLANETLAB’ and 'PROJECT_LOG_DIR'
+# 上述 环境变量 定义在 工作目录下 .profile中 (也有可能定义在 .bashprofile中)
+try:
 
-# f = os.path.dirname(os.path.realpath(__file__))
-# print f
+    PLANET_DIR = os.environ['PLANETLAB']
+    CSV_FILE_DESTDIR = os.environ['PROJECT_LOG_DIR']
 
-# 需要想一个更高效的办法 要不然 这样每次都要修改路径 太麻烦了。。
+
+except KeyError:
+
+    print "Environment variable PLANETLAB is not properly defined or " \
+          "the definition about this variable is not taken into account."
+    print "If PLANETLAB is well defined, restart Pycharm to try again!"
+
 if not os.path.isdir("log"):
     os.makedirs("log")
 
 csv_file_destDir = '/Users/qsong/Documents/TracesAnalyzer/log/'
 CSV_ALL_FILE = '/Users/qsong/Documents/TracesAnalyzer/log/statistic_all.csv'
-CSV_FILE_DESTDIR =  '/Users/qsong/Documents/TracesAnalyzer/log/'
+# CSV_FILE_DESTDIR =  '/Users/qsong/Documents/TracesAnalyzer/log/'
 # #
 #
-traces_log ={
-       'liege' : '/Users/qsong/Documents/PlanetLab/liege/mappings',
-       'temple' : '/Users/qsong/Documents/PlanetLab/temple/mappings',
-        'ucl' : '/Users/qsong/Documents/PlanetLab/ucl/mappings',
-        'umass' : '/Users/qsong/Documents/PlanetLab/umass/mappings',
-        'wiilab' : '/Users/qsong/Documents/PlanetLab/wiilab/mappings'
+TRACES_LOG=\
+{
+   'liege'      : os.path.join(PLANET_DIR, 'liege', 'mappings'),
+   'temple'     : os.path.join(PLANET_DIR, 'temple', 'mappings'),
+    'ucl'       : os.path.join(PLANET_DIR, 'ucl', 'mappings'),
+    'umass'     : os.path.join(PLANET_DIR, 'umass', 'mappings'),
+    'wiilab'    : os.path.join(PLANET_DIR, 'wiilab', 'mappings')
 }
 
 # Describe corresponding relationship between column name and digital index
@@ -62,6 +46,13 @@ LOG_TIME_COLUMN ={
     'coherence': 5,
     'rloc_set_coherence': 6,
     'te_coherence': 7,
-    'round_type_set':8
+    'round_type_set':8,
+    'change_time': 14
+}
 
+LOG_COLUMN ={
+    'type': 0,
+    'date': 1,
+    'eid' : 2,
+    'resovler': 3
 }

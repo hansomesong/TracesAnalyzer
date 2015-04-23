@@ -2,7 +2,7 @@
 __author__ = 'yueli'
 # 本脚本用来衡量 13个Map resolver在发生new depolyment事件情况下的一致性情况
 # 所谓一致性，是指在任一时刻，当
-
+from config.config import *
 import os
 import logging
 import collections
@@ -69,13 +69,11 @@ if __name__ == '__main__':
             f_handler.next()
             for line in f_handler:
                 tmp = line.split(";")
-                # tmp =
-                # vantage, file_name, eid, resovler, coherence, RLOC_set,
-                # print tmp[3]
                 # 不考虑时间的秒位
-                mp_resolver = tmp[3]
+                mp_resolver = tmp[LOG_TIME_COLUMN['resolver']]
                 change_time = [datetime.datetime.strptime(x, "%d/%m/%Y %H:%M:%S").strftime("%d/%m/%Y %H:%M")
-                               for x in tmp[13].split(",") if x != '0'] # strptime把字符串格式改写成datatime格式；strftime把datatime格式改写成字符串格式
+                               for x in tmp[LOG_TIME_COLUMN['change_time']].split(",") if x != '0']
+                               # strptime把字符串格式改写成datatime格式；strftime把datatime格式改写成字符串格式
                 change_time = [datetime.datetime.strptime(x, "%d/%m/%Y %H:%M")
                                for x in change_time]
                 MRs[mp_resolver].extend(change_time) # 给13个不同的MR分别加入datatime格式的change time
@@ -218,7 +216,11 @@ if __name__ == '__main__':
     # plt.ylabel("Mean of numbers of change")
     # plt.title("Test of periodicity")
     # plt.grid()
-    plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Estimate_MR_Coherence_periodicity_autocorrelation.pdf")
+    figure_name = 'Estimate_MR_Coherence_periodicity_autocorrelation.pdf'
+
+    # os.path.dirname(__file__) 用来求得 当前文件所在的路径
+    # os.path.join() 用以生成存储所得图像路径
+    plt.savefig(os.path.join(os.path.dirname(__file__), 'Plot', 'Plot_variable_time', figure_name))
     plt.show()
 
 

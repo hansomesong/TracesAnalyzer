@@ -67,8 +67,8 @@ def processLogDirectory(logDirRoot, resultCSVPath):
 
 
 csv_file = csv_file_destDir+'sp_statistic_v4.csv'
-processLogDirectory(traces_log['liege'], csv_file)
-#write2csv(generateMultiCSVRows(traces_log['liege']),csv_file)
+processLogDirectory(TRACES_LOG['liege'], csv_file)
+#write2csv(generateMultiCSVRows(TRACES_LOG['liege']),csv_file)
 
 
 

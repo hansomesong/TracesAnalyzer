@@ -61,7 +61,7 @@ def get_locator_list_by_vantage_eid_resolver(csv_body_list, vantage, eid, resolv
 #
 # csv_all = []
 #
-# for vantage, value in traces_log.items():
+# for vantage, value in TRACES_LOG.items():
 #      csv_file = csv_dst_dir+'statistic_{0}.csv'.format(vantage)
 #      csv_all.extend(csv_sort_list(csv_file)[1])
 #
