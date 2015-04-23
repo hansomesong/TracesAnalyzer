@@ -6,6 +6,8 @@ from config.config import *
 import logging
 # 借助第三方 package: netaddr来实现 IP subnetwork的排序
 from netaddr import *
+import networkx as nx
+import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
 
@@ -62,7 +64,7 @@ if __name__ == '__main__':
         # 将字符串转化为 IPNetwork对象，以便排序。。。
         result_dict[vantage_name]['neg_no'] = sorted([IPNetwork(x) for x in result_dict[vantage_name]['neg_no']])
         # IP地址转换回 字符串类型
-        result_dict[vantage_name]['neg_no'] = [str(x).format() for x in result_dict[vantage_name]['neg_no']]
+        # result_dict[vantage_name]['neg_no'] = [str(x).format() for x in result_dict[vantage_name]['neg_no']]
 
 
         # 对IP地址进行去重处理
@@ -70,17 +72,41 @@ if __name__ == '__main__':
         # 将字符串转化为 IPNetwork对象，以便排序。。。
         result_dict[vantage_name]['neg_nor'] = sorted([IPNetwork(x) for x in result_dict[vantage_name]['neg_nor']])
         # IP地址转换回 字符串类型
-        result_dict[vantage_name]['neg_nor'] = [str(x).format() for x in result_dict[vantage_name]['neg_nor']]
-
 
 
     logger.info('Case: Neg + No')
     for vantage_name, ip_address in result_dict.iteritems():
-        logger.info("{0:8}: {1}".format(vantage_name, ip_address['neg_no']))
+        logger.info("{0:8}: {1}".format(vantage_name, ['{0:20}'.format(str(x)) for x in ip_address['neg_no']]))
+        logger.info("{0:8}: {1}".format(vantage_name, ['{0:20}'.format(str(x)) for x in cidr_merge(ip_address['neg_no'])]))
 
     logger.info('Case: Neg + Normal')
     for vantage_name, ip_address in result_dict.iteritems():
-        logger.info("{0:8}: {1}".format(vantage_name, ip_address['neg_nor']))
+        logger.info("{0:8}: {1}".format(vantage_name, ['{0:20}'.format(str(x)) for x in ip_address['neg_nor']]))
+        logger.info("{0:8}: {1}".format(vantage_name, ['{0:20}'.format(str(x)) for x in cidr_merge(ip_address['neg_nor'])]))
+
+
+    # G = nx.Graph()
+    #
+    # G.add_node(1)
+    #
+    # G.add_nodes_from(result_dict['liege']['neg_nor'])
+
+
+
+    G=nx.Graph()
+    G.add_nodes_from(result_dict['liege']['neg_no'])
+
+    pos=nx.spring_layout(G) # positions for all nodes
+
+    nx.draw(G, pos)
+
+    plt.show() # display
+
+
+
+
+
+
 
 
 
