@@ -78,8 +78,13 @@ class RoundInstanceFactory:
         for round_obj in self.rounds:
             if round_obj.type != 'RoundNoReply':
                 mappingEntrylist.append(round_obj.mapping_entry)
-        return list(set(mappingEntrylist))
 
+        # 统计每个Mapping Entry有几个
+        counter = collections.Counter()
+        for mappingEntry in mappingEntrylist:
+            counter[mappingEntry] += 1
+
+        return list(counter.items())
 
     def preprocess(self):
         '''
