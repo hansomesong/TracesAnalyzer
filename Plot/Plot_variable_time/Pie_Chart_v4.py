@@ -5,11 +5,11 @@ import matplotlib.pyplot as plt
 # http://matplotlib.org/1.2.1/examples/pylab_examples/pie_demo.html
 
 # Import the targeted raw CSV file
-rawCSV_file1 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/comparison_time_liege.csv"
-rawCSV_file2 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/comparison_time_temple.csv"
-rawCSV_file3 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/comparison_time_ucl.csv"
-rawCSV_file4 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/comparison_time_umass.csv"
-rawCSV_file5 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/comparison_time_wiilab.csv"
+rawCSV_file1 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/comparison_time_bck/comparison_time_liege_bck.csv"
+rawCSV_file2 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/comparison_time_bck/comparison_time_temple_bck.csv"
+rawCSV_file3 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/comparison_time_bck/comparison_time_ucl_bck.csv"
+rawCSV_file4 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/comparison_time_bck/comparison_time_umass_bck.csv"
+rawCSV_file5 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/comparison_time_bck/comparison_time_wiilab_bck.csv"
 rawCSV_files = [rawCSV_file1, rawCSV_file2, rawCSV_file3, rawCSV_file4, rawCSV_file5]
 
 stability = 0
@@ -25,15 +25,15 @@ for rawCSV_file in rawCSV_files:
         for line in f:
         #for line in next(open(rawCSV_file)):
             lines = line.rstrip('\r\n').split(";")
-            if lines[12] == "0":
+            if lines[16] == "0":
                 stability = stability + 1
-            elif lines[12] == "1":
+            elif lines[16] == "1":
                 newDeployment = newDeployment + 1
-            elif lines[12] == "2":
+            elif lines[16] == "2":
                 mobility = mobility + 1
-            elif lines[12] == "3":
+            elif lines[16] == "3":
                 reConfiguration = reConfiguration + 1
-            elif lines[12] == "4":
+            elif lines[16] == "4":
                 RLOCMadness = RLOCMadness + 1
             else:
                 elseCase = elseCase + 1
@@ -57,5 +57,6 @@ plt.pie(fracs, explode=explode, labels=labels, colors=colors, autopct='%1.2f%%',
 
 # plt.title('Percentage of each False case', bbox={'facecolor':'0.8', 'pad':5})
 plt.title('Percentage of each instable case by the variable of time')
-plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot_new/Plot_variable_time/Pie_chart_v4.pdf")
+# plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot_new/Plot_variable_time/Pie_chart_v4.pdf")
+plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Pie_chart_v4.eps", transparent=True)
 plt.show()

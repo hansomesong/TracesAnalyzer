@@ -5,20 +5,19 @@ import matplotlib.cm as cm
 import matplotlib.figure as fig
 
 # Import the targeted raw CSV file
-rawCSV_file1 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.47.16/planetlab1-EID-153.16.47.16-MR-149.20.48.61.log.csv"
-rawCSV_file2 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.47.16/planetlab1-EID-153.16.47.16-MR-149.20.48.77.log.csv"
-rawCSV_file3 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.47.16/planetlab1-EID-153.16.47.16-MR-173.36.254.164.log.csv"
-rawCSV_file4 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.47.16/planetlab1-EID-153.16.47.16-MR-193.162.145.50.log.csv"
-rawCSV_file5 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.47.16/planetlab1-EID-153.16.47.16-MR-195.50.116.18.log.csv"
-rawCSV_file6 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.47.16/planetlab1-EID-153.16.47.16-MR-198.6.255.37.log.csv"
-rawCSV_file7 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.47.16/planetlab1-EID-153.16.47.16-MR-198.6.255.40.log.csv"
-rawCSV_file8 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.47.16/planetlab1-EID-153.16.47.16-MR-202.51.247.10.log.csv"
-rawCSV_file9 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.47.16/planetlab1-EID-153.16.47.16-MR-202.214.86.252.log.csv"
-rawCSV_file10 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.47.16/planetlab1-EID-153.16.47.16-MR-206.223.132.89.log.csv"
-rawCSV_file11 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.47.16/planetlab1-EID-153.16.47.16-MR-217.8.97.6.log.csv"
-rawCSV_file12 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.47.16/planetlab1-EID-153.16.47.16-MR-217.8.98.42.log.csv"
-rawCSV_file13 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.47.16/planetlab1-EID-153.16.47.16-MR-217.8.98.46.log.csv"
-
+rawCSV_file1 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.47.16-MR-149.20.48.61.log.csv"
+rawCSV_file2 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.47.16-MR-149.20.48.77.log.csv"
+rawCSV_file3 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.47.16-MR-173.36.254.164.log.csv"
+rawCSV_file4 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.47.16-MR-193.162.145.50.log.csv"
+rawCSV_file5 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.47.16-MR-195.50.116.18.log.csv"
+rawCSV_file6 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.47.16-MR-198.6.255.37.log.csv"
+rawCSV_file7 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.47.16-MR-198.6.255.40.log.csv"
+rawCSV_file8 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.47.16-MR-202.51.247.10.log.csv"
+rawCSV_file9 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.47.16-MR-202.214.86.252.log.csv"
+rawCSV_file10 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.47.16-MR-206.223.132.89.log.csv"
+rawCSV_file11 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.47.16-MR-217.8.97.6.log.csv"
+rawCSV_file12 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.47.16-MR-217.8.98.42.log.csv"
+rawCSV_file13 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.47.16-MR-217.8.98.46.log.csv"
 
 
 # Define a function to get the Time list from the CSV file
@@ -66,7 +65,7 @@ for rawCSV_file in rawCSV_files:
                 responseList1.append(-5)
             elif lines[0] == "RoundNormal":
                 if int(lines[9]) == 1:
-                    if lines[15] == "195.59.156.123":
+                    if lines[14].split(",")[1] == "195.59.156.123":
                         responseList1.append(mr1)
                     else:
                         responseList1.append(-10)
@@ -90,7 +89,7 @@ for rawCSV_file in rawCSV_files:
                 responseList2.append(-5)
             elif lines[0] == "RoundNormal":
                 if int(lines[9]) == 1:
-                    if lines[15] == "195.59.156.124":
+                    if lines[14].split(",")[1] == "195.59.156.124":
                         responseList2.append(mr2)
                     else:
                         responseList2.append(-10)
@@ -108,8 +107,8 @@ time = getTime(rawCSV_file1)
 print "time.len", len(time)
 
 # Modify the size and dpi of picture, default size is (8,6), default dpi is 80
-plt.gcf().set_size_inches(16,6)
-plt.gcf().set_dpi(300)
+# plt.gcf().set_size_inches(16,6)
+# plt.gcf().set_dpi(300)
 
 # To Scatter all 13 Map Replies from 13 MRs
 for responseList in responseLists1:
@@ -122,10 +121,11 @@ response = np.linspace(1, 13, 13)
 plt.xlabel("Experiment numbers", fontsize=16)
 plt.ylabel("13 MRs", fontsize=16)
 plt.title("Normal Reply from 13 different MRs for EID-153.16.17.16 over time", fontsize=16)
-plt.xlim(0, 801)
-# plt.xlim(0, 50)
+# plt.xlim(0, 801)
+plt.xlim(0, 50)
 plt.ylim(0.5, 13.5)
 plt.yticks(response, ('MR1', 'MR2', 'MR3', 'MR4', 'MR5', 'MR6', 'MR7', 'MR8', 'MR9', 'MR10', 'MR11', 'MR12', 'MR13'))
 
-plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot_new/Plot_variable_MR/Normal_from_13_different_MRs_for_EID-153_16_47_16_over_time_size_double.pdf")
+# plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_MR/Normal_from_13_different_MRs_for_EID-153_16_47_16_over_time_size_double.pdf")
+plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_MR/Normal_from_13_different_MRs_for_EID-153_16_47_16_over_time_zoom.eps", dpi=300, transparent=True)
 plt.show()

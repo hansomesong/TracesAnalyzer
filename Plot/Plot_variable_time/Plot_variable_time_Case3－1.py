@@ -40,4 +40,5 @@ plt.xlim(0,801)
 plt.ylim(-0.2, 2.2)
 
 # plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot_new/Plot_variable_time/Case3-1.pdf")
+plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Case3-1.eps", dpi=300, transparent=True)
 plt.show()

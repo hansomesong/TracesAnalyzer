@@ -41,8 +41,10 @@ plt.title("Response from MR-149.20.48.61 for EID-153.16.30.160 over time in VP1"
 plt.yticks([-1, 0, 1, 2], ['Negative Reply', 'No Map Reply', '24.51.210.242', '24.51.218.201'], fontsize=12)
 plt.xlim(0,801)
 plt.ylim(-1.5, 2.5)
+# plt.figure(figsize=(100,100))
+# plt.gif().set_size_inches(18.5,10.5)
 
 
-#plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot_new/Plot_variable_time/Case1.pdf")
+plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Case1.eps", dpi=300, transparent=True)
 plt.show()
 

@@ -3,16 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Import the targeted raw CSV file
-rawCSV_file1 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_VP/Different_types/" \
-               "liege-EID-153.16.22.216-MR-149.20.48.61.log.csv"
-rawCSV_file2 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_VP/Different_types/" \
-               "temple-EID-153.16.22.216-MR-149.20.48.61.log.csv"
-rawCSV_file3 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_VP/Different_types/" \
-               "ucl-EID-153.16.22.216-MR-149.20.48.61.log.csv"
-rawCSV_file4 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_VP/Different_types/" \
-               "umass-EID-153.16.22.216-MR-149.20.48.61.log.csv"
-rawCSV_file5 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_VP/Different_types/" \
-               "wiilab-EID-153.16.22.216-MR-149.20.48.61.log.csv"
+rawCSV_file1 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.47.16-MR-198.6.255.37.log.csv"
+rawCSV_file2 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/temple/planetlab2-EID-153.16.47.16-MR-198.6.255.37.log.csv"
+rawCSV_file3 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/ucl/onelab1-EID-153.16.47.16-MR-198.6.255.37.log.csv"
+rawCSV_file4 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/umass/planetlab2-EID-153.16.47.16-MR-198.6.255.37.log.csv"
+rawCSV_file5 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/wiilab/planetlab2-EID-153.16.47.16-MR-198.6.255.37.log.csv"
 
 
 
@@ -190,5 +185,6 @@ plt.yticks(response, ('Negative Reply', 'No Map Reply', 'RLOC 1', 'RLOC 2', 'RLO
 plt.legend()
 
 
-plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot_new/Plot_variable_VP/Plot_variable_VP_different_types.pdf")
+# plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_VP/Plot_variable_VP_different_types.pdf")
+plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_VP/Plot_variable_VP_different_types.eps", dpi=300, transparent=True)
 plt.show()

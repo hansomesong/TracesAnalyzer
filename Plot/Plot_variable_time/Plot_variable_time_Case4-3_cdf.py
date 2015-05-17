@@ -144,5 +144,6 @@ plt.title("Cdf of the duration in which the same RLOC is used")
 plt.grid(True)
 
 
-plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot_new/Plot_variable_time/Case4-3_cdf_plot.pdf")
+# plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Case4-3_cdf_plot.pdf")
+plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Case4-3_cdf_plot.eps", dpi=300, transparent=True)
 plt.show()

@@ -41,5 +41,6 @@ plt.ylim(1.5, 3.5)
 plt.annotate('2013/07/10 02:30',xy=(375,3),xytext=(375,3.1),arrowprops=dict(arrowstyle="->"))
 
 # plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot_new/Plot_variable_time/Case3-2.pdf")
+plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Case3-2_thik.eps", dpi=300, transparent=True)
 plt.show()
 

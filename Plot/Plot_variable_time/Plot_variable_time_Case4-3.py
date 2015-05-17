@@ -83,5 +83,6 @@ plt.title("Response from MR-217.8.98.46 for EID-153.16.18.176 over time in VP1")
 
 plt.annotate('No Map Reply',xy=(300,0),xytext=(300,4),arrowprops=dict(arrowstyle="->"))
 
-plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot_new/Plot_variable_time/Case4-3_copy.pdf")
+# plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Case4-3_copy.pdf")
+plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Case4-3.eps", dpi=300, transparent=True)
 plt.show()

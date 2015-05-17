@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Import the targeted raw CSV file
-rawCSV_file = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/log2csv/planetlab1-EID-153.16.3.0-MR-173.36.254.164.log.csv"
+rawCSV_file = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.3.0-MR-173.36.254.164.log.csv"
 
 time = []
 plotData = []
@@ -35,5 +35,5 @@ plt.title("Response from MR-173.36.254.164 for EID-153.16.3.0 by time")
 plt.xlim(-50, 800)
 plt.ylim(-0.3, 2.2)
 
-#plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Case2.pdf")
+plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Case2.eps", dpi=300, transparent=True)
 plt.show()

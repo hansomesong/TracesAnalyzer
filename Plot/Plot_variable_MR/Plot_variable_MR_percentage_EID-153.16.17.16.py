@@ -1,21 +1,23 @@
+# -* coding:UTF-8 -*
 __author__ = 'yueli'
+
 import numpy as np
 import matplotlib.pyplot as plt
 
 # Import the targeted raw CSV file
-rawCSV_file1 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.17.16/planetlab1-EID-153.16.17.16-MR-149.20.48.61.log.csv"
-rawCSV_file2 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.17.16/planetlab1-EID-153.16.17.16-MR-149.20.48.77.log.csv"
-rawCSV_file3 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.17.16/planetlab1-EID-153.16.17.16-MR-173.36.254.164.log.csv"
-rawCSV_file4 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.17.16/planetlab1-EID-153.16.17.16-MR-193.162.145.50.log.csv"
-rawCSV_file5 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.17.16/planetlab1-EID-153.16.17.16-MR-195.50.116.18.log.csv"
-rawCSV_file6 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.17.16/planetlab1-EID-153.16.17.16-MR-198.6.255.37.log.csv"
-rawCSV_file7 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.17.16/planetlab1-EID-153.16.17.16-MR-198.6.255.40.log.csv"
-rawCSV_file8 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.17.16/planetlab1-EID-153.16.17.16-MR-202.51.247.10.log.csv"
-rawCSV_file9 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.17.16/planetlab1-EID-153.16.17.16-MR-202.214.86.252.log.csv"
-rawCSV_file10 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.17.16/planetlab1-EID-153.16.17.16-MR-206.223.132.89.log.csv"
-rawCSV_file11 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.17.16/planetlab1-EID-153.16.17.16-MR-217.8.97.6.log.csv"
-rawCSV_file12 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.17.16/planetlab1-EID-153.16.17.16-MR-217.8.98.42.log.csv"
-rawCSV_file13 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_MR/EID-153.16.17.16/planetlab1-EID-153.16.17.16-MR-217.8.98.46.log.csv"
+rawCSV_file1 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-149.20.48.61.log.csv"
+rawCSV_file2 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-149.20.48.77.log.csv"
+rawCSV_file3 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-173.36.254.164.log.csv"
+rawCSV_file4 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-193.162.145.50.log.csv"
+rawCSV_file5 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-195.50.116.18.log.csv"
+rawCSV_file6 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-198.6.255.37.log.csv"
+rawCSV_file7 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-198.6.255.40.log.csv"
+rawCSV_file8 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-202.51.247.10.log.csv"
+rawCSV_file9 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-202.214.86.252.log.csv"
+rawCSV_file10 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-206.223.132.89.log.csv"
+rawCSV_file11 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-217.8.97.6.log.csv"
+rawCSV_file12 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-217.8.98.42.log.csv"
+rawCSV_file13 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-217.8.98.46.log.csv"
 
 def getResult(rawCSV):
 
@@ -45,7 +47,8 @@ def getResult(rawCSV):
                 negativeReply = negativeReply + 1
 
             elif int(lines[9]) == 1:
-                if (lines[15] == "24.94.15.214"):
+                # 因为CSV文件发生变化，所以用下面一条语句从“0,24.94.15.214,up,1,1”中只提取出Locator
+                if (lines[14].split(",")[1] == "24.94.15.214"):
                     rlocSet1 = rlocSet1 + 1
                 else:
                     rlocSet2 = rlocSet2 + 1
@@ -108,6 +111,7 @@ plt.xlim(0, 13)
 # plt.ylim(715.35, 753)
 plt.ylim(737.94, 753)
 plt.legend(loc='lower right')
-plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot_new/Plot_variable_MR/Plot_variable_MR_percentage98_EID-153_16_17_16.pdf")
+# plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_MR/Plot_variable_MR_percentage98_EID-153_16_17_16.pdf")
+plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_MR/Plot_variable_MR_percentage98_EID-153_16_17_16.eps", dpi=300, transparent=True)
 plt.show()
 
