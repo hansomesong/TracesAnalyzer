@@ -9,6 +9,7 @@ import os
 try:
 
     PLANET_DIR = os.environ['PLANETLAB']
+    # 存储 生成CSV文件的路径
     CSV_FILE_DESTDIR = os.environ['PROJECT_LOG_DIR']
 
 
@@ -18,16 +19,11 @@ except KeyError:
           "the definition about this variable is not taken into account."
     print "If PLANETLAB is well defined, restart Pycharm to try again!"
 
-if not os.path.isdir("log"):
-    os.makedirs("log")
+# # csv_file_destDir = '/Users/qsong/Documents/TracesAnalyzer/log/'
+# csv_file_destDir = '/Users/yueli/Documents/Codes/TracesAnalyzer/log/'
 
-# csv_file_destDir = '/Users/qsong/Documents/TracesAnalyzer/log/'
-csv_file_destDir = '/Users/yueli/Documents/Codes/TracesAnalyzer/log/'
-# CSV_ALL_FILE = '/Users/qsong/Documents/TracesAnalyzer/log/statistic_all.csv'
-CSV_ALL_FILE = '/Users/yueli/Documents/Codes/TracesAnalyzer/log/statistic_all.csv'
-# CSV_FILE_DESTDIR =  '/Users/qsong/Documents/TracesAnalyzer/log/'
-# #
-#
+CSV_ALL_FILE = os.path.join(CSV_FILE_DESTDIR, 'statistic_all.csv')
+
 TRACES_LOG=\
 {
     'liege'      : os.path.join(PLANET_DIR, 'liege', 'mappings'),
@@ -58,3 +54,7 @@ LOG_COLUMN ={
     'eid' : 2,
     'resovler': 3
 }
+
+# if __name__ == 'main':
+#     print "Path of Planet log files directory:", PLANET_DIR
+#     print "Path of processed log files directory:", CSV_FILE_DESTDIR

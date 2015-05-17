@@ -8,6 +8,7 @@ import multiprocessing as mp
 from utility.RoundInstanceFactory import *
 from utility.csv_sorter import *
 import sys
+import timeit
 
 # we need some predefined variables stored in config/config.py, to know such as where store all log files
 from config.config import *
@@ -119,6 +120,9 @@ def main(vantage, traces_log_dir):
 
 
 if __name__ == "__main__":
+    # Record the start time of current script
+    start_time = timeit.default_timer()
+
     # Some advices : it is better to implement a single process version to make sure all other things work well
     # then consider to import multiple process support. Otherwise, it is difficult to debug when in problem.
     # For example, I had committed an error in Round.py (super() method is subclass), in this file, it only shows
@@ -155,6 +159,9 @@ if __name__ == "__main__":
     # Still need to sort csv_all
     csv_all = sorted(csv_all, key=lambda item: socket.inet_aton(item[2])+socket.inet_aton(item[3]))
     write_csv(CSV_ALL_FILE, [csv_header, csv_all])
+
+    stop_time = timeit.default_timer()
+    print "Execution time (in unit of second) of this script: ", stop_time - start_time
 
 
 

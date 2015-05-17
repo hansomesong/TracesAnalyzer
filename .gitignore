@@ -56,7 +56,7 @@ target/
 behave_test/
 
 # CSV file
-*.csv
+log/*.csv
 
 # Ignore also “try.py” script, it’s a trial script for Yue
 try.py
