@@ -5,8 +5,10 @@
 import csv
 import sys
 import collections
+import re
 from operator import itemgetter, attrgetter
 sys.path.append('../')
+from netaddr import *
 
 #If we use syntax such as 'import Request', when executing Python
 from model.Locator import *
@@ -75,16 +77,49 @@ class RoundInstanceFactory:
     # Yue add a function to get MAPPING_ENTRY
     def getMappingEntry(self):
         mappingEntrylist = []
-        for round_obj in self.rounds:
-            if round_obj.type != 'RoundNoReply':
-                mappingEntrylist.append(round_obj.mapping_entry)
 
-        # 统计每个Mapping Entry有几个
+        # 从每一个非RoundNoReply的round里得到一个mapping entry
+        # 删除mappingEntrylist_origin中会出现的error，并把 mapping_entry = '0.0.0.0/3'的替换为 '0.0.0.0/0'
+        # 此list comprehension之后可得到 mappingEntrylist_withoutError = ['153.16.21.209/32', '0.0.0.0/0', '217.128.0.0/9', '37.77.57.224/27', '153.16.21.209/32', '153.16.21.209/32' ,'153.16.20.209/32']
+        # mappingEntrylist_withoutError = [round_obj.mapping_entry.replace('\'0.0.0.0/3', '\'0.0.0.0/0') for round_obj in self.rounds if ((round_obj.type != 'RoundNoReply') and (IPAddress(round_obj.EID) in IPNetwork(round_obj.mapping_entry.replace('\'0.0.0.0/3', '\'0.0.0.0/0'))))]
+        mappingEntrylist_withoutError = [
+            re.sub(r"^0.0.0.0/3$", "0.0.0.0/0", round_obj.mapping_entry)
+            for round_obj in self.rounds
+            if ((round_obj.type != 'RoundNoReply') and
+                (
+                    IPAddress(round_obj.EID)
+                        in IPNetwork(
+                            re.sub(r"^0.0.0.0/3$", "0.0.0.0/0", round_obj.mapping_entry)
+                        )
+                )
+            )
+        ]
+
+        # 统计出 mappingEntrylist_withoutError 中每个不同的mappingEntry出现了几次
+        # 循环结束后可以得到类似这样的 counter = Counter({'153.16.21.209/32': 3, '2610:d0:212c::/48': 1, '153.16.20.209/32': 1, '217.128.0.0/9': 1, '37.77.57.224/27': 1})
+        # list(counter.items()) = [('153.16.21.209/32', 3), ('2610:d0:212c::/48', 1), ('153.16.20.209/32', 1), ('217.128.0.0/9', 1), ('37.77.57.224/27', 1)]
         counter = collections.Counter()
-        for mappingEntry in mappingEntrylist:
+        for mappingEntry in mappingEntrylist_withoutError:
             counter[mappingEntry] += 1
 
-        return list(counter.items())
+        return list(str(a) for a in counter.items())
+
+        # # REGEX pattern to match IPv4, for the format: [('153.16.21.209/32', 3), ('153.16.20.209/32', 1), ('217.128.0.0/9', 1), ('37.77.57.224/27', 1)]
+        # pattern_IPv4 = "\('\d+.\d+.\d+.\d+/\d+', \d\)"
+        # # REGEX pattern to match IPv6, not for all but just for these formats: [('2610:d0:2138::/48', 4), ('2610:d0:2102::/48', 1), ('2610:d0:212c::/48', 1), ('2610:d0:216e::/48', 5), ('2610:d0:2122::/48', 1), ('2610:d0:216d::/48', 1)]
+        # pattern_IPv6 = "\('([0-9a-fA-F]{1,4}:){3,3}:/\d+', \d\)"
+        #
+        # mappingEntryReduced = []
+        # # 在mapping entry里去除数量为1的mapping entry，因为这些极有可能为error
+        # for a in list(counter.items()):
+        #     if re.match(pattern_IPv4, str(a), flags=0) or re.match(pattern_IPv6, str(a), flags=0):
+        #         continue
+        #     else:
+        #         mappingEntryReduced.append(a)
+
+        # 返回一个字符串格式的list，使得mp_parser里的csv_row.append(",".join(R.MAPPING_ENTRY))可用
+        # return list(str(a) for a in mappingEntryReduced)
+
 
     def preprocess(self):
         '''

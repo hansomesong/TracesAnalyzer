@@ -21,15 +21,17 @@ except KeyError:
 if not os.path.isdir("log"):
     os.makedirs("log")
 
-csv_file_destDir = '/Users/qsong/Documents/TracesAnalyzer/log/'
-CSV_ALL_FILE = '/Users/qsong/Documents/TracesAnalyzer/log/statistic_all.csv'
+# csv_file_destDir = '/Users/qsong/Documents/TracesAnalyzer/log/'
+csv_file_destDir = '/Users/yueli/Documents/Codes/TracesAnalyzer/log/'
+# CSV_ALL_FILE = '/Users/qsong/Documents/TracesAnalyzer/log/statistic_all.csv'
+CSV_ALL_FILE = '/Users/yueli/Documents/Codes/TracesAnalyzer/log/statistic_all.csv'
 # CSV_FILE_DESTDIR =  '/Users/qsong/Documents/TracesAnalyzer/log/'
 # #
 #
 TRACES_LOG=\
 {
-   'liege'      : os.path.join(PLANET_DIR, 'liege', 'mappings'),
-   'temple'     : os.path.join(PLANET_DIR, 'temple', 'mappings'),
+    'liege'      : os.path.join(PLANET_DIR, 'liege', 'mappings'),
+    'temple'     : os.path.join(PLANET_DIR, 'temple', 'mappings'),
     'ucl'       : os.path.join(PLANET_DIR, 'ucl', 'mappings'),
     'umass'     : os.path.join(PLANET_DIR, 'umass', 'mappings'),
     'wiilab'    : os.path.join(PLANET_DIR, 'wiilab', 'mappings')

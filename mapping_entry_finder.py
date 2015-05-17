@@ -1,6 +1,5 @@
+__author__ = 'yueli'
 # -*- coding: utf-8 -*-
-
-__author__ = 'qsong'
 
 from config.config import *
 import logging
@@ -61,6 +60,7 @@ if __name__ == '__main__':
                     result_dict[vantage_name]['neg_nor'].extend(tmp_list[LOG_TIME_COLUMN['mapping_entry']].split(','))
         # 对IP地址进行去重处理
         result_dict[vantage_name]['neg_no'] = list(set(result_dict[vantage_name]['neg_no']))
+        print result_dict[vantage_name]['neg_no']
         # 将字符串转化为 IPNetwork对象，以便排序。。。
         result_dict[vantage_name]['neg_no'] = sorted([IPNetwork(x) for x in result_dict[vantage_name]['neg_no']])
         # IP地址转换回 字符串类型
