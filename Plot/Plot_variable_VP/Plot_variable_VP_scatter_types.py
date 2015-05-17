@@ -1,18 +1,23 @@
 __author__ = 'yueli'
 import numpy as np
 import matplotlib.pyplot as plt
+from config.config import *
 
 # Import the targeted raw CSV file
-rawCSV_file1 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_VP/Different_types/" \
-               "liege-EID-153.16.22.216-MR-149.20.48.61.log.csv"
-rawCSV_file2 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_VP/Different_types/" \
-               "temple-EID-153.16.22.216-MR-149.20.48.61.log.csv"
-rawCSV_file3 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_VP/Different_types/" \
-               "ucl-EID-153.16.22.216-MR-149.20.48.61.log.csv"
-rawCSV_file4 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_VP/Different_types/" \
-               "umass-EID-153.16.22.216-MR-149.20.48.61.log.csv"
-rawCSV_file5 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_VP/Different_types/" \
-               "wiilab-EID-153.16.22.216-MR-149.20.48.61.log.csv"
+rawCSV_file1 = os.path.join(CSV_FILE_DESTDIR, 'For_different_5_VP/Deleted_database',
+                            "liege-EID-153.16.22.216-MR-149.20.48.61.log.csv")
+
+rawCSV_file2 = os.path.join(CSV_FILE_DESTDIR, 'For_different_5_VP/Deleted_database',
+                            "temple-EID-153.16.22.216-MR-149.20.48.61.log.csv")
+
+rawCSV_file3 = os.path.join(CSV_FILE_DESTDIR, 'For_different_5_VP/Deleted_database',
+                            "ucl-EID-153.16.22.216-MR-149.20.48.61.log.csv")
+
+rawCSV_file4 = os.path.join(CSV_FILE_DESTDIR, 'For_different_5_VP/Deleted_database',
+                            "umass-EID-153.16.22.216-MR-149.20.48.61.log.csv")
+
+rawCSV_file5 = os.path.join(CSV_FILE_DESTDIR, 'For_different_5_VP/Deleted_database',
+                            "wiilab-EID-153.16.22.216-MR-149.20.48.61.log.csv")
 
 
 
@@ -154,8 +159,8 @@ print "rlocSet5_1:", rlocSet5_1.__len__()
 print "rlocSet5_2:", rlocSet5_2.__len__()
 
 # Modify the size and dpi of picture, default size is (8,6), default dpi is 80
-#plt.gcf().set_size_inches(8,6)
-#plt.gcf().set_dpi(300)
+plt.gcf().set_size_inches(16,8)
+# plt.gcf().set_dpi(300)
 
 # Plot begins here, "-1" means the response is "Negative Reply", "0" means the response is "No Map Reply"
 # "1" means the RLOC set is "82.121.231.67", "2" means the RLOC set is "192.168.1.66",
@@ -174,7 +179,7 @@ plt.scatter(time, rlocSet5_2, color='blue', marker='+', s=100)
 response = np.linspace(-1, 14, 16)
 plt.xlabel("Experiment numbers", fontsize=18)
 plt.ylabel("Different Map Replies", fontsize=18)
-plt.title("Map Replies over time for EID-153.16.49.112 from MR-149.20.48.61 in 5 VPs", fontsize=22)
+plt.title("Map Replies over time for EID-153.16.22.216 from MR-149.20.48.61 in 5 VPs", fontsize=22)
 plt.xlim(0,750)
 # plt.yticks([-1, 0], ('Negative Reply', 'No Map Reply'))
 # plt.yticks(response, ('Negative Reply', 'No Map Reply', '192.168.1.66', '132.227.85.238',
@@ -190,5 +195,6 @@ plt.yticks(response, ('Negative Reply', 'No Map Reply', 'RLOC 1', 'RLOC 2', 'RLO
 plt.legend()
 
 
-plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot_new/Plot_variable_VP/Plot_variable_VP_different_types.pdf")
+# plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_VP/Plot_variable_VP_different_types.pdf")
+plt.savefig("/Users/qsong/Documents/TracesAnalyzer/Plot/Plot_variable_VP/Plot_variable_VP_different_types_size_double.eps", dpi=300, Transparent=True)
 plt.show()

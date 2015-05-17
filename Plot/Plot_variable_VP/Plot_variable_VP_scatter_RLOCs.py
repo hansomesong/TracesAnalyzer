@@ -3,16 +3,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Import the targeted raw CSV file
-rawCSV_file1 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_VP/Different_RLOCs/" \
-               "liege-planetlab1-EID-153.16.47.16-MR-198.6.255.37.log.csv"
-rawCSV_file2 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_VP/Different_RLOCs/" \
-               "temple-planetlab2-EID-153.16.47.16-MR-198.6.255.37.log.csv"
-rawCSV_file3 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_VP/Different_RLOCs/" \
-               "ucl-onelab1-EID-153.16.47.16-MR-198.6.255.37.log.csv"
-rawCSV_file4 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_VP/Different_RLOCs/" \
-               "umass-planetlab2-EID-153.16.47.16-MR-198.6.255.37.log.csv"
-rawCSV_file5 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_VP/Different_RLOCs/" \
-               "wiilab-planetlab2-EID-153.16.47.16-MR-198.6.255.37.log.csv"
+rawCSV_file1 = "/Users/qsong/Documents/TracesAnalyzer/log/For_different_5_VP/Deleted_database/EID-153.16.47.16-MR-198.6.255.37/" \
+               "liege-EID-153.16.47.16-MR-198.6.255.37.log.csv"
+rawCSV_file2 = "/Users/qsong/Documents/TracesAnalyzer/log/For_different_5_VP/Deleted_database/EID-153.16.47.16-MR-198.6.255.37/" \
+               "temple-EID-153.16.47.16-MR-198.6.255.37.log.csv"
+rawCSV_file3 = "/Users/qsong/Documents/TracesAnalyzer/log/For_different_5_VP/Deleted_database/EID-153.16.47.16-MR-198.6.255.37/" \
+               "ucl-EID-153.16.47.16-MR-198.6.255.37.log.csv"
+rawCSV_file4 = "/Users/qsong/Documents/TracesAnalyzer/log/For_different_5_VP/Deleted_database/EID-153.16.47.16-MR-198.6.255.37/" \
+               "umass-EID-153.16.47.16-MR-198.6.255.37.log.csv"
+rawCSV_file5 = "/Users/qsong/Documents/TracesAnalyzer/log/For_different_5_VP/Deleted_database/EID-153.16.47.16-MR-198.6.255.37/" \
+               "wiilab-EID-153.16.47.16-MR-198.6.255.37.log.csv"
 
 
 
@@ -47,9 +47,9 @@ def getRlocSet(rawCSV_file):
                 responseList.append(0)
             elif lines[0] == "RoundNormal":
                 if int(lines[9]) == 1:
-                    if lines[15] == "195.59.156.123":
+                    if lines[14].split(",")[1] == "195.59.156.123":
                         responseList.append(1)
-                    elif lines[15] == "195.59.156.124":
+                    elif lines[14].split(",")[1] == "195.59.156.124":
                         responseList.append(2)
                     else:
                         responseList.append(3)
@@ -89,8 +89,8 @@ response = np.linspace(-1, 2, 4)
 plt.xlabel("Experiment numbers", fontsize=16)
 plt.ylabel("Different Map Replies", fontsize=16)
 plt.title("Map Replies over time for EID-153.16.47.16 from MR-198.6.255.37 in 5 VPs", fontsize=20)
-plt.xlim(0,798)
-# plt.xlim(550, 600)
+# plt.xlim(0,798)
+plt.xlim(550, 600)
 plt.ylim(-2, 3)
 plt.yticks(response, ('Negative Reply', 'No Map Reply', 'RLOC 1', 'RLOC 2'), fontsize=12)
 
@@ -101,5 +101,6 @@ plt.yticks(response, ('Negative Reply', 'No Map Reply', 'RLOC 1', 'RLOC 2'), fon
 plt.legend(loc=4)
 
 
-plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot_new/Plot_variable_VP/Plot_variable_VP_different_RLOCs.pdf")
+# plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_VP/Plot_variable_VP_different_RLOCs.pdf")
+# plt.savefig("/Users/qsong/Documents/TracesAnalyzer/Plot/Plot_variable_VP/Plot_variable_VP_different_RLOCs.eps", dpi=300, Transparent=True)
 plt.show()
