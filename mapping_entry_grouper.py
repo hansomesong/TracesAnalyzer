@@ -86,26 +86,42 @@ if __name__ == '__main__':
 
     # print "Try the new sorted method: "
     # print "length of result_dict['liege']:", len(sort_dic_key_value(result_dict['liege']))
-    # print sort_dic_key_value(result_dict['liege'])
+    pprint.pprint(sort_dic_key_value(result_dict['liege']))
 
     sorted_list_liege = sort_dic_key_value(result_dict['liege'])
     dic_me_grouper = {}
-    for i, element in enumerate(sorted_list_liege):
-         # 如果maping entry的个数>1,才有资格作为dic_me_grouper的key
-         if len(element[1]) > 1:
-            eid_list = [element[0]]
+    i=0
+
+    j=0
+    # for i, element in enumerate(sorted_list_liege):
+    while i < len(sorted_list_liege):
+        # 如果maping entry的个数>1,才有资格作为dic_me_grouper的key
+        print "In the first loop, current i is:", i
+        if len(sorted_list_liege[i][1]) > 1:
+            possible_key = sorted_list_liege[i][1][0]
+            eid_list = [sorted_list_liege[i][0]]
+            next_eid = sorted_list_liege[i+1][0]
             i = i+1
             # 如果 i >= sorted_list_liege的长度则会溢出，
             # 如果下一个EID被当前prefix最短的mapping entry包含，则被新dic添加
-            while i < len(sorted_list_liege) and sorted_list_liege[i][0] in element[1][0]:
-                eid_list.append(sorted_list_liege[i][0])
+            while (i < len(sorted_list_liege)) and (next_eid in possible_key):
+                eid_list.append(next_eid)
                 i = i+1
-            dic_me_grouper.update({element[1][0]: eid_list})
+                next_eid = sorted_list_liege[i][0]
+            print possible_key,"=>","after processing: ", eid_list
+            print "after while loop, current i:", i
+            dic_me_grouper.update({possible_key: eid_list})
+            # dic_me_grouper[sorted_list_liege[i][1][0]] = eid_list
+        else:
+            i += 1
+            j += 1
+    pprint.pprint(dic_me_grouper)
+    print "Rest EID: ", j
 
 
     print "length of dic_me_grouper:", len(sort_dic_key_value(dic_me_grouper))
     print "Final result"
-    pprint.pprint(sort_dic_key_value(dic_me_grouper))
+    # pprint.pprint(sort_dic_key_value(dic_me_grouper))
 
     all_eid_set = []
     with open(os.path.join(LOG_DIR, 'comparison_time_liege.csv')) as f_handler:
@@ -126,12 +142,13 @@ if __name__ == '__main__':
 
     after_process = []
     for value in dic_me_grouper.itervalues():
+        print value
         after_process.extend(value)
     print "After processing,", len(after_process)
     #pprint.pprint(sorted(after_process))
 
-    rest = list(set(all_eid_set)-set(middle_process))
-    pprint.pprint(rest)
+    # rest = list(set(all_eid_set)-set(middle_process))
+    # pprint.pprint(rest)
 
 
 

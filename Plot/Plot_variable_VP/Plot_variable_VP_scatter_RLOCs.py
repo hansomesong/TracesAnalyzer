@@ -1,20 +1,48 @@
 __author__ = 'yueli'
 import numpy as np
 import matplotlib.pyplot as plt
+from config.config import *
 
 # Import the targeted raw CSV file
-rawCSV_file1 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_different_5_VP/Deleted_database/" \
-               "liege-planetlab1-EID-153.16.47.16-MR-198.6.255.37.log.csv"
-rawCSV_file2 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_different_5_VP/Deleted_database/" \
-               "temple-planetlab2-EID-153.16.47.16-MR-198.6.255.37.log.csv"
-rawCSV_file3 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_different_5_VP/Deleted_database/" \
-               "ucl-onelab1-EID-153.16.47.16-MR-198.6.255.37.log.csv"
-rawCSV_file4 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_different_5_VP/Deleted_database/" \
-               "umass-planetlab2-EID-153.16.47.16-MR-198.6.255.37.log.csv"
-rawCSV_file5 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/For_different_5_VP/Deleted_database/" \
-               "wiilab-planetlab2-EID-153.16.47.16-MR-198.6.255.37.log.csv"
+rawCSV_file1 = os.path.join(
+    CSV_FILE_DESTDIR,
+    'For_different_5_VP',
+    'Deleted_database',
+    'EID-153.16.47.16-MR-198.6.255.37',
+    "liege-EID-153.16.47.16-MR-198.6.255.37.log.csv"
+)
 
+rawCSV_file2 = os.path.join(
+    CSV_FILE_DESTDIR,
+    'For_different_5_VP',
+    'Deleted_database',
+    'EID-153.16.47.16-MR-198.6.255.37',
+    "temple-EID-153.16.47.16-MR-198.6.255.37.log.csv"
+)
 
+rawCSV_file3 = os.path.join(
+    CSV_FILE_DESTDIR,
+    'For_different_5_VP',
+    'Deleted_database',
+    'EID-153.16.47.16-MR-198.6.255.37',
+    "ucl-EID-153.16.47.16-MR-198.6.255.37.log.csv"
+)
+
+rawCSV_file4 = os.path.join(
+    CSV_FILE_DESTDIR,
+    'For_different_5_VP',
+    'Deleted_database',
+    'EID-153.16.47.16-MR-198.6.255.37',
+    "umass-EID-153.16.47.16-MR-198.6.255.37.log.csv"
+)
+
+rawCSV_file5 = os.path.join(
+    CSV_FILE_DESTDIR,
+    'For_different_5_VP',
+    'Deleted_database',
+    'EID-153.16.47.16-MR-198.6.255.37',
+    "wiilab-EID-153.16.47.16-MR-198.6.255.37.log.csv"
+)
 
 # Define a function to get the experiment number list from the CSV file
 def getTime(rawCSV_file):
@@ -47,9 +75,9 @@ def getRlocSet(rawCSV_file):
                 responseList.append(0)
             elif lines[0] == "RoundNormal":
                 if int(lines[9]) == 1:
-                    if lines[15] == "195.59.156.123":
+                    if lines[14].split(",")[1] == "195.59.156.123":
                         responseList.append(1)
-                    elif lines[15] == "195.59.156.124":
+                    elif lines[14].split(",")[1] == "195.59.156.124":
                         responseList.append(2)
                     else:
                         responseList.append(3)
@@ -89,8 +117,8 @@ response = np.linspace(-1, 2, 4)
 plt.xlabel("Experiment numbers", fontsize=16)
 plt.ylabel("Different Map Replies", fontsize=16)
 plt.title("Map Replies over time for EID-153.16.47.16 from MR-198.6.255.37 in 5 VPs", fontsize=20)
-plt.xlim(0,798)
-# plt.xlim(550, 600)
+# plt.xlim(0,798)
+plt.xlim(550, 600)
 plt.ylim(-2, 3)
 plt.yticks(response, ('Negative Reply', 'No Map Reply', 'RLOC 1', 'RLOC 2'), fontsize=12)
 
@@ -100,7 +128,10 @@ plt.yticks(response, ('Negative Reply', 'No Map Reply', 'RLOC 1', 'RLOC 2'), fon
 # loc=4 makes legend locating at right-down
 plt.legend(loc=4)
 
+plt.savefig(
+    os.path.join(PLOT_DIR, 'Plot_variable_VP', 'Plot_variable_VP_different_RLOCs.eps'),
+    dpi=300,
+    transparent=True
+)
 
-# plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_VP/Plot_variable_VP_different_RLOCs.pdf")
-plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_VP/Plot_variable_VP_different_RLOCs.eps", dpi=300, transparent=True)
 plt.show()
