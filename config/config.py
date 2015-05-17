@@ -9,6 +9,7 @@ import os
 try:
 
     PLANET_DIR = os.environ['PLANETLAB']
+    PLANET_CSV_DIR = os.environ['PLANETLAB_CSV']
     CSV_FILE_DESTDIR = os.environ['PROJECT_LOG_DIR']
 
 
