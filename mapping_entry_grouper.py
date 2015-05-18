@@ -6,10 +6,7 @@ from config.config import *
 import logging
 # 借助第三方 package: netaddr来实现 IP subnetwork的排序
 from netaddr import *
-import networkx as nx
-import matplotlib.pyplot as plt
 import re
-import random
 
 # 定义一个排序函数，使得作为key的EID可以从小到大排列，作为value的Mapping entry list内部也可以按照从小到大排列
 def sort_dic_key_value(dic_origin):
@@ -57,9 +54,25 @@ if __name__ == '__main__':
     logger = logging.getLogger(__name__)
     logger.debug(input_logs)
 
+#   关于数据结构 result_dict, 其最终形式为：
+#   result_dict = {
+#       ‘liege’     : {'eid', [list of mapping entries]},
+#       'temple'    : {'eid', [list of mapping entries]},
+#       ...
+#   }
+
+#   me_grouper_dict = {
+#       'liege'     : {'mapping entry': [list of eid]}
+#       'temple'    : {'mapping entry': [list of eid]}
+#       ...
+#   }
+
+
     result_dict = {}
+    me_grouper_dict ={}
     for vantage_name, log_file in input_logs.iteritems():
         result_dict[vantage_name] = {}
+        me_grouper_dict[vantage_name] ={}
         with open(log_file) as f_handler:
             next(f_handler)
             num = 1
@@ -83,72 +96,96 @@ if __name__ == '__main__':
                     # 如果此 key(EID) 不存在，则需要添加 key value 对
                     else:
                         result_dict[vantage_name].update({EID: me_list})
+        # 处理完一个comparison_time_<VANTAGE_POINT>.csv类型的文件，准备更新字典me_grouper_dict
+        sorted_list_liege = sort_dic_key_value(result_dict[vantage_name])
+        i = 0
+        while i < len(sorted_list_liege):
+            # 如果maping entry的个数>1,才有资格作为dic_me_grouper的key
+            logger.debug("In the first loop, current i is:{0}".format(i))
+            if len(sorted_list_liege[i][1]) > 1:
+                possible_key = sorted_list_liege[i][1][0]
+                eid_list = [sorted_list_liege[i][0]]
+                next_eid = sorted_list_liege[i+1][0]
+                i = i+1
+                # 如果 i >= sorted_list_liege的长度则会溢出，
+                # 如果下一个EID被当前prefix最短的mapping entry包含，则被新dic添加
+                while (i < len(sorted_list_liege)) and (next_eid in possible_key):
+                    eid_list.append(next_eid)
+                    i = i+1
+                    next_eid = sorted_list_liege[i][0]
+                logger.debug("{0} => after processing: {1}".format(possible_key, eid_list))
+                logger.debug("after while loop, current i: {0}".format(i))
+                me_grouper_dict[vantage_name].update({possible_key: eid_list})
+                # dic_me_grouper[sorted_list_liege[i][1][0]] = eid_list
+            else:
+                i += 1
+
+    pprint.pprint(me_grouper_dict)
 
     # print "Try the new sorted method: "
     # print "length of result_dict['liege']:", len(sort_dic_key_value(result_dict['liege']))
-    pprint.pprint(sort_dic_key_value(result_dict['liege']))
-
-    sorted_list_liege = sort_dic_key_value(result_dict['liege'])
-    dic_me_grouper = {}
-    i=0
-
-    j=0
-    # for i, element in enumerate(sorted_list_liege):
-    while i < len(sorted_list_liege):
-        # 如果maping entry的个数>1,才有资格作为dic_me_grouper的key
-        print "In the first loop, current i is:", i
-        if len(sorted_list_liege[i][1]) > 1:
-            possible_key = sorted_list_liege[i][1][0]
-            eid_list = [sorted_list_liege[i][0]]
-            next_eid = sorted_list_liege[i+1][0]
-            i = i+1
-            # 如果 i >= sorted_list_liege的长度则会溢出，
-            # 如果下一个EID被当前prefix最短的mapping entry包含，则被新dic添加
-            while (i < len(sorted_list_liege)) and (next_eid in possible_key):
-                eid_list.append(next_eid)
-                i = i+1
-                next_eid = sorted_list_liege[i][0]
-            print possible_key,"=>","after processing: ", eid_list
-            print "after while loop, current i:", i
-            dic_me_grouper.update({possible_key: eid_list})
-            # dic_me_grouper[sorted_list_liege[i][1][0]] = eid_list
-        else:
-            i += 1
-            j += 1
-    pprint.pprint(dic_me_grouper)
-    print "Rest EID: ", j
 
 
-    print "length of dic_me_grouper:", len(sort_dic_key_value(dic_me_grouper))
-    print "Final result"
-    # pprint.pprint(sort_dic_key_value(dic_me_grouper))
-
-    all_eid_set = []
-    with open(os.path.join(LOG_DIR, 'comparison_time_liege.csv')) as f_handler:
-        next(f_handler)
-        for line in f_handler:
-            tmp_list = line.split(';')
-
-            all_eid_set.append(IPAddress(tmp_list[LOG_TIME_COLUMN['eid']]))
-
-    all_eid_set = list(set(all_eid_set))
-
-    print 'In original file, eid number is', len(all_eid_set)
-    # pprint.pprint(all_eid_set)
-
-    middle_process = [element[0] for element in sort_dic_key_value(result_dict['liege'])]
-    print len(middle_process)
-    #pprint.pprint(middle_process)
-
-    after_process = []
-    for value in dic_me_grouper.itervalues():
-        print value
-        after_process.extend(value)
-    print "After processing,", len(after_process)
-    #pprint.pprint(sorted(after_process))
-
-    # rest = list(set(all_eid_set)-set(middle_process))
-    # pprint.pprint(rest)
+    # pprint.pprint(sort_dic_key_value(result_dict['liege']))
+    #
+    # sorted_list_liege = sort_dic_key_value(result_dict['liege'])
+    # dic_me_grouper = {}
+    # i=0
+    #
+    # # for i, element in enumerate(sorted_list_liege):
+    # while i < len(sorted_list_liege):
+    #     # 如果maping entry的个数>1,才有资格作为dic_me_grouper的key
+    #     print "In the first loop, current i is:", i
+    #     if len(sorted_list_liege[i][1]) > 1:
+    #         possible_key = sorted_list_liege[i][1][0]
+    #         eid_list = [sorted_list_liege[i][0]]
+    #         next_eid = sorted_list_liege[i+1][0]
+    #         i = i+1
+    #         # 如果 i >= sorted_list_liege的长度则会溢出，
+    #         # 如果下一个EID被当前prefix最短的mapping entry包含，则被新dic添加
+    #         while (i < len(sorted_list_liege)) and (next_eid in possible_key):
+    #             eid_list.append(next_eid)
+    #             i = i+1
+    #             next_eid = sorted_list_liege[i][0]
+    #         print possible_key,"=>","after processing: ", eid_list
+    #         print "after while loop, current i:", i
+    #         dic_me_grouper.update({possible_key: eid_list})
+    #         # dic_me_grouper[sorted_list_liege[i][1][0]] = eid_list
+    #     else:
+    #         i += 1
+    # pprint.pprint(dic_me_grouper)
+    #
+    #
+    # print "length of dic_me_grouper:", len(sort_dic_key_value(dic_me_grouper))
+    # print "Final result"
+    # # pprint.pprint(sort_dic_key_value(dic_me_grouper))
+    #
+    # all_eid_set = []
+    # with open(os.path.join(LOG_DIR, 'comparison_time_liege.csv')) as f_handler:
+    #     next(f_handler)
+    #     for line in f_handler:
+    #         tmp_list = line.split(';')
+    #
+    #         all_eid_set.append(IPAddress(tmp_list[LOG_TIME_COLUMN['eid']]))
+    #
+    # all_eid_set = list(set(all_eid_set))
+    #
+    # print 'In original file, eid number is', len(all_eid_set)
+    # # pprint.pprint(all_eid_set)
+    #
+    # middle_process = [element[0] for element in sort_dic_key_value(result_dict['liege'])]
+    # print len(middle_process)
+    # #pprint.pprint(middle_process)
+    #
+    # after_process = []
+    # for value in dic_me_grouper.itervalues():
+    #     print value
+    #     after_process.extend(value)
+    # print "After processing,", len(after_process)
+    # #pprint.pprint(sorted(after_process))
+    #
+    # # rest = list(set(all_eid_set)-set(middle_process))
+    # # pprint.pprint(rest)
 
 
 
