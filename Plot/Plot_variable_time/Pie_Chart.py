@@ -1,8 +1,12 @@
-__author__ = 'yueli'
+# -* coding:UTF-8 -*
+# __author__ = 'yueli'
+
 import numpy as np
 import matplotlib.pyplot as plt
 # All the codes in this python file can be referenced to
 # http://matplotlib.org/1.2.1/examples/pylab_examples/pie_demo.html
+
+# 由于此文件的input文件已不存在，所以此文件已被Pie_chart_v4.py替代
 
 # Import the targeted raw CSV file
 rawCSV_file1 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/comparison_time_liege.csv"

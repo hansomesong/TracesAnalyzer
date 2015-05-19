@@ -187,7 +187,13 @@ if __name__ == '__main__':
     # # rest = list(set(all_eid_set)-set(middle_process))
     # # pprint.pprint(rest)
 
+    print me_grouper_dict['liege'] == me_grouper_dict['temple'] == me_grouper_dict['ucl'] == me_grouper_dict['umass'] == me_grouper_dict['wiilab']
 
+
+    print me_grouper_dict['liege'].items() == me_grouper_dict['temple'].items() == me_grouper_dict['ucl'].items() == me_grouper_dict['umass'].items() == me_grouper_dict['wiilab'].items()
+
+    # for i in me_grouper_dict.iteritems():
+    #     logger.info(i)
 
 
 

@@ -1,9 +1,10 @@
 __author__ = 'yueli'
 import numpy as np
 import matplotlib.pyplot as plt
+from config.config import *
 
 # Import the targeted raw CSV file
-rawCSV_file = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/log2csv/planetlab1-EID-153.16.30.160-MR-149.20.48.61.log.csv"
+rawCSV_file = os.path.join(PLANET_CSV_DIR, 'liege', 'planetlab1-EID-153.16.30.160-MR-149.20.48.61.log.csv')
 
 time = []
 plotData = []
@@ -44,7 +45,7 @@ plt.ylim(-1.5, 2.5)
 # plt.figure(figsize=(100,100))
 # plt.gif().set_size_inches(18.5,10.5)
 
-
-plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Case1.eps", dpi=300, transparent=True)
+plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_time', 'Case1.eps'),
+            dpi=300, transparent=True)
 plt.show()
 

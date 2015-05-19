@@ -1,15 +1,16 @@
 __author__ = 'yueli'
 import numpy as np
 import matplotlib.pyplot as plt
+from config.config import *
 # All the codes in this python file can be referenced to
 # http://matplotlib.org/1.2.1/examples/pylab_examples/pie_demo.html
 
 # Import the targeted raw CSV file
-rawCSV_file1 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/comparison_time_bck/comparison_time_liege_bck.csv"
-rawCSV_file2 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/comparison_time_bck/comparison_time_temple_bck.csv"
-rawCSV_file3 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/comparison_time_bck/comparison_time_ucl_bck.csv"
-rawCSV_file4 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/comparison_time_bck/comparison_time_umass_bck.csv"
-rawCSV_file5 = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/comparison_time_bck/comparison_time_wiilab_bck.csv"
+rawCSV_file1 = os.path.join(CSV_FILE_DESTDIR, 'comparison_time_bck', 'comparison_time_liege_bck.csv')
+rawCSV_file2 = os.path.join(CSV_FILE_DESTDIR, 'comparison_time_bck', 'comparison_time_temple_bck.csv')
+rawCSV_file3 = os.path.join(CSV_FILE_DESTDIR, 'comparison_time_bck', 'comparison_time_ucl_bck.csv')
+rawCSV_file4 = os.path.join(CSV_FILE_DESTDIR, 'comparison_time_bck', 'comparison_time_umass_bck.csv')
+rawCSV_file5 = os.path.join(CSV_FILE_DESTDIR, 'comparison_time_bck', 'comparison_time_wiilab_bck.csv')
 rawCSV_files = [rawCSV_file1, rawCSV_file2, rawCSV_file3, rawCSV_file4, rawCSV_file5]
 
 stability = 0
@@ -58,5 +59,6 @@ plt.pie(fracs, explode=explode, labels=labels, colors=colors, autopct='%1.2f%%',
 # plt.title('Percentage of each False case', bbox={'facecolor':'0.8', 'pad':5})
 plt.title('Percentage of each instable case by the variable of time')
 # plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot_new/Plot_variable_time/Pie_chart_v4.pdf")
-plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Pie_chart_v4.eps", transparent=True)
+# plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_time', 'Pie_chart_v4.eps'),
+#             dpi=300, transparent=True)
 plt.show()

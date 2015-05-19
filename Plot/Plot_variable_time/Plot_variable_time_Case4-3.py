@@ -2,10 +2,10 @@ __author__ = 'yueli'
 import numpy as np
 import matplotlib.pyplot as plt
 import socket
-
+from config.config import *
 
 # Import the targeted raw CSV file
-rawCSV_file = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/log2csv/planetlab1-EID-153.16.18.176-MR-217.8.98.46.log.csv"
+rawCSV_file = os.path.join(PLANET_CSV_DIR, 'liege', 'planetlab1-EID-153.16.18.176-MR-217.8.98.46.log.csv')
 
 time = []
 unsortedRlocList = []
@@ -24,10 +24,10 @@ for line in open(rawCSV_file):
             else:
                 unsortedRlocList.append("0.0.0.0")
         elif int(lines[9]) == 1:
-            if lines[15] in unsortedRlocList:
+            if lines[14].split(',')[1] in unsortedRlocList:
                 continue
             else:
-                unsortedRlocList.append(lines[15])
+                unsortedRlocList.append(lines[14].split(',')[1])
         else:
             if "-999.999.999.999" in unsortedRlocList:
                 continue
@@ -61,7 +61,7 @@ for line1 in open(rawCSV_file):
         if lines1[0] == "RoundNoReply":
             rlocList.append(sortedRlocList.index("0.0.0.0"))
         elif int(lines1[9]) == 1:
-            rlocList.append(sortedRlocList.index(lines1[15]))
+            rlocList.append(sortedRlocList.index(lines[14].split(',')[1]))
         else:
             rlocList.append(sortedRlocList.index("-999.999.999.999"))
 
@@ -83,6 +83,6 @@ plt.title("Response from MR-217.8.98.46 for EID-153.16.18.176 over time in VP1")
 
 plt.annotate('No Map Reply',xy=(300,0),xytext=(300,4),arrowprops=dict(arrowstyle="->"))
 
-# plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Case4-3_copy.pdf")
-plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Case4-3.eps", dpi=300, transparent=True)
+# plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_time', 'Case4-3.eps'),
+#             dpi=300, transparent=True)
 plt.show()

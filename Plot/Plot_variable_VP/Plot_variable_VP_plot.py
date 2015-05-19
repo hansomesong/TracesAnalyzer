@@ -1,6 +1,7 @@
 __author__ = 'yueli'
 import numpy as np
 import matplotlib.pyplot as plt
+from config.config import *
 
 # Import the targeted raw CSV file
 rawCSV_file1 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.47.16-MR-198.6.255.37.log.csv"
@@ -209,5 +210,10 @@ plt.legend(loc='upper right')
 # plt.annotate('Negative Reply',xy=(0,-0.98),xytext=(0, -0.5),arrowprops=dict(arrowstyle="->"))
 # plt.annotate('No Map Reply',xy=(0,0.02),xytext=(0, 0.5),arrowprops=dict(arrowstyle="->"))
 
-# plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_VP/Plot_variable_VP_copy_subplot.png")
+# plt.savefig(
+#     os.path.join(PLOT_DIR, 'Plot_variable_VP', 'Plot_variable_VP_copy_subplot.eps'),
+#     dpi=300,
+#     transparent=True
+# )
+
 plt.show()

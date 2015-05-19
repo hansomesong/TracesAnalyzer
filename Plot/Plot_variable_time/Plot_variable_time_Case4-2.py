@@ -1,9 +1,10 @@
 __author__ = 'yueli'
 import numpy as np
 import matplotlib.pyplot as plt
+from config.config import *
 
 # Import the targeted raw CSV file
-rawCSV_file = "/Users/yueli/Documents/Codes/TracesAnalyzer/log/log2csv/planetlab1-EID-153.16.14.0-MR-193.162.145.50.log.csv"
+rawCSV_file = os.path.join(PLANET_CSV_DIR, 'liege', 'planetlab1-EID-153.16.14.0-MR-193.162.145.50.log.csv')
 
 time = []
 noMapReply = []
@@ -24,36 +25,36 @@ for line in open(rawCSV_file):
             rlocSet2.append(-999)
             rlocSet3.append(-999)
         elif int(lines[9]) == 1:
-            if (lines[15] == "166.149.122.123"):
+            if lines[14].split(',')[1] == "166.149.122.123":
                 noMapReply.append(-999)
                 rlocSet1.append(1)
                 rlocSet2.append(-999)
                 rlocSet3.append(-999)
-            elif (lines[15] == "166.149.122.124"):
+            elif lines[14].split(',')[1] == "166.149.122.124":
                 noMapReply.append(-999)
                 rlocSet1.append(-999)
                 rlocSet2.append(2)
                 rlocSet3.append(-999)
-            elif (lines[15] == "166.149.122.125"):
+            elif lines[14].split(',')[1] == "166.149.122.125":
                 noMapReply.append(-999)
                 rlocSet1.append(-999)
                 rlocSet2.append(-999)
                 rlocSet3.append(3)
         elif int(lines[9]) == 2:
-            if ((lines[15] == "166.149.122.123" and lines[20] == "166.149.122.124")
-                or (lines[20] == "166.149.122.123" and lines[15] == "166.149.122.124")):
+            if ((lines[14].split(',')[1] == "166.149.122.123" and lines[15].split(',')[1] == "166.149.122.124")
+                or (lines[15].split(',')[1] == "166.149.122.123" and lines[14].split(',')[1] == "166.149.122.124")):
                 noMapReply.append(-999)
                 rlocSet1.append(1)
                 rlocSet2.append(2)
                 rlocSet3.append(-999)
-            elif ((lines[15] == "166.149.122.123" and lines[20] == "166.149.122.125")
-                  or (lines[20] == "166.149.122.123" and lines[15] == "166.149.122.125")):
+            elif ((lines[14].split(',')[1] == "166.149.122.123" and lines[15].split(',')[1] == "166.149.122.125")
+                  or (lines[15].split(',')[1] == "166.149.122.123" and lines[14].split(',')[1] == "166.149.122.125")):
                 noMapReply.append(-999)
                 rlocSet1.append(1)
                 rlocSet2.append(-999)
                 rlocSet3.append(3)
-            elif ((lines[15] == "166.149.122.124" and lines[20] == "166.149.122.125")
-                  or (lines[20] == "166.149.122.124" and lines[15] == "166.149.122.125")):
+            elif ((lines[14].split(',')[1] == "166.149.122.124" and lines[15].split(',')[1] == "166.149.122.125")
+                  or (lines[15].split(',')[1] == "166.149.122.124" and lines[14].split(',')[1] == "166.149.122.125")):
                 noMapReply.append(-999)
                 rlocSet1.append(-999)
                 rlocSet2.append(2)
@@ -83,6 +84,6 @@ plt.ylabel("Response from MR", fontsize=16)
 plt.title("Response from MR-193.162.145.50 for EID-153.16.14.0 over time in VP1", fontsize=18)
 plt.yticks([0, 1, 2, 3], ['No Map Reply', '166.149.122.123', '166.149.122.124', '166.149.122.125'], fontsize=12)
 
-# plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot_new/Plot_variable_time/Case4-2.pdf")
-plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_time/Case4-2.eps", dpi=300, transparent=True)
+# plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_time', 'Case4-2.eps'),
+#             dpi=300, transparent=True)
 plt.show()

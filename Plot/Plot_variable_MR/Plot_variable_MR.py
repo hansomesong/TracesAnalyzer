@@ -1,6 +1,7 @@
 __author__ = 'yueli'
 import numpy as np
 import matplotlib.pyplot as plt
+from config.config import *
 
 mrList = np.linspace(1, 13, 13)
 negativeList = [-1, -1, -10, -10, -1, -1, -1, -10 ,-1, -1, -1, -10, -10]
@@ -25,6 +26,10 @@ plt.xticks(mrList, ['MR1', 'MR2', 'MR3', 'MR4', 'MR5', 'MR6', 'MR7', 'MR8', 'MR9
 plt.yticks([-1, 0, 1, 2, 3], ['Negative Reply', 'No Map Reply', '82.121.231.67', '192.168.1.66', '132.227.85.231'])
 
 
-# plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot_new/Plot_variable_MR/Plot_variable_MR.pdf")
+# plt.savefig(
+#     os.path.join(PLOT_DIR, 'Plot_variable_MR', 'Plot_variable_MR.eps'),
+#     dpi=300,
+#     transparent=True
+# )
 plt.show()
 

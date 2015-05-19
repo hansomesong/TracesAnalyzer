@@ -1,5 +1,6 @@
 __author__ = 'yueli'
 from pylab import *
+from config.config import *
 
 # Plot the percentage of False
 # (which means that the responses from the different Map Resolvers for a dedicated EID during the whole measurements are different)
@@ -20,4 +21,9 @@ xlabel("vantage point")
 ylabel("percentage of False (%)")
 plt.title("Percentage of False according to the Map Resolver")
 # savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Percentage of False according to the Map Resolver.png")
+# plt.savefig(
+#     os.path.join(PLOT_DIR, 'Percentage_of_False_according_to_the_Map_Resolver.eps'),
+#     dpi=300,
+#     transparent=True
+# )
 plt.show()

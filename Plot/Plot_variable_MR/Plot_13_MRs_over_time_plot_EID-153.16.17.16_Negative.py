@@ -2,21 +2,22 @@ __author__ = 'yueli'
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+from config.config import *
 
 # Import the targeted raw CSV file
-rawCSV_file1 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-149.20.48.61.log.csv"
-rawCSV_file2 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-149.20.48.77.log.csv"
-rawCSV_file3 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-173.36.254.164.log.csv"
-rawCSV_file4 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-193.162.145.50.log.csv"
-rawCSV_file5 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-195.50.116.18.log.csv"
-rawCSV_file6 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-198.6.255.37.log.csv"
-rawCSV_file7 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-198.6.255.40.log.csv"
-rawCSV_file8 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-202.51.247.10.log.csv"
-rawCSV_file9 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-202.214.86.252.log.csv"
-rawCSV_file10 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-206.223.132.89.log.csv"
-rawCSV_file11 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-217.8.97.6.log.csv"
-rawCSV_file12 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-217.8.98.42.log.csv"
-rawCSV_file13 = "/Users/yueli/Documents/Codes/PlanetLab_CSV/liege/planetlab1-EID-153.16.17.16-MR-217.8.98.46.log.csv"
+rawCSV_file1 = os.path.join(PLANET_CSV_DIR, 'liege', 'planetlab1-EID-153.16.17.16-MR-149.20.48.61.log.csv')
+rawCSV_file2 = os.path.join(PLANET_CSV_DIR, 'liege', 'planetlab1-EID-153.16.17.16-MR-149.20.48.77.log.csv')
+rawCSV_file3 = os.path.join(PLANET_CSV_DIR, 'liege', 'planetlab1-EID-153.16.17.16-MR-173.36.254.164.log.csv')
+rawCSV_file4 = os.path.join(PLANET_CSV_DIR, 'liege', 'planetlab1-EID-153.16.17.16-MR-193.162.145.50.log.csv')
+rawCSV_file5 = os.path.join(PLANET_CSV_DIR, 'liege', 'planetlab1-EID-153.16.17.16-MR-195.50.116.18.log.csv')
+rawCSV_file6 = os.path.join(PLANET_CSV_DIR, 'liege', 'planetlab1-EID-153.16.17.16-MR-198.6.255.37.log.csv')
+rawCSV_file7 = os.path.join(PLANET_CSV_DIR, 'liege', 'planetlab1-EID-153.16.17.16-MR-198.6.255.40.log.csv')
+rawCSV_file8 = os.path.join(PLANET_CSV_DIR, 'liege', 'planetlab1-EID-153.16.17.16-MR-202.51.247.10.log.csv')
+rawCSV_file9 = os.path.join(PLANET_CSV_DIR, 'liege', 'planetlab1-EID-153.16.17.16-MR-202.214.86.252.log.csv')
+rawCSV_file10 = os.path.join(PLANET_CSV_DIR, 'liege', 'planetlab1-EID-153.16.17.16-MR-206.223.132.89.log.csv')
+rawCSV_file11 = os.path.join(PLANET_CSV_DIR, 'liege', 'planetlab1-EID-153.16.17.16-MR-217.8.97.6.log.csv')
+rawCSV_file12 = os.path.join(PLANET_CSV_DIR, 'liege', 'planetlab1-EID-153.16.17.16-MR-217.8.98.42.log.csv')
+rawCSV_file13 = os.path.join(PLANET_CSV_DIR, 'liege', 'planetlab1-EID-153.16.17.16-MR-217.8.98.46.log.csv')
 
 
 
@@ -88,6 +89,6 @@ plt.yticks(response, ('MR1', 'MR2', 'MR3', 'MR4', 'MR5', 'MR6', 'MR7', 'MR8', 'M
 plt.grid(True)
 
 # plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_MR/Negatives_from_13_different_MRs_for_EID-153_16_17_16_over_time.pdf")
-plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_MR/Negatives_from_13_different_MRs_for_EID-153_16_17_16_over_time.eps", dpi=300, transparent=True)
-
+plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_MR', 'Negatives_from_13_different_MRs_for_EID-153_16_17_16_over_time.eps'),
+            dpi=300, transparent=True)
 plt.show()

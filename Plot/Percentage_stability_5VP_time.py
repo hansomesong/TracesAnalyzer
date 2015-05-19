@@ -1,6 +1,7 @@
 __author__ = 'yueli'
 from pylab import *
 import matplotlib.pyplot as plt
+from config.config import *
 
 # Plot the percentage of False
 # (which means that the responses from a Map Resolver for a dedicated EID during the whole measurements are different)
@@ -42,6 +43,10 @@ plt.ylim(90.8, 91.8)
 rect = plt.bar(indexs, percentageTrueList, bar_width, color='b')
 autolabel(rect)
 # savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Percentage_stability_5VP_time.pdf")
-plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Percentage_stability_5VP_time.eps", dpi=300, transparent=True)
+# plt.savefig(
+#     os.path.join(PLOT_DIR, 'Percentage_stability_5VP_time.eps'),
+#     dpi=300,
+#     transparent=True
+# )
 # plt.tight_layout()
 plt.show()
