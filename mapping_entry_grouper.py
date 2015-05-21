@@ -120,7 +120,7 @@ if __name__ == '__main__':
             else:
                 i += 1
 
-    pprint.pprint(me_grouper_dict)
+    # pprint.pprint(me_grouper_dict)
 
     # print "Try the new sorted method: "
     # print "length of result_dict['liege']:", len(sort_dic_key_value(result_dict['liege']))
@@ -186,6 +186,38 @@ if __name__ == '__main__':
     #
     # # rest = list(set(all_eid_set)-set(middle_process))
     # # pprint.pprint(rest)
+
+
+
+    # 为方便后续操作，创建字典 vp_me_logs = {}
+    # 其内容大体为：
+    # vp_me_logs = {
+    #       'liege'     : {'mapping entry': [list of logs]}
+    #       'temple'    : {'mapping entry': [list of logs]}
+    #       ...
+    # }
+    vp_me_logs = {}
+
+    for vantage, me_eids_dic in me_grouper_dict.iteritems():
+        # print vantage
+        # pprint.pprint(me_eids_dic)
+        vp_me_logs[vantage] ={}
+        for me, eids_list in me_eids_dic.iteritems():
+            vp_me_logs[vantage][me] =[str(eid) for eid in eids_list]
+            vp_me_logs[vantage][me] = [
+                "{0}-EID-{1}-MR-{2}.log".format(
+                    LOG_PREFIX[vantage], eid, mr
+                )
+                for eid in vp_me_logs[vantage][me] for mr in MR_LIST
+            ]
+
+
+    pprint.pprint(vp_me_logs)
+
+
+
+
+
 
 
 

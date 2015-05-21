@@ -56,6 +56,30 @@ LOG_COLUMN ={
     'resovler': 3
 }
 
+MR_LIST = [
+"149.20.48.61",
+"149.20.48.77",
+"173.36.254.164",
+"193.162.145.50",
+"195.50.116.18",
+"198.6.255.37",
+"198.6.255.40",
+"202.51.247.10",
+"202.214.86.252",
+"206.223.132.89",
+"217.8.97.6",
+"217.8.98.42",
+"217.8.98.46"
+]
+
+LOG_PREFIX ={
+    'liege'      : 'planetlab1',
+    'temple'     : 'planetlab2',
+    'ucl'       : 'onelab1',
+    'umass'     : 'planetlab2',
+    'wiilab'    : 'planetlab2'
+}
+
 # if __name__ == 'main':
 #     print "Path of Planet log files directory:", PLANET_DIR
 #     print "Path of processed log files directory:", CSV_FILE_DESTDIR
