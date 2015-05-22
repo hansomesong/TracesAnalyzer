@@ -49,7 +49,10 @@ LOG_TIME_COLUMN ={
     'change_time': 14
 }
 
+
+# 对应文件：planetlab1-EID-0.0.0.0-MR-198.6.255.40.log.csv 中 每一列代表什么
 LOG_COLUMN ={
+
     'type': 0,
     'date': 1,
     'eid' : 2,

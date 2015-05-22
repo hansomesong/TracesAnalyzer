@@ -3,10 +3,12 @@ __author__ = 'yueli'
 
 import pprint
 from config.config import *
+import resolver_comparator
 import logging
 # 借助第三方 package: netaddr来实现 IP subnetwork的排序
 from netaddr import *
 import re
+import timeit
 
 # 定义一个排序函数，使得作为key的EID可以从小到大排列，作为value的Mapping entry list内部也可以按照从小到大排列
 def sort_dic_key_value(dic_origin):
@@ -22,7 +24,7 @@ def sort_dic_key_value(dic_origin):
 
 
 if __name__ == '__main__':
-
+    start_time = timeit.default_timer()
     # 读取环境变量 ‘PROJECT_LOG_DIR’ (此变量定义在工作目录下.profile或者.bashprofile)
     try:
         LOG_DIR = os.environ['PROJECT_LOG_DIR']
@@ -120,75 +122,6 @@ if __name__ == '__main__':
             else:
                 i += 1
 
-    # pprint.pprint(me_grouper_dict)
-
-    # print "Try the new sorted method: "
-    # print "length of result_dict['liege']:", len(sort_dic_key_value(result_dict['liege']))
-
-
-    # pprint.pprint(sort_dic_key_value(result_dict['liege']))
-    #
-    # sorted_list_liege = sort_dic_key_value(result_dict['liege'])
-    # dic_me_grouper = {}
-    # i=0
-    #
-    # # for i, element in enumerate(sorted_list_liege):
-    # while i < len(sorted_list_liege):
-    #     # 如果maping entry的个数>1,才有资格作为dic_me_grouper的key
-    #     print "In the first loop, current i is:", i
-    #     if len(sorted_list_liege[i][1]) > 1:
-    #         possible_key = sorted_list_liege[i][1][0]
-    #         eid_list = [sorted_list_liege[i][0]]
-    #         next_eid = sorted_list_liege[i+1][0]
-    #         i = i+1
-    #         # 如果 i >= sorted_list_liege的长度则会溢出，
-    #         # 如果下一个EID被当前prefix最短的mapping entry包含，则被新dic添加
-    #         while (i < len(sorted_list_liege)) and (next_eid in possible_key):
-    #             eid_list.append(next_eid)
-    #             i = i+1
-    #             next_eid = sorted_list_liege[i][0]
-    #         print possible_key,"=>","after processing: ", eid_list
-    #         print "after while loop, current i:", i
-    #         dic_me_grouper.update({possible_key: eid_list})
-    #         # dic_me_grouper[sorted_list_liege[i][1][0]] = eid_list
-    #     else:
-    #         i += 1
-    # pprint.pprint(dic_me_grouper)
-    #
-    #
-    # print "length of dic_me_grouper:", len(sort_dic_key_value(dic_me_grouper))
-    # print "Final result"
-    # # pprint.pprint(sort_dic_key_value(dic_me_grouper))
-    #
-    # all_eid_set = []
-    # with open(os.path.join(LOG_DIR, 'comparison_time_liege.csv')) as f_handler:
-    #     next(f_handler)
-    #     for line in f_handler:
-    #         tmp_list = line.split(';')
-    #
-    #         all_eid_set.append(IPAddress(tmp_list[LOG_TIME_COLUMN['eid']]))
-    #
-    # all_eid_set = list(set(all_eid_set))
-    #
-    # print 'In original file, eid number is', len(all_eid_set)
-    # # pprint.pprint(all_eid_set)
-    #
-    # middle_process = [element[0] for element in sort_dic_key_value(result_dict['liege'])]
-    # print len(middle_process)
-    # #pprint.pprint(middle_process)
-    #
-    # after_process = []
-    # for value in dic_me_grouper.itervalues():
-    #     print value
-    #     after_process.extend(value)
-    # print "After processing,", len(after_process)
-    # #pprint.pprint(sorted(after_process))
-    #
-    # # rest = list(set(all_eid_set)-set(middle_process))
-    # # pprint.pprint(rest)
-
-
-
     # 为方便后续操作，创建字典 vp_me_logs = {}
     # 其内容大体为：
     # vp_me_logs = {
@@ -205,7 +138,7 @@ if __name__ == '__main__':
         for me, eids_list in me_eids_dic.iteritems():
             vp_me_logs[vantage][me] =[str(eid) for eid in eids_list]
             vp_me_logs[vantage][me] = [
-                "{0}-EID-{1}-MR-{2}.log".format(
+                "{0}-EID-{1}-MR-{2}.log.csv".format(
                     LOG_PREFIX[vantage], eid, mr
                 )
                 for eid in vp_me_logs[vantage][me] for mr in MR_LIST
@@ -213,6 +146,33 @@ if __name__ == '__main__':
 
 
     pprint.pprint(vp_me_logs)
+
+    for vantage, me_logs_dic in vp_me_logs.iteritems():
+        logger.info("Processing {0}".format(vantage))
+        for me, log_list in me_logs_dic.iteritems():
+            log_obj_list = [
+                resolver_comparator.LogFile(
+                    os.path.join(PLANET_CSV_DIR, vantage, log_file_str)
+                )
+                for log_file_str in log_list
+            ]
+            print log_obj_list
+            logger.info(resolver_comparator.is_coherent(log_obj_list, str(me), logger))
+
+    stop_time = timeit.default_timer()
+    print "Execution time (in unit of second) of this script: ", stop_time - start_time
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -14,7 +14,6 @@ from operator import itemgetter, attrgetter
 from utility.REPattern_opt import *
 
 class Round(object):
-
     # 根究CSV文件中的每一列，生成一个Round类型的对象
     # csv_row 可能的形式有：
     # 'RoundNormal',
@@ -54,7 +53,6 @@ class LogFile(object):
     def csv_sort_list(self, csv_file, delimiter=';'):
         """Read target csv file into a list and return a sorted list to be written"""
         with open(csv_file, 'rt') as csvfile:
-
             reader = csv.reader(csvfile, delimiter=delimiter)
             csv_cont_list = list(reader)
             return csv_cont_list[1:]
@@ -71,10 +69,15 @@ def csv_files_dict(traces_csv_dir, logger):
     """
     eids, resovlers = get_eid_resolver_sort_list(traces_csv_dir)
 
-    result = dict()
+    # 初始化 返回结果
+    # 其可能返回结果：
+    # result ={
+    #   'eid', [LogFile1, LogFile2, ...]
+    # }
+    result = {}
 
     for eid in eids:
-        result[eid] = list()
+        result[eid] = []
 
     # for csv_file_name in os.listdir(traces_csv_dir):
     # glob.glob(filepath)直接获得就是绝对地址了
@@ -152,14 +155,18 @@ def is_all_resolver_coherent_for_eid(output_file, csv_files, logger):
 
 def is_coherent(log_file_list, eid, logger):
     """
-        input: a list of LogFile object
-        output: True or false
+        input   : log_file_list: a list of LogFile object (13 log files in format of CSV)
+                : eid: string, indicate current processing for which EID
+                : logger: logging handler, record debug information
+
+        output  : a dictionary of comparison metric and result key-value pair
     """
     logger.debug("Processing {0}".format(eid))
     # 默认 coherent值为True, 一旦有异常情况出现，则返回False, 方法立即结束
+    # 因为本方法，只能记录下第一次 各个参与比较的log_file的no-coherence之处，这种做法主要是为了降低 程序的复杂度和对系统资源消耗
     # 如若需要统计错误异常的总次数，则需要修改代码
 
-    # 所有的比较指标，默认值都为 True
+    # 开头即直接初始化返回的结果，所有的比较指标，默认值都为 True
     res = {
         'coherent': True,
         'round_number_coherent': True,
@@ -172,6 +179,8 @@ def is_coherent(log_file_list, eid, logger):
         'te_coherent': True
 
     }
+
+    # 错误信息字典，给出no-coherence的具体原因
     error_message = {
         'round_number': 'The total round number for EID:{0} of is not coherent. Reason:{1}',
         'type': 'The type of rounds for EID:{0} at {1}th trial is not coherent. Reason: {2}',
@@ -330,7 +339,7 @@ if __name__ == '__main__':
     try:
         # debug的时候 使用 PLANETLAB_DEBUG
         # 工作的时候 用 PLANETLAB_CSV
-        PLANETLAB_DEV = os.environ['PLANETLAB_CSV']
+        PLANETLAB_DEV = os.environ['PLANETLAB_DEV']
 
     except KeyError:
 
@@ -340,16 +349,22 @@ if __name__ == '__main__':
 
 
     # 构造字典，存储所有指向CSV格式的traces的路径
+    # =========================================== ** =======================================================
     TRACES_CSV = {
-        #'liege':   "/".join([PLANETLAB_DEV, 'liege']),
-        'ucl':   "/".join([PLANETLAB_DEV, 'ucl']),
-        'umass':   "/".join([PLANETLAB_DEV, 'umass']),
-        'temple':   "/".join([PLANETLAB_DEV, 'temple']),
-        'wiilab':   "/".join([PLANETLAB_DEV, 'wiilab']),
+        'liege':   "/".join([PLANETLAB_DEV, 'liege']),
+        #'ucl':   "/".join([PLANETLAB_DEV, 'ucl']),
+        # 'umass':   "/".join([PLANETLAB_DEV, 'umass']),
+        # 'temple':   "/".join([PLANETLAB_DEV, 'temple']),
+        # 'wiilab':   "/".join([PLANETLAB_DEV, 'wiilab']),
 
     }
 
-    # 构造字典，指向每个vantage之内 Map resolver比较结果，CSV格式
+    # 遍历字典 TRACES_CSV的键值，生成字典RESULT_FILE
+    # 该字典用以存储 13个Map resolver的比较结果CSV文件路径，该字典可能形式如下
+    # RESULT_FILE ={
+    #   'liege' : '/Users/qsong/Documents/TracesAnalyzer/log/comparison_map_resolver_in_liege.csv'
+    #   ...
+    # }
     RESULT_FILE = {}
     for vantage in TRACES_CSV.iterkeys():
         RESULT_FILE[vantage] = os.path.join(LOG_DIR, "comparison_map_resolver_in_{0}.csv".format(vantage))
@@ -390,6 +405,7 @@ if __name__ == '__main__':
                         format='%(asctime)s - %(levelname)s: %(message)s')
     logger = logging.getLogger(__name__)
 
+    # 遍历字典TRACES_CSV， 分别处理5个VP文件夹内的所有文件
     for vantage, traces_dir in TRACES_CSV.iteritems():
         # log_name = vantage+'_execution.log'
         # setup_logger(vantage, os.path.join(LOG_DIR, log_name))
