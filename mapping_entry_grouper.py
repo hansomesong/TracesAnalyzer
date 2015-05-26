@@ -1,5 +1,5 @@
-__author__ = 'yueli'
 # -*- coding: utf-8 -*-
+__author__ = 'yueli'
 
 import pprint
 from config.config import *
@@ -9,6 +9,7 @@ import logging
 from netaddr import *
 import re
 import timeit
+import datetime
 
 # 定义一个排序函数，使得作为key的EID可以从小到大排列，作为value的Mapping entry list内部也可以按照从小到大排列
 def sort_dic_key_value(dic_origin):
@@ -147,33 +148,21 @@ if __name__ == '__main__':
 
     pprint.pprint(vp_me_logs)
 
-    for vantage, me_logs_dic in vp_me_logs.iteritems():
-        logger.info("Processing {0}".format(vantage))
-        for me, log_list in me_logs_dic.iteritems():
-            log_obj_list = [
-                resolver_comparator.LogFile(
-                    os.path.join(PLANET_CSV_DIR, vantage, log_file_str)
-                )
-                for log_file_str in log_list
-            ]
-            print log_obj_list
-            logger.info(resolver_comparator.is_coherent(log_obj_list, str(me), logger))
+    # # 为了Debug而把所有详细内容打印出来
+    # for vantage, me_logs_dic in vp_me_logs.iteritems():
+    #     logger.info("Processing {0}".format(vantage))
+    #     for me, log_list in me_logs_dic.iteritems():
+    #         log_obj_list = [
+    #             resolver_comparator.LogFile(
+    #                 os.path.join(PLANET_CSV_DIR, vantage, log_file_str)
+    #             )
+    #             for log_file_str in log_list
+    #         ]
+    #         print log_obj_list
+    #         logger.info(resolver_comparator.is_coherent(log_obj_list, str(me), logger))
 
     stop_time = timeit.default_timer()
     print "Execution time (in unit of second) of this script: ", stop_time - start_time
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -189,7 +178,30 @@ if __name__ == '__main__':
 
 
 
+    # 用raw_file_list来储存每个group里含有的EID－MR-149.20.48.61.log.csv，方便后面画图
+    for vp, me_eid_dic in me_grouper_dict.iteritems():
+        raw_file_list = []
+        for me, eid_presented_list in me_eid_dic.iteritems():
+            for eid in eid_presented_list:
+                raw_file_list.append(os.path.join(PLANET_CSV_DIR, vp, "{0}-EID-{1}-MR-149.20.48.61.log.csv".format(LOG_PREFIX[vp], str(eid))))
 
+        # # 逐个打开每个group的文件用来画图
+        # for raw_file in raw_file_list:
+        #     with open(raw_file) as f_handler:
+        #         me_in_raw_file = []
+        #         next(f_handler)
+        #         for line in f_handler:
+        #             tmp_list = line.split(";")
+        #             tmp_dt = datetime.datetime.strptime(tmp_list[1], "%Y-%m-%d %H:%M:%S")
+        #             me_in_raw_file.append(tmp_list[10])
 
-
-
+        # 逐个打开每个group的文件用来检测第一列是什么
+        for raw_file in raw_file_list:
+            with open(raw_file) as f_handler:
+                me_in_raw_file = []
+                next(f_handler)
+                for line in f_handler:
+                    tmp_list = line.split(";")
+                    if tmp_list[0] != "RoundNoReply":
+                        me_in_raw_file.append(tmp_list[0])
+                print raw_file, "---->",set(me_in_raw_file)
