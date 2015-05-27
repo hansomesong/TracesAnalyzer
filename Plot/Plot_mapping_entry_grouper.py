@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from config.config import *
 import timeit
+import re
 
 # Import the targeted raw CSV file, and store them in the rawCSV_file_list
 rawCSV_file_list = []
@@ -27,6 +28,8 @@ rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-15
 
 # rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.44.112-MR-149.20.48.61.log.csv"))
 # rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.44.120-MR-149.20.48.61.log.csv"))
+
+print rawCSV_file_list
 
 # Define a function to get the longest Time list from the CSV file list
 def getTime(rawCSV_file_list):
@@ -72,6 +75,15 @@ def getYAxisValue(timeXAxis, rawCSV_file, index_value):
     return negativeReply_list, normalReply_list
 
 
+# 定义一个方法，使得可以得到当前绘图时用到的所有EID，用一个list储存起来
+def getEID_list():
+    EID_list = []
+    pattern = r"EID-\d+.\d+.\d+.\d+"
+    for rawCSV_file in rawCSV_file_list:
+        EID_list.append(re.search(pattern, rawCSV_file).group())
+
+    return EID_list
+
 
 
 if __name__ == '__main__':
@@ -96,7 +108,8 @@ if __name__ == '__main__':
     plt.xlim(0, len(timeXAxis))
     plt.ylim(0, i)
     plt.xlabel('Experiment number')
-    # plt.yticks(range(1,i+1,1), ('EID-37.77.58.0', 'EID-37.77.58.64', 'EID-37.77.58.128','EID-37.77.59.0'))
+    plt.yticks(range(1,len(getEID_list())+1,1), getEID_list())
+
     plt.show()
 
 
