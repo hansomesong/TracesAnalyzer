@@ -10,15 +10,15 @@ import datetime
 
 # Import the targeted raw CSV file, and store them in the rawCSV_file_list
 rawCSV_file_list = []
-# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-37.77.58.0-MR-149.20.48.61.log.csv"))
-# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-37.77.58.64-MR-149.20.48.61.log.csv"))
-# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-37.77.58.128-MR-149.20.48.61.log.csv"))
-# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-37.77.59.0-MR-149.20.48.61.log.csv"))
+rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-37.77.58.0-MR-149.20.48.61.log.csv"))
+rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-37.77.58.64-MR-149.20.48.61.log.csv"))
+rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-37.77.58.128-MR-149.20.48.61.log.csv"))
+rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-37.77.59.0-MR-149.20.48.61.log.csv"))
 
-rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.22.216-MR-149.20.48.61.log.csv"))
-rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.22.217-MR-149.20.48.61.log.csv"))
-rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.22.218-MR-149.20.48.61.log.csv"))
-rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.22.220-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.22.216-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.22.217-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.22.218-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.22.220-MR-149.20.48.61.log.csv"))
 
 # rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.17.224-MR-149.20.48.61.log.csv"))
 # rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.17.228-MR-149.20.48.61.log.csv"))
@@ -96,7 +96,13 @@ def getMappingEntry_list(timeXAxis, rawCSV_file, index_value):
             tmp_list = line.split(';')
             if tmp_list[0] != 'RoundNoReply':
                 if tmp_list[10] not in [a[0] for a in mappingEntry_list]:
-                    mappingEntry_list.append([tmp_list[10], timeXAxis.index(tmp_list[1]), index_value])
+                    exp_date = datetime.datetime.strptime(
+                        tmp_list[LOG_COLUMN['date']], "%Y-%m-%d %H:%M:%S"
+                    ).replace(
+                        # zero the second and millisecond filed of target datetime object
+                        second=0, microsecond=0
+                    )
+                    mappingEntry_list.append([tmp_list[10], datetime2exp_number(exp_date), index_value])
 
     return mappingEntry_list
 
@@ -130,7 +136,7 @@ if __name__ == '__main__':
         negativeValue_list = []
         normalValue_list = []
         negativeValue_list, normalValue_list = getYAxisValue(timeXAxis, rawCSV_file, i)
-        plt.scatter(range(1, len(timeXAxis)+1), negativeValue_list, color='black', s=1)
+        # plt.scatter(range(1, len(timeXAxis)+1), negativeValue_list, color='black', s=1)
         # print [y for y, x in enumerate(normalValue_list, 1) if x == 1]
         i += 1
 
@@ -177,8 +183,17 @@ if __name__ == '__main__':
                     marker_color_pair = rloc_marker_dict[rlocs]
 
 
-                    print marker_color_pair, date, datetime2exp_number(date), rlocs
+                    # print marker_color_pair, date, datetime2exp_number(date), rlocs
                     plt.scatter(datetime2exp_number(date), i, marker=marker_color_pair[0], color=marker_color_pair[1])
+                elif tmp_list[LOG_COLUMN['type']] == 'NegativeReply':
+                    date = datetime.datetime.strptime(
+                        tmp_list[LOG_COLUMN['date']], "%Y-%m-%d %H:%M:%S"
+                    ).replace(
+                        # zero the second and millisecond filed of target datetime object
+                        second=0, microsecond=0
+                    )
+                    plt.scatter(datetime2exp_number(date), i, color="black", s=1)
+
         i += 1
 
     # 此处循环为给不同的mappingEntry变化时标注出来，打上箭头，
@@ -186,6 +201,7 @@ if __name__ == '__main__':
     j = 1
     for rawCSV_file in rawCSV_file_list:
         mappingEntry_list = getMappingEntry_list(timeXAxis, rawCSV_file, j)
+        print mappingEntry_list
         # 添加一个新变量，in the case of 不同mappingEntry离得太近，会发生标注重叠现象
         annotation_distance = 0
         more_than_one_time_flag = 0
@@ -194,8 +210,8 @@ if __name__ == '__main__':
             if more_than_one_time_flag == 0:
                 plt.annotate(
                     mappingEntry[0],
-                    xy=(mappingEntry[1],mappingEntry[2]+0.04),
-                    xytext=(mappingEntry[1],mappingEntry[2]+0.3),
+                    xy=(mappingEntry[1], mappingEntry[2]+0.04),
+                    xytext=(mappingEntry[1], mappingEntry[2]+0.3),
                     arrowprops=dict(arrowstyle="->")
                 )
                 more_than_one_time_flag += 1
