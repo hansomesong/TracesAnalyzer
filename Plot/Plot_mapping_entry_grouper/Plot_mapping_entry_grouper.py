@@ -8,14 +8,15 @@ import timeit
 import re
 import datetime
 import colorsys
+from netaddr import *
 
 # Import the targeted raw CSV file, and store them in the rawCSV_file_list
 rawCSV_file_list = []
 # liege
-rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-37.77.58.0-MR-149.20.48.61.log.csv"))
-rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-37.77.58.64-MR-149.20.48.61.log.csv"))
-rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-37.77.58.128-MR-149.20.48.61.log.csv"))
-rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-37.77.59.0-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-37.77.58.0-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-37.77.58.64-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-37.77.58.128-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-37.77.59.0-MR-149.20.48.61.log.csv"))
 
 # rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.22.216-MR-149.20.48.61.log.csv"))
 # rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.22.217-MR-149.20.48.61.log.csv"))
@@ -29,8 +30,8 @@ rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-37
 # rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.30.164-MR-149.20.48.61.log.csv"))
 # rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.30.176-MR-149.20.48.61.log.csv"))
 
-# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.44.112-MR-149.20.48.61.log.csv"))
-# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.44.120-MR-149.20.48.61.log.csv"))
+rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.44.112-MR-149.20.48.61.log.csv"))
+rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.44.120-MR-149.20.48.61.log.csv"))
 
 
 # temple
@@ -220,7 +221,7 @@ def get_plot_title(rawCSV_file_list):
         next(f_handler)
         for line in f_handler:
             tmp_list = line.split(';')
-            if tmp_list[0] != "RoundNoReply":
+            if tmp_list[0] != "RoundNoReply" and IPAddress(tmp_list[2]) in IPNetwork(tmp_list[10]):
                 if int(re.sub( "\d+.\d+.\d+.\d+\/", '', tmp_list[10])) < prefix_tmp:
                     me_prefix_shortest = tmp_list[10]
                     prefix_tmp = int(re.sub( "\d+.\d+.\d+.\d+\/", '', tmp_list[10]))
@@ -359,7 +360,6 @@ if __name__ == '__main__':
     plt.yticks(range(1, len(getEID_list())+1, 1), getEID_list())
 
     plt.title(get_plot_title(rawCSV_file_list))
-
 
 
     # 记录程序终止时间，用差可算出程序实际运行时间
