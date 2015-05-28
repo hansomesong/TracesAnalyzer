@@ -123,6 +123,11 @@ if __name__ == '__main__':
             else:
                 i += 1
 
+
+    print "me_grouper_dict:"
+    pprint.pprint(me_grouper_dict)
+
+
     # 为方便后续操作，创建字典 vp_me_logs = {}
     # 其内容大体为：
     # vp_me_logs = {
@@ -161,8 +166,6 @@ if __name__ == '__main__':
     #         print log_obj_list
     #         logger.info(resolver_comparator.is_coherent(log_obj_list, str(me), logger))
 
-    stop_time = timeit.default_timer()
-    print "Execution time (in unit of second) of this script: ", stop_time - start_time
 
 
 
@@ -205,3 +208,7 @@ if __name__ == '__main__':
                     if tmp_list[0] != "RoundNoReply":
                         me_in_raw_file.append(tmp_list[0])
                 print raw_file, "---->",set(me_in_raw_file)
+
+
+    stop_time = timeit.default_timer()
+    print "Execution time (in unit of second) of this script: ", stop_time - start_time
