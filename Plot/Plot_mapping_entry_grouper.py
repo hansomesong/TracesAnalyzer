@@ -30,7 +30,6 @@ rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-15
 # rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.44.112-MR-149.20.48.61.log.csv"))
 # rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.44.120-MR-149.20.48.61.log.csv"))
 
-print rawCSV_file_list
 
 # Define a function to get the longest Time list from the CSV file list
 def getTime(rawCSV_file_list):
@@ -86,61 +85,157 @@ def getEID_list():
     return EID_list
 
 
+# 定义一个方法，使得可以得到当前绘图时用到的所有需用箭头标记出来的不同的mapping_entry，
+# 返回值为list的list，内层list=[mapping_entry,experiment number,y轴值]，
+# 外层list变量为不同的mapping_entry
+def getMappingEntry_list(timeXAxis, rawCSV_file, index_value):
+    mappingEntry_list = []
+    with open(rawCSV_file) as f_handler:
+        next(f_handler)
+        for line in f_handler:
+            tmp_list = line.split(';')
+            if tmp_list[0] != 'RoundNoReply':
+                if tmp_list[10] not in [a[0] for a in mappingEntry_list]:
+                    mappingEntry_list.append([tmp_list[10], timeXAxis.index(tmp_list[1]), index_value])
+
+    return mappingEntry_list
+
+def datetime2exp_number(date):
+    return int((date-datetime.datetime(2013, 7, 2, 7, 30)).total_seconds()/1800+1)
+
+# Generate a list of unique, distinct colors
+import colorsys
+def get_N_HexCol(N=5):
+
+    colors=[]
+    for i in np.arange(0., 360., 360. / N):
+        hue = i/360.
+        lightness = (50 + np.random.rand() * 10)/100.
+        saturation = (90 + np.random.rand() * 10)/100.
+        colors.append(colorsys.hls_to_rgb(hue, lightness, saturation))
+    return colors
 
 if __name__ == '__main__':
     # 记录程序起始时间
     start_time = timeit.default_timer()
 
-    # All available marker styles are introduced in this webpage:
-    # http://matplotlib.org/api/markers_api.html
-    marker_styles = ['o', '*', '+', 'x', 's', 'q', '1', '2', '3', '4']
 
 
     # 画图时作为X轴的时间
     timeXAxis = getTime(rawCSV_file_list)
 
+    # 此处循环plot出整体，negativeMapReply用蓝线表示，normalReply用绿线表示
     i = 1
     for rawCSV_file in rawCSV_file_list:
         negativeValue_list = []
         normalValue_list = []
         negativeValue_list, normalValue_list = getYAxisValue(timeXAxis, rawCSV_file, i)
-        i = i + 1
-
-        plt.scatter(range(len(timeXAxis)), negativeValue_list, color = 'blue')
-        plt.scatter(range(len(timeXAxis)), normalValue_list, color = 'green', marker='*')
-
+        plt.scatter(range(1, len(timeXAxis)+1), negativeValue_list, color='black', s=1)
+        # print [y for y, x in enumerate(normalValue_list, 1) if x == 1]
+        i += 1
 
 
 
+    # 此for loop只为绘制RoundNormal类型的 点状图
+    i = 1
     for rawCSV_file in rawCSV_file_list:
+        # All available marker styles are introduced in this webpage:
+        # http://matplotlib.org/api/markers_api.html
+        marker_styles = ['o', '*', '+', 'x', 's', '1', '2', '3', '4', '8', '<', '>', '^', 'D', 'd']
+        marker_styles.reverse()
+        # Generate a list of distinct colors
+        colors = get_N_HexCol(20)
+        # Record whether a certain RLOC has appreared before and associate a pair of marker and color for plotting
+        rloc_marker_dict = {}
+
+        # open current CSV log file to process each round
         with open(rawCSV_file) as f_handler:
             next(f_handler)
             for line in f_handler:
                 tmp_list = line.split(";")
                 # The data structure "LOG_COLUMN" is defined in file: config.py
-                if tmp_list[LOG_COLUMN['type']] != 'RoundNoReply':
-                    round_dict = {
-                        'type'      : tmp_list[LOG_COLUMN['type']],
-                        # Convert datetime of format string into a Datetime type object, and
-                        # gard just year, month, day, hour, minutes.
-                        'datetime'  : datetime.datetime.strptime(tmp_list[LOG_COLUMN['date']], "%Y-%m-%d %H:%M:%S")
+                # We are just interested in round whose type is "RoundNormal
+                if tmp_list[LOG_COLUMN['type']] == 'RoundNormal':
+                    # For line of type "RoundNormal", we need to record the column:
+                    # datetime and rloc set, because datetime
+                    date = datetime.datetime.strptime(
+                        # It is strange that when I open CSV log file with Excel, the datetime column is in format of
+                        # "%d/%m/%Y %H:%M:%S", but in format of "%Y-%m-%d %H:%M:%S" opened with vim.
+                        # Actually, the format "%Y-%m-%d %H:%M:%S" works when parsing datetime string in CSV log file
+                        # into datetime object, and I do not know why...
+                        tmp_list[LOG_COLUMN['date']], "%Y-%m-%d %H:%M:%S"
+                    ).replace(
+                        # zero the second and millisecond filed of target datetime object
+                        second=0, microsecond=0
+                    )
+
+                    # Remember that c
+                    rlocs= "#".join(tmp_list[14:])
+
+                    if rlocs not in rloc_marker_dict.keys():
+                        rloc_marker_dict[rlocs] = (marker_styles.pop(), colors.pop())
+                    marker_color_pair = rloc_marker_dict[rlocs]
 
 
-                    }
+                    print marker_color_pair, date, datetime2exp_number(date), rlocs
+                    plt.scatter(datetime2exp_number(date), i, marker=marker_color_pair[0], color=marker_color_pair[1])
+        i += 1
 
+    # 此处循环为给不同的mappingEntry变化时标注出来，打上箭头，
+    # 并且避免了由于X轴间距太小而annotaion被重叠在一起打印出来的情况
+    j = 1
+    for rawCSV_file in rawCSV_file_list:
+        mappingEntry_list = getMappingEntry_list(timeXAxis, rawCSV_file, j)
+        # 添加一个新变量，in the case of 不同mappingEntry离得太近，会发生标注重叠现象
+        annotation_distance = 0
+        more_than_one_time_flag = 0
+        for mappingEntry in mappingEntry_list:
+            # 第一次加注释开始
+            if more_than_one_time_flag == 0:
+                plt.annotate(
+                    mappingEntry[0],
+                    xy=(mappingEntry[1],mappingEntry[2]+0.04),
+                    xytext=(mappingEntry[1],mappingEntry[2]+0.3),
+                    arrowprops=dict(arrowstyle="->")
+                )
+                more_than_one_time_flag += 1
+                time_tmp = mappingEntry[1]
+                # 为下一次标注重合移动Y轴坐标做准备
+                annotation_distance += 0.2
+            # 第二次以后加注释开始
+            else:
+                # 如果此标注起始位置与上一次相差大于等于200，则标注的Y周坐标不用变更
+                if (mappingEntry[1] - time_tmp) >= 200:
+                    plt.annotate(
+                        mappingEntry[0],
+                        xy=(mappingEntry[1], mappingEntry[2]+0.04),
+                        xytext=(mappingEntry[1], mappingEntry[2]+0.3),
+                        arrowprops=dict(arrowstyle="->")
+                    )
+                    more_than_one_time_flag += 1
+                    time_tmp = mappingEntry[1]
+                # 如果此标注起始位置与上一次相差小于200，则标注的Y周坐标需要有上调或下降的变更
+                else:
+                    plt.annotate(
+                        mappingEntry[0],
+                        xy=(mappingEntry[1], mappingEntry[2]+0.04),
+                        xytext=(mappingEntry[1], mappingEntry[2]+0.3+annotation_distance),
+                        arrowprops=dict(arrowstyle="->"))
+                    annotation_distance -= 0.2
+                    more_than_one_time_flag += 1
 
+        j += 1
 
     plt.xlim(0, len(timeXAxis))
     plt.ylim(0, i)
     plt.xlabel('Experiment number')
-    plt.yticks(range(1,len(getEID_list())+1,1), getEID_list())
-
-    plt.show()
+    plt.yticks(range(1, len(getEID_list())+1, 1), getEID_list())
 
 
 
     # 记录程序终止时间，用差可算出程序实际运行时间
     stop_time = timeit.default_timer()
     print "Execution time (in unit of second) of this script: ", stop_time - start_time
+    plt.show()
 
-# plt.annotate('mapping_entry/prefix',xy=(0,2.03),xytext=(0,2.1),arrowprops=dict(arrowstyle="->"))
+
