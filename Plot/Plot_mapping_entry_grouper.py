@@ -7,9 +7,11 @@ from config.config import *
 import timeit
 import re
 import datetime
+import colorsys
 
 # Import the targeted raw CSV file, and store them in the rawCSV_file_list
 rawCSV_file_list = []
+# liege
 rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-37.77.58.0-MR-149.20.48.61.log.csv"))
 rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-37.77.58.64-MR-149.20.48.61.log.csv"))
 rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-37.77.58.128-MR-149.20.48.61.log.csv"))
@@ -30,6 +32,92 @@ rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-37
 # rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.44.112-MR-149.20.48.61.log.csv"))
 # rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'liege', "planetlab1-EID-153.16.44.120-MR-149.20.48.61.log.csv"))
 
+
+# temple
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'temple', "planetlab2-EID-37.77.58.0-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'temple', "planetlab2-EID-37.77.58.64-MR-149.20.48.61.log.csv "))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'temple', "planetlab2-EID-37.77.58.128-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'temple', "planetlab2-EID-37.77.59.0-MR-149.20.48.61.log.csv"))
+#
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'temple', "planetlab2-EID-153.16.22.216-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'temple', "planetlab2-EID-153.16.22.217-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'temple', "planetlab2-EID-153.16.22.218-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'temple', "planetlab2-EID-153.16.22.220-MR-149.20.48.61.log.csv"))
+#
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'temple', "planetlab2-EID-153.16.17.224-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'temple', "planetlab2-EID-153.16.17.228-MR-149.20.48.61.log.csv"))
+#
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'temple', "planetlab2-EID-153.16.30.160-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'temple', "planetlab2-EID-153.16.30.164-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'temple', "planetlab2-EID-153.16.30.176-MR-149.20.48.61.log.csv"))
+#
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'temple', "planetlab2-EID-153.16.44.112-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'temple', "planetlab2-EID-153.16.44.120-MR-149.20.48.61.log.csv"))
+
+# ucl
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'ucl', "onelab1-EID-37.77.58.0-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'ucl', "onelab1-EID-37.77.58.64-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'ucl', "onelab1-EID-37.77.58.128-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'ucl', "onelab1-EID-37.77.59.0-MR-149.20.48.61.log.csv"))
+
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'ucl', "onelab1-EID-153.16.22.216-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'ucl', "onelab1-EID-153.16.22.217-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'ucl', "onelab1-EID-153.16.22.218-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'ucl', "onelab1-EID-153.16.22.220-MR-149.20.48.61.log.csv"))
+
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'ucl', "onelab1-EID-153.16.17.224-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'ucl', "onelab1-EID-153.16.17.228-MR-149.20.48.61.log.csv"))
+#
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'ucl', "onelab1-EID-153.16.30.160-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'ucl', "onelab1-EID-153.16.30.164-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'ucl', "onelab1-EID-153.16.30.176-MR-149.20.48.61.log.csv"))
+#
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'ucl', "onelab1-EID-153.16.44.112-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'ucl', "onelab1-EID-153.16.44.120-MR-149.20.48.61.log.csv"))
+
+
+# umass
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'umass', "planetlab2-EID-37.77.58.0-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'umass', "planetlab2-EID-37.77.58.64-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'umass', "planetlab2-EID-37.77.58.128-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'umass', "planetlab2-EID-37.77.59.0-MR-149.20.48.61.log.csv"))
+#
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'umass', "planetlab2-EID-153.16.22.216-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'umass', "planetlab2-EID-153.16.22.217-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'umass', "planetlab2-EID-153.16.22.218-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'umass', "planetlab2-EID-153.16.22.220-MR-149.20.48.61.log.csv"))
+#
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'umass', "planetlab2-EID-153.16.17.224-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'umass', "planetlab2-EID-153.16.17.228-MR-149.20.48.61.log.csv"))
+#
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'umass', "planetlab2-EID-153.16.30.160-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'umass', "planetlab2-EID-153.16.30.164-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'umass', "planetlab2-EID-153.16.30.176-MR-149.20.48.61.log.csv"))
+#
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'umass', "planetlab2-EID-153.16.44.112-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'umass', "planetlab2-EID-153.16.44.120-MR-149.20.48.61.log.csv"))
+
+
+# wiilab
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'wiilab', "planetlab2-EID-37.77.58.0-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'wiilab', "planetlab2-EID-37.77.58.64-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'wiilab', "planetlab2-EID-37.77.58.128-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'wiilab', "planetlab2-EID-37.77.59.0-MR-149.20.48.61.log.csv"))
+#
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'wiilab', "planetlab2-EID-153.16.22.216-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'wiilab', "planetlab2-EID-153.16.22.217-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'wiilab', "planetlab2-EID-153.16.22.218-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'wiilab', "planetlab2-EID-153.16.22.220-MR-149.20.48.61.log.csv"))
+#
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'wiilab', "planetlab2-EID-153.16.17.224-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'wiilab', "planetlab2-EID-153.16.17.228-MR-149.20.48.61.log.csv"))
+#
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'wiilab', "planetlab2-EID-153.16.30.160-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'wiilab', "planetlab2-EID-153.16.30.164-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'wiilab', "planetlab2-EID-153.16.30.176-MR-149.20.48.61.log.csv"))
+#
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'wiilab', "planetlab2-EID-153.16.44.112-MR-149.20.48.61.log.csv"))
+# rawCSV_file_list.append(os.path.join(PLANET_CSV_DIR, 'wiilab', "planetlab2-EID-153.16.44.120-MR-149.20.48.61.log.csv"))
 
 # Define a function to get the longest Time list from the CSV file list
 def getTime(rawCSV_file_list):
@@ -110,7 +198,7 @@ def datetime2exp_number(date):
     return int((date-datetime.datetime(2013, 7, 2, 7, 30)).total_seconds()/1800+1)
 
 # Generate a list of unique, distinct colors
-import colorsys
+
 def get_N_HexCol(N=5):
 
     colors=[]
@@ -121,6 +209,29 @@ def get_N_HexCol(N=5):
         colors.append(colorsys.hls_to_rgb(hue, lightness, saturation))
     return colors
 
+
+
+# 定一个方法，使得挑出最短的prefix的mapping_entry，从而作为plot的题目
+def get_plot_title(rawCSV_file_list):
+    # 初始化一个长度为32位的prefix，方便后面选出最短prefix长度的比较
+    prefix_tmp = 32
+    first_rawCSV_file = rawCSV_file_list[0]
+    with open(first_rawCSV_file) as f_handler:
+        next(f_handler)
+        for line in f_handler:
+            tmp_list = line.split(';')
+            if tmp_list[0] != "RoundNoReply":
+                if int(re.sub( "\d+.\d+.\d+.\d+\/", '', tmp_list[10])) < prefix_tmp:
+                    me_prefix_shortest = tmp_list[10]
+                    prefix_tmp = int(re.sub( "\d+.\d+.\d+.\d+\/", '', tmp_list[10]))
+
+    plot_title = "Mapping Entry - {0}".format(me_prefix_shortest)
+    return plot_title
+
+
+
+
+# Main
 if __name__ == '__main__':
     # 记录程序起始时间
     start_time = timeit.default_timer()
@@ -247,11 +358,14 @@ if __name__ == '__main__':
     plt.xlabel('Experiment number')
     plt.yticks(range(1, len(getEID_list())+1, 1), getEID_list())
 
+    plt.title(get_plot_title(rawCSV_file_list))
+
 
 
     # 记录程序终止时间，用差可算出程序实际运行时间
     stop_time = timeit.default_timer()
     print "Execution time (in unit of second) of this script: ", stop_time - start_time
+
     plt.show()
 
 
