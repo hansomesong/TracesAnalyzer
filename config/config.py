@@ -7,12 +7,16 @@ import os
 # 读取 环境变量 ‘PLANETLAB’ and 'PROJECT_LOG_DIR'
 # 上述 环境变量 定义在 工作目录下 .profile中 (也有可能定义在 .bashprofile中)
 try:
-
-    PLANET_DIR = os.environ['PLANETLAB']
-    PLANET_CSV_DIR = os.environ['PLANETLAB_CSV']
-    # 存储 生成CSV文件的路径
-    PLOT_DIR = os.environ['PROJECT_PLOT_DIR']
+    # $HOME/Documents/Codes/TracesAnalyzer/log
     CSV_FILE_DESTDIR = os.environ['PROJECT_LOG_DIR']
+    # $HOME/Documents/Codes/PlanetLab_CSV
+    PLANET_CSV_DIR = os.environ['PLANETLAB_CSV']
+    # $HOME/Documents/Codes/Luigi_Codes/PlanetLab_20140716
+    PLANET_DIR = os.environ['PLANETLAB']
+    # 存储 生成CSV文件的路径
+    # $HOME/Documents/Codes/TracesAnalyzer/Plot
+    PLOT_DIR = os.environ['PROJECT_PLOT_DIR']
+
 
 except KeyError:
 
