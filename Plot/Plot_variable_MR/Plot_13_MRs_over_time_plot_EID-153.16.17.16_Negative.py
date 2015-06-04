@@ -81,7 +81,7 @@ for responseList in responseLists:
 
 response = np.linspace(1, 13, 13)
 plt.xlabel("Experiment numbers", fontsize=16)
-plt.ylabel("13 MRs", fontsize=16)
+plt.ylabel("MRs", fontsize=16)
 plt.title("Negative Reply from 13 different MRs for EID-153.16.17.16 over time", fontsize=16)
 plt.xlim(0, 753)
 plt.ylim(0, 14)

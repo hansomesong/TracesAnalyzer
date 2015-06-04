@@ -108,8 +108,8 @@ time = getTime(rawCSV_file1)
 print "time.len", len(time)
 
 # Modify the size and dpi of picture, default size is (8,6), default dpi is 80
-# plt.gcf().set_size_inches(16,6)
-# plt.gcf().set_dpi(300)
+plt.gcf().set_size_inches(16,6)
+plt.gcf().set_dpi(300)
 
 # To Scatter all 13 Map Replies from 13 MRs
 for responseList in responseLists1:
@@ -120,14 +120,14 @@ for responseList in responseLists2:
 
 response = np.linspace(1, 13, 13)
 plt.xlabel("Experiment numbers", fontsize=16)
-plt.ylabel("13 MRs", fontsize=16)
-plt.title("Normal Reply from 13 different MRs for EID-153.16.17.16 over time", fontsize=16)
-# plt.xlim(0, 801)
-plt.xlim(0, 50)
+plt.ylabel("MRs", fontsize=16)
+plt.title("Normal Reply from 13 different MRs for EID-153.16.47.16 over time", fontsize=16)
+plt.xlim(0, 801)
+# plt.xlim(0, 50)
 plt.ylim(0.5, 13.5)
 plt.yticks(response, ('MR1', 'MR2', 'MR3', 'MR4', 'MR5', 'MR6', 'MR7', 'MR8', 'MR9', 'MR10', 'MR11', 'MR12', 'MR13'))
 
 # plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_MR/Normal_from_13_different_MRs_for_EID-153_16_47_16_over_time_size_double.pdf")
-# plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_MR', 'Normal_from_13_different_MRs_for_EID-153_16_47_16_over_time_zoom.eps.eps'),
-#             dpi=300, transparent=True)
+plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_MR', 'Normal_from_13_different_MRs_for_EID-153_16_47_16_over_time.eps'),
+            dpi=300, transparent=True)
 plt.show()
