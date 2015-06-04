@@ -116,6 +116,7 @@ if __name__ == '__main__':
         PLANET_DIR = os.environ['PLANETLAB']
         CSV_FILE_DESTDIR = os.environ['PROJECT_LOG_DIR']
         PLANET_CSV_DIR = os.environ['PLANETLAB_CSV']
+        PLOT_DIR = os.environ['PROJECT_PLOT_DIR']
     except KeyError:
         print "Environment variable PROJECT_LOG_DIR is not properly defined or " \
               "the definition about this variable is not taken into account."
@@ -156,13 +157,53 @@ if __name__ == '__main__':
     print "get_num_different_response -->",
     pprint.pprint(num_different_response)
 
-    date_EID_dic = {}
-    for raw_file_lists in os.listdir(os.path.join(PLANET_CSV_DIR, 'liege')):
-        if re.search('planetlab1-EID-\d+.\d+.\d+.\d+-MR-149.20.48.61.log.csv', raw_file_lists):
-            eid_length_list = find_EID_total_number_per_day(os.path.join(PLANET_CSV_DIR, 'liege', raw_file_lists), date_EID_dic)
 
-    print "eid_length_list -->", eid_length_list
+
+    # 此部分为了验证每天EID的总个数与所给txt文件是否一致，是老板想要的不同mapping类型的EID个数的总合
+    # date_EID_dic = {}
+    # for raw_file_lists in os.listdir(os.path.join(PLANET_CSV_DIR, 'liege')):
+    #     if re.search('planetlab1-EID-\d+.\d+.\d+.\d+-MR-149.20.48.61.log.csv', raw_file_lists):
+    #         eid_length_list = find_EID_total_number_per_day(os.path.join(PLANET_CSV_DIR, 'liege', raw_file_lists), date_EID_dic)
+    #
+    # print "eid_length_list -->", eid_length_list
+
+
+    # This part is used to plot the result of num_different_response{}
+    # 画图时X轴即为num_different_response字典里最外面一层的keys
+    X_axis = num_different_response.keys()
+    # 根据已得到的X_axis list可以利用循环把不同mapping类型的EID个数分别存在4个不同的list里
+    NegativeReply_list = []
+    RoundNormal_list = []
+    PrintSkipped_list = []
+    NoMapReply_list = []
+    totalReply_list = []
+
+    for X in X_axis:
+        NegativeReply_list.append(num_different_response[X]['NegativeReply'])
+        RoundNormal_list.append(num_different_response[X]['RoundNormal'])
+        PrintSkipped_list.append(num_different_response[X]['PrintSkipped'])
+        NoMapReply_list.append(num_different_response[X]['RoundNoReply'])
+        totalReply_list.append(num_different_response[X]['NegativeReply'] + num_different_response[X]['RoundNormal']
+                               + num_different_response[X]['PrintSkipped'] + num_different_response[X]['RoundNoReply'])
+
+    plt.plot(X_axis, NegativeReply_list, color = 'blue', label = 'Negative Reply', linewidth = 2)
+    plt.plot(X_axis, RoundNormal_list, color = 'red', label = 'RLOC', linewidth = 2)
+    plt.plot(X_axis, PrintSkipped_list, color = 'black', label = 'PrintSkipped', linewidth = 2)
+    plt.plot(X_axis, NoMapReply_list, color = 'orange', label = 'No Map Reply', linewidth = 2)
+    plt.plot(X_axis, totalReply_list, color = 'gray', ls = '--', label = 'Total Reply', linewidth = 2)
+
+    plt.legend(loc="center right")
+    plt.xlabel("Date (from 02/07/2013 - 18/07/2013)", fontsize = 16)
+    plt.ylabel("EID number", fontsize = 16)
+    plt.title("EID number of different types of mapping per day", fontsize = 18)
+
+    plt.savefig(os.path.join(PLOT_DIR, 'EID_number_counter.eps'), dpi=300, transparent=True)
+
 
 
     stop_time = timeit.default_timer()
     print "Execution time (in unit of second) of this script: ", stop_time - start_time
+
+
+
+    plt.show()
