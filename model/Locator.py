@@ -57,6 +57,20 @@ class Locator(object):
         )
         return res
 
+    def __repr__(self):
+            # Just return the Locator's address
+            # return self.addr
+
+            # Return the Locator's all the infomation
+            res = "LOCATOR{0}={1},LOCATOR{0}_STATE={2},LOCATOR{0}_PRIORITY={3},LOCATOR{0}_WEIGHT={4}".format(
+                self.id,
+                self.addr,
+                self.state,
+                self.priority,
+                self.weight
+            )
+            return res
+
 ## Test for Locator
 
 if __name__ == '__main__':

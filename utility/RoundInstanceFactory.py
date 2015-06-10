@@ -572,9 +572,9 @@ class RoundInstanceFactory:
             while initial_ref is 'RoundNoReply':
                 initial_ref = self.rounds[i].type
                 i = i+1
-            initial_ref_locator_count = self.rounds[0].locator_count
-            initial_ref_locators = self.rounds[0].locators
-            pattern.append((self.rounds[i-1].locator_count, self.rounds[i-1].locators))
+            initial_ref_locator_count = self.rounds[i-1].locator_count
+            initial_ref_locators = self.rounds[i-1].locators
+            pattern.append(str((self.rounds[i-1].locator_count, self.rounds[i-1].locators)))
 
             # 从获取初始值的那一行开始向后比较
             for j in range(i, len(self.rounds)):
@@ -584,13 +584,47 @@ class RoundInstanceFactory:
                     count += 1
                     initial_ref_locator_count = self.rounds[j].locator_count
                     initial_ref_locators = self.rounds[j].locators
-                    pattern.append((self.rounds[j].locator_count, self.rounds[j].locators))
+                    pattern.append(str((self.rounds[j].locator_count, self.rounds[j].locators)))
                     times.append(self.rounds[j].date.strftime("%d/%m/%Y %H:%M:%S"))
 
             return [count, ','.join(times), '->'.join(pattern)]
         else:
             return [0, 0, 0]
 
+
+    # 2015-06-10：Add new functions to count RLOCMadness number, change time and change pattern
+    # RLOCMadness refers to the times of change are <= 3 times per day
+    # No Map Reply type is skipped
+    def statistics_RLOCMadness(self):
+        if "RoundNormal" in self.round_type_list and "NegativeReply" not in self.round_type_list:
+            count = 0
+            pattern = []
+            times = []
+            # select the first Locator count and RLOC(s) of RoundNormal as the initial_ref
+            # 如果此Round是RoundNoReply，则无法取到初始值，继续查看下一行直到有RoundNormal出现为止
+            initial_ref = self.rounds[0].type
+            i = 1
+            while initial_ref is 'RoundNoReply':
+                initial_ref = self.rounds[i].type
+                i = i+1
+            initial_ref_locator_count = self.rounds[i-1].locator_count
+            initial_ref_locators = self.rounds[i-1].locators
+            pattern.append(str((self.rounds[i-1].locator_count, self.rounds[i-1].locators)))
+
+            # 从获取初始值的那一行开始向后比较
+            for j in range(i, len(self.rounds)):
+                # print j, entries[j][0], initial_ref, entries[j][0] != initial_ref
+                if self.rounds[j].type == 'RoundNormal' and \
+                        (self.rounds[j].locator_count != initial_ref_locator_count or self.rounds[j].locators != initial_ref_locators):
+                    count += 1
+                    initial_ref_locator_count = self.rounds[j].locator_count
+                    initial_ref_locators = self.rounds[j].locators
+                    pattern.append(str((self.rounds[j].locator_count, self.rounds[j].locators)))
+                    times.append(self.rounds[j].date.strftime("%d/%m/%Y %H:%M:%S"))
+
+            return [count, ','.join(times), '->'.join(pattern)]
+        else:
+            return [0, 0, 0]
 
 
 
