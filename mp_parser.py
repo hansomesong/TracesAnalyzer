@@ -31,6 +31,7 @@ def listener(q):
                 'Coherence',
                 'RLOC set Consistence',
                 'TE coherent',
+                'case',
                 'Round Type Set',
                 'Different Locator Count',
                 'Locators Count Set',
@@ -39,9 +40,11 @@ def listener(q):
                 #'Locator count flap',
                 #'Locators flap',
                 'new deployement number',
-                'change time',
-                'change pattern',
-                'case',
+                'case1 change time',
+                'case1 change pattern',
+                'reconfiguration number',
+                'case2 change time',
+                'case2 change pattern',
                 'RLOC Set'
             ]
         )
@@ -65,6 +68,9 @@ def worker(vantage, log_file, q):
     csv_row.append(R.coherent)
     csv_row.append(R.RLOCSetCoherent)  # print 'Locator Count Consistence'
     csv_row.append(R.TECoherent)       # print 'TE coherent'
+
+    csv_row.append(R.case)  # Add judge logfile case
+
     csv_row.append(",".join(R.round_type_list))   # print 'Round Type List'
 
     # Here add 2 rows: locator_count_list and locator_list
@@ -78,13 +84,17 @@ def worker(vantage, log_file, q):
     #csv_row.append(R.isLocatorCountFlap())
     #csv_row.append(R.isLocatorsFlap())
 
-    #nd_number, change_time, pattern = R.statistics_new_deployment()
+    # 显示Case1-4的具体变化情况
+    # Case1的具体变化情况 nd_number, change_time, pattern = R.statistics_new_deployment()
     csv_row.extend(R.statistics_new_deployment())
 
-    # Add judge logfile case
-    csv_row.append(R.case)
-    csv_row.append(sys.getsizeof(R))
+    # Case2的具体变化情况 nd_number, change_time, pattern = R.statistics_new_deployment()
+    csv_row.extend(R.statistics_reconfiguration())
 
+    # 这列忘了当时是在干嘛，就先注销了
+    # csv_row.append(sys.getsizeof(R))
+
+    # 每列只显示一个RLOC
     csv_row.extend(R.locator_addr_list)
 
     q.put(csv_row)
