@@ -39,12 +39,12 @@ def listener(q):
                 'Locators set',
                 #'Locator count flap',
                 #'Locators flap',
-                'new deployement number',
+                'New Deployement number',
                 'case1 change time',
                 'case1 change pattern',
-                'reconfiguration number',
-                'case2 change time',
-                'case2 change pattern',
+                'Case3&4 number',
+                'case3&4 change time',
+                'case3&4 change pattern',
                 'RLOC Set'
             ]
         )
@@ -84,12 +84,12 @@ def worker(vantage, log_file, q):
     #csv_row.append(R.isLocatorCountFlap())
     #csv_row.append(R.isLocatorsFlap())
 
-    # 显示Case1-4的具体变化情况
+    # 显示Case1,3,4的具体变化情况
     # Case1的具体变化情况 nd_number, change_time, pattern = R.statistics_new_deployment()
     csv_row.extend(R.statistics_new_deployment())
 
-    # Case2的具体变化情况 nd_number, change_time, pattern = R.statistics_new_deployment()
-    csv_row.extend(R.statistics_reconfiguration())
+    # Case3 & Case4 的具体变化情况 nd_number, change_time, pattern = R.statistics_new_deployment()
+    csv_row.extend(R.statistics_Case3_Case4())
 
     # 这列忘了当时是在干嘛，就先注销了
     # csv_row.append(sys.getsizeof(R))
