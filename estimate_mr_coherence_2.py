@@ -154,30 +154,64 @@ if __name__ == '__main__':
     # mean_2std_blue = list(map(lambda x: x[0]+2*x[1], zip(mean_means, mean_stds)))
     print "mean_2std_blue:", mean_2std_blue
 
-    # 快速傅立叶变换
-    sampling_rate = 1
-    fft_size = 802
-    x_axis = range(1, 803, 1) # 时间点
-    means_fourier = np.fft.rfft(means)/fft_size # 对实数信号进行FFT计算, 为了正确显示波形能量，还需要将rfft函数的结果除以fft_size
-    freqs = np.linspace(0, 1024, fft_size/2+1) # rfft函数的返回值是N/2+1个复数，分别表示从0(Hz)到sampling_rate/2(Hz)的N/2+1点频率的成分, 频域上的x轴
-    # xfp = 20*np.log10(np.clip(np.abs(xf), 1e-20, 1e100)) # 计算每个频率分量的幅值，并通过 20*np.log10() 将其转换为以db单位的值。为了防止0幅值的成分造成log10无法计算，我们调用np.clip对xf的幅值进行上下限处理
-    means_fp = np.abs(means_fourier)
+    # 快速傅立叶变换，要变换的原始信号为means
+    sig = means
+    #最先确定的是采样率，采样率确定意味着两方面的事情。
+    #1.时间轴：确定每隔多久对信号采样一次，即离散化的时域轴的间隔确定，但是总长没定。
+    #2.频率轴：的总长确定了，为采样率的一半，但是间隔没定。
+    Fs = 1.0/1800
+    T_interval = 1/Fs
+    Freq_max = Fs/2
+
+    #之后要确定的是采样的个数，采样的个数的确定也意味着两件事情。
+    #1.时间轴：采样的总时间确定了,配合上面的间隔，也就全定了。
+    #2.频率轴：频率轴的间隔定了，配合上面的总长，也就全定了。
+    N = fft_size = len(sig)        # 即：FFT_SIZE
+    t = np.arange(0,N)*T_interval
+    freq = np.linspace(0,Freq_max,N/2+1)
+
+    # 做FFT之后的信号
+    fft_sig = np.fft.rfft(sig,N)/N
+
+    # 为了把频谱的X轴由Frequence (Hz)更换为Time (Hour)，生成最终想显示的几个X轴上的数值然后求倒数，
+    # 但目前还未用到频谱图上
+    freqs_xticks_inverse = []
+    for f in freq:
+        if f == 0:
+            freqs_xticks_inverse.append("endless")
+        else:
+            freqs_xticks_inverse.append(round(1/f,2))
+    print "freqs_xticks_inverse:", len(freqs_xticks_inverse)
 
 
-    # pl.figure(figsize=(8,4))
+    # print len(t), "t:", t
+    print len(sig), "sig:", sig
+    # print len(freq), "freq:", freq
+    # print len(fft_sig), "fft_sig:", fft_sig
+
+    # #画出时间域的幅度图
+    # figure_name_FFT = pl.figure('Period_verified_by_FFT.eps')
     # pl.subplot(211)
-    # pl.plot(x_axis, means, c="red")
-    # pl.xlim(0, 802)
+    # pl.plot(np.arange(1,N+1),sig,'blue', label='means')
     # pl.xlabel("Experiment number")
-    # plt.ylabel("Mean of numbers of change")
-    # pl.title("Waveform and spectrum for numbers of change")
+    # pl.ylabel("Mean of numbers of change")
+    # pl.xlim(0,len(sig))
+    # pl.legend()
+    # pl.title("Waveform for mean of numbers of change")
     #
+    #
+    # #画出频域图,你会发现你的横坐标无从下手？虽然你懂了后面的东西后可以返回来解决，但是现在就非常迷惑。现在只能原封不懂的画出频率图
     # pl.subplot(212)
-    # pl.plot(freqs, means_fp, c="blue")
-    # pl.xlim(0, 1024)
-    # pl.xlabel("Frequency (Hz)")
-    # pl.subplots_adjust(hspace=0.4)
+    #
+    # pl.plot(freq,2*np.abs(fft_sig),'red',label='Frequency')#如果用db作单位则20*np.log10(2*np.abs(fft_sig))
+    # pl.xlabel('Frequency(Hz)')
+    # pl.ylabel('Proportion')
+    # pl.xlim(0,Freq_max)
+    # pl.legend()
+    # pl.title('Frenquency spectrum for mean of numbers of change')
     # pl.show()
+
+
 
     # Autocorrelation
     def autocorrelation(x,lags): #计算lags阶以内的自相关系数，返回lags个值，分别计算序列均值，标准差
@@ -188,18 +222,25 @@ if __name__ == '__main__':
             for i in range(1,lags+1)]
         return result
 
-    correlation_result = autocorrelation(means, fft_size-2)
+    # 计算从k＝1 到 k＝experiment number-1 阶的auto-correlation，
+    # 因为 k＝experiment number-1 时计算的已是X(1)和X(n)间的相关性了，
+    # k ＝ experiment number的相关性不存在或无法计算，
+    # 但实际看几阶相关，周期为几时只看 experiment number/2 即可，后半程无意义，因为2个X序列已无交集
+    correlation_result = autocorrelation(means, fft_size-1)
     print "correlation_result:", correlation_result
-    plt.plot(np.linspace(1, 800, 800), correlation_result)
-    plt.xlabel("Order from 1 to (experiment number - 1)")
-    plt.ylabel("Range of Autocorrelation")
-    plt.title("Test of periodicity by using Autocorrelation")
+    print "np.arange(1,N) length:", len(np.arange(1,N))
+    print "correlation_result length:", len(correlation_result)
+    plt.plot(np.arange(1,N), correlation_result)
+    plt.xlabel("Order from 1 to (experiment number-1)")
+    plt.ylabel("Range of Auto-correlation")
+    pl.title('Auto-correlation for mean of numbers of change')
+    figure_name_Autocorrelation = pl.figure('Period_verified_by_Autocorrelation.eps')
 
 
 
     # # 将802个实验时刻对应的 随机变量均值、方差画图
     # plt.figure(1)
-    # x_axis = range(1, 803, 1)
+    # x_axis = np.arange(1,N+1)
     # plt.plot(x_axis, means, color='red')
     # # # plt.bar(x_axis, stds, color='black', width=0)
     # # plt.plot(x_axis, stds_p, color='black')
@@ -216,11 +257,12 @@ if __name__ == '__main__':
     # plt.ylabel("Mean of numbers of change")
     # plt.title("Test of periodicity")
     # plt.grid()
-    figure_name = 'Estimate_MR_Coherence_periodicity_autocorrelation.pdf'
+    # figure_name_Autocorrelation = pl.figure('Period_verified_by_Autocorrelation.eps')
 
-    # os.path.dirname(__file__) 用来求得 当前文件所在的路径
-    # os.path.join() 用以生成存储所得图像路径
-    plt.savefig(os.path.join(os.path.dirname(__file__), 'Plot', 'Plot_variable_time', figure_name))
+    # os.path.dirname(__file__) # 用来求得 当前文件所在的路径
+    # os.path.join() # 用以生成存储所得图像路径
+    # plt.savefig(os.path.join(os.path.dirname(__file__), 'Plot', 'Plot_variable_time', figure_name_FFT))
+    # plt.savefig(os.path.join(os.path.dirname(__file__), 'Plot', 'Plot_variable_time', figure_name_Autocorrelation))
     plt.show()
 
 

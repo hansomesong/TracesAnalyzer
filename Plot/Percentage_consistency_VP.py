@@ -1,4 +1,4 @@
-__author__ = 'qsong'
+__author__ = 'yueli'
 import os
 import matplotlib.pyplot as plt
 from config.config import *

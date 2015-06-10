@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 __author__ = 'yueli'
 
+# 本脚按不同mapping reply的回复类型统计EID-prefix的个数
+
 import os
 import timeit
 import re
@@ -9,6 +11,7 @@ import datetime
 import logging
 import matplotlib.pyplot as plt
 import pprint
+import numpy as np
 
 
 # 从已给各vp的eid list里直接数出每天有多少个EID参与实验
@@ -187,17 +190,17 @@ if __name__ == '__main__':
                                + num_different_response[X]['PrintSkipped'] + num_different_response[X]['RoundNoReply'])
 
     plt.plot(X_axis, NegativeReply_list, color = 'blue', label = 'Negative Reply', linewidth = 2)
-    plt.plot(X_axis, RoundNormal_list, color = 'red', label = 'RLOC', linewidth = 2)
+    plt.plot(X_axis, RoundNormal_list, color = 'red', label = 'Normal Map Reply', linewidth = 2)
     plt.plot(X_axis, PrintSkipped_list, color = 'black', label = 'PrintSkipped', linewidth = 2)
     plt.plot(X_axis, NoMapReply_list, color = 'orange', label = 'No Map Reply', linewidth = 2)
     plt.plot(X_axis, totalReply_list, color = 'gray', ls = '--', label = 'Total Reply', linewidth = 2)
 
     plt.legend(loc="center right")
     plt.xlabel("Date (from 02/07/2013 - 18/07/2013)", fontsize = 16)
-    plt.ylabel("EID number", fontsize = 16)
-    plt.title("EID number of different types of mapping per day", fontsize = 18)
+    plt.ylabel("EID-prefix number", fontsize = 16)
+    plt.title("EID-prefix number of different types of mapping per day", fontsize = 18)
 
-    plt.savefig(os.path.join(PLOT_DIR, 'EID_number_counter.eps'), dpi=300, transparent=True)
+    # plt.savefig(os.path.join(PLOT_DIR, 'EID_number_counter.eps'), dpi=300, transparent=True)
 
 
 
@@ -205,5 +208,7 @@ if __name__ == '__main__':
     print "Execution time (in unit of second) of this script: ", stop_time - start_time
 
 
-
+    print "avr Nor:", np.average(RoundNormal_list)
+    print "avr Total:", np.average(totalReply_list)
+    print "avr Nor / avr Total:", float(np.average(RoundNormal_list))/float(np.average(totalReply_list))
     plt.show()
