@@ -6,6 +6,8 @@ from config.config import *
 import os
 import timeit
 import re
+import resolver_comparator as rc
+import logging
 
 
 # 此方法用于统计第'case'列为1的行数即文件个数，然后进一步判断有多少是在1st day就有变化的，
@@ -134,10 +136,31 @@ def numbers_case4_all_days(csv_file):
     return numbers_case4_all_days
 
 
+# 此函数可以调用resolver_comparator里定义的一个method：is_coherent，
+# 它可以比较某一特定时间段内由input输入的一组csv文件是否为consistent，
+# output包含type是否coherent，RLOC是否coherent，te是否coherent等等
+def inconsistent_type_MR(log_file_list, eid, date_list, logger):
+    res = rc.is_coherent_for_given_date(log_file_list, eid, date_list, logger)
+    if res['type_coherent'] == 'False':
+        return 'negative_RLOCs'
+    elif (res['locator_count_coherent'] or res['rloc_address_coherent']
+          or res['te_coherent'] or res['auth_coherent']) == 'False':
+        return 'RLOC1_RLOC2'
+
+
 
 # Main
 if __name__ == '__main__':
     start_time = timeit.default_timer()
+
+    logging.basicConfig(
+        filename=os.path.join(os.getcwd(), '{0}.log'.format(__file__)),
+        level=logging.INFO,
+        filemode='w',
+        format='%(asctime)s - %(levelname)s: %(message)s'
+    )
+    logger = logging.getLogger(__name__)
+
     # 读取环境变量 ‘PROJECT_LOG_DIR’ (此变量定义在工作目录下.profile或者.bashprofile)
     try:
         PLANET_DIR = os.environ['PLANETLAB']
@@ -150,6 +173,7 @@ if __name__ == '__main__':
         print "If PROJECT_LOG_DIR is well defined, restart Pycharm to try again!"
 
 
+    # Stability部分的percentage计算
     # 为每一个case各初始化2个list，分别用来存储某个case某一天的变化次数
     numbers_case1_1st_day_list = []
     numbers_case1_18th_day_list = []
@@ -222,6 +246,55 @@ if __name__ == '__main__':
     print "percentage_case3_18th_day =", percentage_case3_18th_day
     percentage_case4_18th_day = sum_num_case4_18th_day / sum_18th_day * 100
     print "percentage_case4_18th_day =", percentage_case4_18th_day
+
+
+    # Consistency by MR 部分的percentage计算
+    # 在resolver_comparator里定义了一个method：is_coherent，
+    # 它可以比较某一特定时间段内由input输入的一组csv文件是否为consistent，
+    # output包含type是否coherent，RLOC是否coherent，te是否coherent等等
+    date_list_1st_day = ["02/07/2013"] #要比较的日期都存在list里, 1st day
+    date_list_18th_day = ["18/07/2013"] #要比较的日期都存在list里, 18th day
+    inconsistent_number_MR_1st_day = []
+    inconsistent_number_MR_18th_day = []
+    for vp in VP_LIST:
+        with open(os.path.join(PLOT_DIR, "comparison_MR", "comparison_map_resolver_in_{0}.csv".format(vp))) as f_handler:
+            next(f_handler)
+            for line in f_handler:
+                tmp_list = line.split(';')
+                # find out EID value
+                eid = tmp_list[0]
+                log_list_to_be_compared = []
+                # 把要比较的13个EID－MR pair都放进log_list_to_be_compared里
+                for mr in MR_LIST:
+                    log_list_to_be_compared.append(os.path.join(PLANET_CSV_DIR, vp,
+                                                            "{0}-EID-{1}-MR-{2}.log.csv".format(LOG_PREFIX[vp], eid, mr)))
+
+                # 分别对第一天&最后一天调用is_consistency_MR
+                inconsistent_number_MR_1st_day.append(inconsistent_type_MR(log_list_to_be_compared, eid, date_list_1st_day, logger))
+                inconsistent_number_MR_18th_day.append(inconsistent_type_MR(log_list_to_be_compared, eid, date_list_18th_day, logger))
+
+    # 计算第一天的2个percentage
+    Negative_RLOCs_number_1st_day = float(inconsistent_number_MR_1st_day.count('negative_RLOCs'))
+    RLOC1_RLOC2_1st_day = float(inconsistent_number_MR_1st_day.count('RLOC1_RLOC2'))
+
+    # 计算由MR引起的Negative_RLOCs的inconsistent percentage
+    percentage_Negative_RLOCs_MR_1st_day = Negative_RLOCs_number_1st_day / \
+                                           (Negative_RLOCs_number_1st_day + RLOC1_RLOC2_1st_day)
+    # 计算由MR引起的RLOC1_RLOC2的inconsistent percentage
+    percentage_RLOC1_RLOC2_MR_1st_day = RLOC1_RLOC2_1st_day / \
+                                        (Negative_RLOCs_number_1st_day + RLOC1_RLOC2_1st_day)
+
+    # 计算最后一天的2个percentage
+    Negative_RLOCs_number_18th_day = float(inconsistent_number_MR_18th_day.count('negative_RLOCs'))
+    RLOC1_RLOC2_18th_day = float(inconsistent_number_MR_18th_day.count('RLOC1_RLOC2'))
+
+    # 计算由MR引起的Negative_RLOCs的inconsistent percentage
+    percentage_Negative_RLOCs_MR_18th_day = Negative_RLOCs_number_18th_day / \
+                                           (Negative_RLOCs_number_18th_day + RLOC1_RLOC2_18th_day)
+    # 计算由MR引起的RLOC1_RLOC2的inconsistent percentage
+    percentage_RLOC1_RLOC2_MR_18th_day = RLOC1_RLOC2_18th_day / \
+                                        (Negative_RLOCs_number_18th_day + RLOC1_RLOC2_18th_day)
+
 
 
 
