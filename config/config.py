@@ -29,6 +29,8 @@ except KeyError:
 
 CSV_ALL_FILE = os.path.join(CSV_FILE_DESTDIR, 'statistic_all.csv')
 
+VP_LIST = ["liege", "temple", "ucl", "umass", "wiilab"]
+
 TRACES_LOG=\
 {
     'liege'      : os.path.join(PLANET_DIR, 'liege', 'mappings'),
@@ -49,18 +51,45 @@ LOG_TIME_COLUMN ={
     'coherence': 5,
     'rloc_set_coherence': 6,
     'te_coherence': 7,
-    'round_type_set':8,
-    'change_time': 14
+    'case': 8,
+    'round_type_set':9,
+    'different_locator_count': 10,
+    'locators_count_set': 11,
+    'different_locators': 12,
+    'locators_set': 13,
+    'new_deployment_number': 14,
+    'case1_change_time': 15,
+    'case1_change_pattern': 16,
+    'case3_4_number': 17,
+    'case3_4_change_time': 18,
+    'case3_4_change_pattern': 19,
+    'RLOC_set': 20
 }
 
 
-# 对应文件：planetlab1-EID-0.0.0.0-MR-198.6.255.40.log.csv 中 每一列代表什么
+# 对应文件PlanetLab_CSV中：planetlab1-EID-0.0.0.0-MR-198.6.255.40.log.csv 中 每一列代表什么
 LOG_COLUMN ={
 
-    'type': 0,
+    'round_type': 0,
     'date': 1,
     'eid' : 2,
-    'resovler': 3
+    'resovler': 3,
+    'request_src': 4,
+    'request_dst': 5,
+    'request_for': 6,
+    'reply_src': 7,
+    'rtt': 8,
+    'locator_count': 9,
+    'mapping_entry': 10,
+    'ttl': 11,
+    'auth': 12,
+    'mobile': 13,
+    'locator_id': 14,
+    'locator_address': 15,
+    'locator_state': 16,
+    'locator_priority': 17,
+    'locator_weight': 18
+
 }
 
 MR_LIST = [

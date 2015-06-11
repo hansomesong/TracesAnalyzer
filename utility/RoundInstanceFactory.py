@@ -283,7 +283,7 @@ class RoundInstanceFactory:
     # Accordin to Yue's demand, add a new method
     # This method is used to detect the flap of locator and locator_count
 
-# 按照宝贝儿要求，先注释掉 Flap相关的函数，用不到
+# 先注释掉 Flap相关的函数，用不到
     # def isLocatorCountFlap(self):
     #     # 所谓的 Locator Count Flap 是指 某一个 locator count的值在改变之后，又再次出现。
     #     # 假设 一个文件中出现的 locator count的取值依次是 1，2，3，1 我们说该文件具有 locator count flap的特性。
@@ -478,7 +478,7 @@ class RoundInstanceFactory:
 
                 # 处理case3 case4的时候我们仅考虑Normal类型的round
                 rounds_reduced = [round_obj for round_obj in self.rounds if round_obj.type == 'RoundNormal']
-                # 刚才跟宝贝儿商量过了，我们就是按照每天（比如0点到24点）的统计范围来计数每天的change数目
+                # 我们就是按照每天（比如0点到24点）的统计范围来计数每天的change数目
                 # 第一步，讲rounds按照日期分割为多个子集，每个子集仅包含当日记录的实验结果
                 # 对每个子集统计其相应的locator_count以及Locators (包含在Normal类型)变化的总数
                 # 第一步 获得当前log中出现过得所有的 date
