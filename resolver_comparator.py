@@ -43,9 +43,27 @@ class Round(object):
 
 class LogFile(object):
 
-    def __init__(self, csv_file):
-
-        self.rounds = sorted([Round(csv_row) for csv_row in self.csv_sort_list(csv_file)], key=lambda item: item.date)
+    def __init__(self, csv_file, date_list=''):
+        # 2015-06-12: 添加一个 可选参数date_list, 其可能的格式为：['2015-07-02', '2015-07-04']
+        #如果date_list不为空，那么只把含有 出现在后者中的时间 的Round放入self.rounds之中
+        if not date_list:
+            self.rounds = sorted(
+                [
+                    Round(csv_row) for csv_row in self.csv_sort_list(csv_file)
+                    # Round(csv_row)构造了一个Round类型的Object,date是其一个attribute(类型为datetime),date()是datetime类型对象
+                    # 的一个方法，目的是只返回datetime对象的date部分
+                    if Round(csv_row).date.date() in [
+                        datetime.datetime.strptime(element, "%Y-%m-%d").date() for element in date_list
+                    ]
+                ],
+                key=lambda item: item.date
+            )
+        #如若不然，则把CSV log file中所有的Round都放进去
+        else:
+            self.rounds = sorted(
+                [Round(csv_row) for csv_row in self.csv_sort_list(csv_file)],
+                key=lambda item: item.date
+            )
         self.eid = self.rounds[0].eid
         self.resolver = self.rounds[0].resolver
 
@@ -152,12 +170,29 @@ def is_all_resolver_coherent_for_eid(output_file, csv_files, logger):
 
                 ])
 
+def is_coherent_for_given_date(log_file_list, eid, logger, date_list=''):
+
+    """
+        2015-06-10: 添加方法 is_coherent_for_given_date 用以处理log file中某些特定日期的实验结果
+        input
+            log_file_list   : type(list), list of CSV log file path
+            eid             : type(str), indicate current processing EID
+            logger          : type(logging handler), used for recording debug information
+            date_list       : type(list), indicate the interested, optional parameter, default value is vide string
+    """
+    # 注意本函数中 参数log_file_list代表一个存储文件路径的list, 而函数is_coherent()中的同名参数
+    # 代表的其实是 一个包含Log_file类型对象的list
+    return is_coherent([LogFile(file_path, date_list) for file_path in log_file_list], eid, logger)
+
+
+
 
 def is_coherent(log_file_list, eid, logger):
     """
-        input   : log_file_list: a list of LogFile object (13 log files in format of CSV)
-                : eid: string, indicate current processing for which EID
-                : logger: logging handler, record debug information
+        input   : log_file_list     : a list of LogFile object (13 log files in format of CSV)
+                : eid               : string, indicate current processing for which EID
+                : date_list          : list, duration to be compared, e.x.["2013-05-14 08:00", "2013-05-14 08:30" ]
+                : logger            : logging handler, record debug information
 
         output  : a dictionary of comparison metric and result key-value pair
     """
