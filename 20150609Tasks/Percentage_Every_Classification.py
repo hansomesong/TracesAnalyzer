@@ -257,7 +257,7 @@ if __name__ == '__main__':
     inconsistent_number_MR_1st_day = []
     inconsistent_number_MR_18th_day = []
     for vp in VP_LIST:
-        with open(os.path.join(PLOT_DIR, "comparison_MR", "comparison_map_resolver_in_{0}.csv".format(vp))) as f_handler:
+        with open(os.path.join(CSV_FILE_DESTDIR, "comparison_MR", "comparison_map_resolver_in_{0}.csv".format(vp))) as f_handler:
             next(f_handler)
             for line in f_handler:
                 tmp_list = line.split(';')
