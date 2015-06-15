@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # 有点儿意思： 我通过修改我工作目录中的.profile文件添加环境变量$PLANETLAB_CSV,然后运行source .profile使得修改生效
 # 然后需要重启Pycharm，使得Pycharm可以读取到刚刚刚添加的变量，不然有可能抛出异常
-__author__ = 'qsong'
+__author__ = 'yueli'
 
 import os
 import logging

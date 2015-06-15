@@ -126,8 +126,7 @@ if __name__ == '__main__':
         print "If PROJECT_LOG_DIR is well defined, restart Pycharm to try again!"
 
     # 此部分用于统计已有的txt文档里直接存储的EID个数／天，针对5个vantage point都有统计，以列表形式存储每个VP的EID个数
-    vp_list = ["liege", "temple", "ucl", "umass", "wiilab"]
-    for vp in vp_list:
+    for vp in VP_LIST:
         Y_vp = []
         for target_file in find_target_log_file(os.path.join(PLANET_DIR, vp, "eid")):
             with open(target_file) as f_handler:
