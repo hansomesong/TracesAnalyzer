@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 __author__ = 'yueli'
+# 此脚本用来查看指定某天的IP Addressing Space个数
 
-import os
+
 import timeit
 import re
 from config.config import *
-import datetime
 from netaddr import *
 import pprint
 import logging
 
-
-# 此脚本用来查看指定某天的IP Addressing Space个数
 
 # 定义一个method，input为指定的csv file和指定的时间范围，output为在此时间范围内可以得到的所有mapping entry(prefix)
 def prefix_finder_given_time(csv_file, given_date):
