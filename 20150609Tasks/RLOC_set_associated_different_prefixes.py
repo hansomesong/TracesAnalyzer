@@ -32,30 +32,43 @@ def rloc_set_associated_diff_prefix(tmp_list):
             if tmp_list[LOG_COLUMN['round_type']] == 'RoundNormal':
                 rloc_set_list = []
                 # 将LOG_COLUMN['locator_id']列到LOG_COLUMN['locator_id']－1列的RLOC拼成一个string，暂时作为value存起来
-                for i in range(0, int(tmp_list[LOG_COLUMN['locator_count']])):
-                    rloc_set_list.append((tmp_list[LOG_COLUMN['locator_id'] + i]).split(',')[1].replace('\r\n',''))
+                # for i in range(0, int(tmp_list[LOG_COLUMN['locator_count']])):
+                #     rloc_set_list.append((tmp_list[LOG_COLUMN['locator_id'] + i]).split(',')[1].replace('\r\n',''))
+
+                for rloc_addr in tmp_list[LOG_COLUMN['locator_id']:]:
+                    rloc_set_list.append(rloc_addr.split(',')[1].replace('\r\n',''))
+
                 dic_tmp[tmp_list[LOG_COLUMN['mapping_entry']].split(',')[0].replace("(",'').replace("'",'')] \
-                    = ','.join(rloc_set_list)
+                    = rloc_set_list
 
             # 每一行处理完相当于新建了一个dic，所以要与最终存整个文件的的dic merge
             # 用此语法合并2个字典即可：dictMerged = dict(dict1, **dict2)，即：
             # dictMerged = dic_prefix_rloc_set （和dict1为同一个字典）
             # dict1 ＝ dic_prefix_rloc_set
             # dict2 ＝ dic_tmp
-            dic_prefix_rloc_set = dict(dic_prefix_rloc_set, **dic_tmp)
+            # dic_prefix_rloc_set = dict(dic_prefix_rloc_set, **dic_tmp)
+            for key, value in dic_tmp.iteritems():
+                if key in dic_prefix_rloc_set.keys():
+                    dic_prefix_rloc_set[key].extend(value)
+                else:
+                    dic_prefix_rloc_set[key] = value
+
+    # 在此 dic_prefix_rloc_set 遍历了整个文件，并以prefix为key，[RLOC set]为value的字典形式存储了下来
+    # 现在先对 dic_prefix_rloc_set 消一次重，因为value为list，有可能重复记录了很多次，方便后续工作
+    for key, value in dic_prefix_rloc_set.iteritems():
+        dic_prefix_rloc_set[key] = ','.join(list(set(value)))
 
     # 因为在当前得到的dic_prefix_rloc_set中，key为prefix，而value为RLOC set
     # 与我们最终要返回的dic的key和value刚好相反，所以此处需要把key和value对互换
-    dic_tmp = {}
-    for value, key in dic_prefix_rloc_set.items():
-        dic_tmp[key] = value
-    dic_rloc_set_prefixes = dict(dic_rloc_set_prefixes, **dic_tmp)
+    for value, key in dic_prefix_rloc_set.iteritems():
+        if key in dic_rloc_set_prefixes.keys():
+            dic_rloc_set_prefixes[key].extend([value])
+        else:
+            dic_rloc_set_prefixes[key] = [value]
 
-    # for value, key in dic_prefix_rloc_set.items():
-    #     if key in dic_rloc_set_prefixes.keys():
-    #         dic_rloc_set_prefixes[key] = dic_rloc_set_prefixes[key] + ',' + value
-    #     else:
-    #         dic_rloc_set_prefixes[key] = value
+    # dic_rloc_set_prefixes 已接近最终想要返回的dic，只需要再去一次重即可
+    for key, value in dic_rloc_set_prefixes.iteritems():
+        dic_rloc_set_prefixes[key] = list(set(value))
 
 
     return dic_rloc_set_prefixes
@@ -74,8 +87,11 @@ def rloc_set_associated_one_prefix(tmp_list):
     # 同理把tmp_list[LOG_TIME_COLUMN['RLOC_set']尾部的'\r\n'也消除掉
     # 把从LOG_TIME_COLUMN['RLOC_set'] 及之后的 LOG_TIME_COLUMN['different_locator_count']-1 列的RLOC合并成最终想用的key
     rloc_set_key_list = []
-    for i in range(0, int(tmp_list[LOG_TIME_COLUMN['different_locator_count']])):
-        rloc_set_key_list.append(tmp_list[LOG_TIME_COLUMN['RLOC_set'] + i].replace('\r\n',''))
+    # for i in range(0, int(tmp_list[LOG_TIME_COLUMN['different_locator_count']])):
+    #     rloc_set_key_list.append(tmp_list[LOG_TIME_COLUMN['RLOC_set'] + i].replace('\r\n',''))
+
+    for rloc_addr in tmp_list[LOG_TIME_COLUMN['RLOC_set']:]:
+        rloc_set_key_list.append(rloc_addr.replace('\r\n',''))
 
     # 从rloc_set_key_list生成rloc_set_key作为key，将LOG_TIME_COLUMN['mapping_entry'] 作为value存进字典即可
     dic_rloc_set_prefixes[','.join(rloc_set_key_list)] = \
@@ -111,9 +127,10 @@ if __name__ == '__main__':
     # 在5个csv文件中直接逐行读取数值
 
 
-
+    # 创建一个总字典，存储每个vantage对应的子字典
+    dic_rloc_set_prefix = {}
     for vp in VP_LIST:
-        dic_rloc_set_prefix = {}
+        dic_rloc_set_prefix[vp] = {}
         with open(os.path.join(CSV_FILE_DESTDIR, 'comparison_time_{0}.csv'.format(vp))) as f_handler:
             next(f_handler)
             for line in f_handler:
@@ -131,20 +148,40 @@ if __name__ == '__main__':
                         # dict1相当于main函数里最终结果的字典，dict2相当于每次调用函数时返回的字典
                         # 即：dictMerged = dic_rloc_set_prefix （和dict1为同一个字典）
                         # dict1 ＝ dic_rloc_set_prefix
-                        # dict2 ＝ rlocs_associated_one_prefix(tmp_list)
-                        dic_rloc_set_prefix = dict(dic_rloc_set_prefix, **rloc_set_associated_one_prefix(tmp_list))
-                        logger.debug(str(dic_rloc_set_prefix))
+                        # dict2 ＝ rloc_set_associated_one_prefix(tmp_list)
+                        # dic_rloc_set_prefix[vp] = dict(dic_rloc_set_prefix[vp], **rloc_set_associated_one_prefix(tmp_list))
+                        tmp_dict = rloc_set_associated_one_prefix(tmp_list)
+                        for key, value in tmp_dict.iteritems():
+                            if key in dic_rloc_set_prefix[vp].keys():
+                                dic_rloc_set_prefix[vp][key].extend(value)
+                            else:
+                                dic_rloc_set_prefix[vp][key] = value
+
 
                     # 当 LOG_TIME_COLUMN['mapping_entry'] 的个数不为一时，则必须得遍历原 PlanetLab_CSV 文件已确定哪个RLOC对应哪个prefix，
                     # 即调用函数 rloc_associated_diff_prefix(csv_file)
                     else:
-                        dic_rloc_set_prefix = dict(dic_rloc_set_prefix, **rloc_set_associated_diff_prefix(tmp_list))
+                        # dic_rloc_set_prefix[vp] = dict(dic_rloc_set_prefix[vp], **rloc_set_associated_diff_prefix(tmp_list))
+                        tmp_dict = rloc_set_associated_diff_prefix(tmp_list)
+                        for key, value in tmp_dict.iteritems():
+                            if key in dic_rloc_set_prefix[vp].keys():
+                                dic_rloc_set_prefix[vp][key].extend(value)
+                            else:
+                                dic_rloc_set_prefix[vp][key] = value
 
 
-        print '\n\nIn', vp, ', there are', len(dic_rloc_set_prefix), 'groups, in which one RLOC associated with different prefixes'
+        # 去重。。。
+        for key, value in dic_rloc_set_prefix[vp].iteritems():
+            dic_rloc_set_prefix[vp][key] = list(set(value))
+
+
+        print '\n\nIn', vp, ', there are', len(dic_rloc_set_prefix[vp]), 'groups, in which one RLOC associated with different prefixes'
         pprint.pprint(dic_rloc_set_prefix)
+        logger.debug('\n\nIn {0}, there are {1} groups, in which one RLOC associated with different prefixes'.format(vp, len(dic_rloc_set_prefix[vp])))
+        logger.debug(dic_rloc_set_prefix)
 
 
 
     stop_time = timeit.default_timer()
     print "Execution time (in unit of second) of this script: ", stop_time - start_time
+    logger.debug("Execution time (in unit of second) of this script: {0}".format(stop_time - start_time))

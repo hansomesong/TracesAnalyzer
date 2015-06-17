@@ -75,7 +75,7 @@ if __name__ == '__main__':
 
     logging.basicConfig(
         filename=os.path.join(os.getcwd(), '{0}.log'.format(__file__)),
-        level=logging.INFO,
+        level=logging.DEBUG,
         filemode='w',
         format='%(asctime)s - %(levelname)s: %(message)s'
     )
@@ -142,8 +142,11 @@ if __name__ == '__main__':
 
         print '\n\nIn', vp, ', there are', len(dic_rloc_prefix[vp]), 'groups, in which one RLOC associated with different prefixes'
         pprint.pprint(dic_rloc_prefix[vp])
+        logger.debug('\n\nIn {0}, there are {1} groups, in which one RLOC associated with different prefixes'.format(vp, len(dic_rloc_prefix[vp])))
+        logger.debug(dic_rloc_prefix[vp])
 
 
 
     stop_time = timeit.default_timer()
     print "Execution time (in unit of second) of this script: ", stop_time - start_time
+    logger.debug("Execution time (in unit of second) of this script: {0}".format(stop_time - start_time))
