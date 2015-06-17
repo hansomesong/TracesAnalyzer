@@ -10,6 +10,7 @@ from config.config import *
 from netaddr import *
 import pprint
 import logging
+import resolver_comparator as rc
 
 
 # 针对comparison_time_vp.csv中一行多个prefix的情况
@@ -101,6 +102,28 @@ def rloc_set_associated_one_prefix(tmp_list):
 
 
 
+# 此函数将调用 resolver_comparator 里的is_coherent_for_given_date(log_file_list, eid, logger)函数，
+# 去比较所给log是否coherent并返回True或False
+def is_conherent_in_group(vp, eid_list):
+    # 根据输入的 vp 和 eid_list 确定 log_file_list
+    consistent_result_list = []
+    for eid in eid_list:
+        log_file_list = []
+        for mr in MR_LIST:
+            log_file_list.append(os.path.join(PLANET_CSV_DIR, vp,
+                                              '{0}-EID-{1}-MR-{2}.log.csv'.format(LOG_PREFIX[vp], eid, mr)))
+        consistent_result_list.append(rc.is_coherent_for_given_date(log_file_list, eid, logger)['coherent'])
+
+    # 得到类似于 consistent_result_list ＝ [True, True, False] 的list，如果其中有一个为False，则几组之间的比较结果肯定也为False
+    # 只有全为True，则整体比较才可能是True
+    if False in consistent_result_list:
+        return False
+    else:
+        return True
+
+
+
+
 # Main
 if __name__ == '__main__':
     start_time = timeit.default_timer()
@@ -129,6 +152,7 @@ if __name__ == '__main__':
 
     # 创建一个总字典，存储每个vantage对应的子字典
     dic_rloc_set_prefix = {}
+    consistent_result_list = {}
     for vp in VP_LIST:
         dic_rloc_set_prefix[vp] = {}
         with open(os.path.join(CSV_FILE_DESTDIR, 'comparison_time_{0}.csv'.format(vp))) as f_handler:
@@ -179,6 +203,23 @@ if __name__ == '__main__':
         pprint.pprint(dic_rloc_set_prefix[vp])
         logger.debug('\n\nIn {0}, there are {1} groups, in which one RLOC associated with different prefixes'.format(vp, len(dic_rloc_set_prefix[vp])))
         logger.debug(dic_rloc_set_prefix[vp])
+
+        # 在此调用函数 is_conherent_in_group()，并存在
+        consistent_result_list[vp] = []
+        for key, value in dic_rloc_set_prefix[vp].iteritems():
+            eid_list = [i[1] for i in value]
+            consistent_result_list[vp].append(is_conherent_in_group(vp, eid_list))
+
+        # 将几组之间consistent的最终结果打印出来
+        print "There are", consistent_result_list[vp].count(True), "True over", len(consistent_result_list[vp]), "groups in total,"
+        print "and", consistent_result_list[vp].count(False), "False over", len(consistent_result_list[vp])
+        logger.debug("There are {0} True over {1} groups in total, "
+                     "and {2} False over {3}".format(consistent_result_list[vp].count(True),
+                                                     len(consistent_result_list[vp]),
+                                                     consistent_result_list[vp].count(False),
+                                                     len(consistent_result_list[vp])))
+        print "Consistent result in", vp, "---->", consistent_result_list[vp]
+        logger.debug("Consistent result in {0} ----> {1}".format(vp, consistent_result_list[vp]))
 
 
 

@@ -173,14 +173,22 @@ if __name__ == '__main__':
         logger.debug('\n\nIn {0}, there are {1} groups, in which one RLOC associated with different prefixes'.format(vp, len(dic_rloc_prefix[vp])))
         logger.debug(dic_rloc_prefix[vp])
 
-        # 在此调用函数 is_coherent()，并存在
+        # 在此调用函数 is_conherent_in_group()，并存在
         consistent_result_list[vp] = []
         for key, value in dic_rloc_prefix[vp].iteritems():
             eid_list = [i[1] for i in value]
             consistent_result_list[vp].append(is_conherent_in_group(vp, eid_list))
 
         # 将几组之间consistent的最终结果打印出来
+        print "There are", consistent_result_list[vp].count(True), "True over", len(consistent_result_list[vp]), "groups in total,"
+        print "and", consistent_result_list[vp].count(False), "False over", len(consistent_result_list[vp])
+        logger.debug("There are {0} True over {1} groups in total, "
+                     "and {2} False over {3}".format(consistent_result_list[vp].count(True),
+                                                     len(consistent_result_list[vp]),
+                                                     consistent_result_list[vp].count(False),
+                                                     len(consistent_result_list[vp])))
         print "Consistent result in", vp, "---->", consistent_result_list[vp]
+        logger.debug("Consistent result in {0} ----> {1}".format(vp, consistent_result_list[vp]))
 
 
 
