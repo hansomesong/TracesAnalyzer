@@ -58,9 +58,12 @@ def rlocs_associated_one_prefix(tmp_list):
     # 但是因为直接从 tmp_list[LOG_TIME_COLUMN['mapping_entry']] 里取得时候还有该mapping_entry出现的次数，
     # 所以用.split()和replace()等消除掉
     # 同理把tmp_list[LOG_TIME_COLUMN['RLOC_set']尾部的'\r\n'也消除掉
-    for i in range(0, int(tmp_list[LOG_TIME_COLUMN['different_locator_count']])):
-        dic_rloc_prefixes[IPAddress(tmp_list[LOG_TIME_COLUMN['RLOC_set'] + i].replace('\r\n',''))] \
-            = [tmp_list[LOG_TIME_COLUMN['mapping_entry']].split(',')[0].replace("(",'').replace("'",'')]
+    # for i in range(0, int(tmp_list[LOG_TIME_COLUMN['different_locator_count']])):
+    #     dic_rloc_prefixes[IPAddress(tmp_list[LOG_TIME_COLUMN['RLOC_set'] + i].replace('\r\n',''))] \
+    #         = [tmp_list[LOG_TIME_COLUMN['mapping_entry']].split(',')[0].replace("(",'').replace("'",'')]
+
+    for rloc_addr in tmp_list[LOG_TIME_COLUMN['RLOC_set']:]:
+        dic_rloc_prefixes[IPAddress(rloc_addr.replace('\r\n', ''))] = [tmp_list[LOG_TIME_COLUMN['mapping_entry']].split(',')[0].replace("(",'').replace("'",'')]
 
     return dic_rloc_prefixes
 
