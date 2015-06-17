@@ -91,7 +91,7 @@ if __name__ == '__main__':
 
     logging.basicConfig(
         filename=os.path.join(os.getcwd(), '{0}.log'.format(__file__)),
-        level=logging.INFO,
+        level=logging.DEBUG,
         filemode='w',
         format='%(asctime)s - %(levelname)s: %(message)s'
     )
@@ -133,6 +133,7 @@ if __name__ == '__main__':
                         # dict1 ＝ dic_rloc_set_prefix
                         # dict2 ＝ rlocs_associated_one_prefix(tmp_list)
                         dic_rloc_set_prefix = dict(dic_rloc_set_prefix, **rloc_set_associated_one_prefix(tmp_list))
+                        logger.debug(str(dic_rloc_set_prefix))
 
                     # 当 LOG_TIME_COLUMN['mapping_entry'] 的个数不为一时，则必须得遍历原 PlanetLab_CSV 文件已确定哪个RLOC对应哪个prefix，
                     # 即调用函数 rloc_associated_diff_prefix(csv_file)

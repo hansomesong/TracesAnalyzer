@@ -92,9 +92,10 @@ if __name__ == '__main__':
     # 在5个csv文件中直接逐行读取数值
 
 
-
+    # 创建一个总字典，存储每个vantage对应的子字典
+    dic_rloc_prefix = {}
     for vp in VP_LIST:
-        dic_rloc_prefix_liege = {}
+        dic_rloc_prefix[vp] = {}
         with open(os.path.join(CSV_FILE_DESTDIR, 'comparison_time_{0}.csv'.format(vp))) as f_handler:
             next(f_handler)
             for line in f_handler:
@@ -112,15 +113,32 @@ if __name__ == '__main__':
                         # 即：dictMerged = dic_rloc_prefix_liege （和dict1为同一个字典）
                         # dict1 ＝ dic_rloc_prefix_liege
                         # dict2 ＝ rlocs_associated_one_prefix(tmp_list)
-                        dic_rloc_prefix_liege = dict(dic_rloc_prefix_liege, **rlocs_associated_one_prefix(tmp_list))
+                        tmp_dict = rlocs_associated_one_prefix(tmp_list)
+                        for key, value in tmp_dict.iteritems():
+                            if key in dic_rloc_prefix[vp].keys():
+                                dic_rloc_prefix[vp][key].extend(value)
+                            else:
+                                dic_rloc_prefix[vp][key] = value
                     # 当 LOG_TIME_COLUMN['mapping_entry'] 的个数不为一时，则必须得遍历原 PlanetLab_CSV 文件已确定哪个RLOC对应哪个prefix，
                     # 即调用函数 rloc_associated_diff_prefix(csv_file)
                     else:
-                        dic_rloc_prefix_liege = dict(dic_rloc_prefix_liege, **rloc_associated_diff_prefix(tmp_list))
+                        tmp_dict = rloc_associated_diff_prefix(tmp_list)
+                        for key, value in tmp_dict.iteritems():
+                            if key in dic_rloc_prefix[vp].keys():
+                                dic_rloc_prefix[vp][key].extend(value)
+                            else:
+                                dic_rloc_prefix[vp][key] = value
+
+                        # dic_rloc_prefix[vp] = dict(dic_rloc_prefix_liege, **rloc_associated_diff_prefix(tmp_list))
 
 
-        print '\n\nIn', vp, ', there are', len(dic_rloc_prefix_liege), 'groups, in which one RLOC associated with different prefixes'
-        pprint.pprint(dic_rloc_prefix_liege)
+        # 去重。。。
+        for key, value in dic_rloc_prefix[vp].iteritems():
+            dic_rloc_prefix[vp][key] = list(set(value))
+
+
+        print '\n\nIn', vp, ', there are', len(dic_rloc_prefix[vp]), 'groups, in which one RLOC associated with different prefixes'
+        pprint.pprint(dic_rloc_prefix[vp])
 
 
 
