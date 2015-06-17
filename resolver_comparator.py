@@ -46,7 +46,7 @@ class LogFile(object):
     def __init__(self, csv_file, date_list=''):
         # 2015-06-12: 添加一个 可选参数date_list, 其可能的格式为：['2015-07-02', '2015-07-04']
         #如果date_list不为空，那么只把含有 出现在后者中的时间 的Round放入self.rounds之中
-        if not date_list:
+        if date_list != '':
             self.rounds = sorted(
                 [
                     Round(csv_row) for csv_row in self.csv_sort_list(csv_file)
