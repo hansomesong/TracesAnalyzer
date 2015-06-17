@@ -38,7 +38,7 @@ def rloc_set_associated_diff_prefix(tmp_list):
                 for rloc_addr in tmp_list[LOG_COLUMN['locator_id']:]:
                     rloc_set_list.append(rloc_addr.split(',')[1].replace('\r\n',''))
 
-                dic_tmp[tmp_list[LOG_COLUMN['mapping_entry']].split(',')[0].replace("(",'').replace("'",'')] \
+                dic_tmp[(tmp_list[LOG_COLUMN['mapping_entry']].split(',')[0].replace("(",'').replace("'",''), tmp_list[LOG_COLUMN['eid']])] \
                     = rloc_set_list
 
             # 每一行处理完相当于新建了一个dic，所以要与最终存整个文件的的dic merge
@@ -95,7 +95,7 @@ def rloc_set_associated_one_prefix(tmp_list):
 
     # 从rloc_set_key_list生成rloc_set_key作为key，将LOG_TIME_COLUMN['mapping_entry'] 作为value存进字典即可
     dic_rloc_set_prefixes[','.join(rloc_set_key_list)] = \
-        [tmp_list[LOG_TIME_COLUMN['mapping_entry']].split(',')[0].replace("(",'').replace("'",'')]
+        [(tmp_list[LOG_TIME_COLUMN['mapping_entry']].split(',')[0].replace("(",'').replace("'",''), tmp_list[LOG_TIME_COLUMN['eid']])]
 
     return dic_rloc_set_prefixes
 
@@ -176,9 +176,9 @@ if __name__ == '__main__':
 
 
         print '\n\nIn', vp, ', there are', len(dic_rloc_set_prefix[vp]), 'groups, in which one RLOC associated with different prefixes'
-        pprint.pprint(dic_rloc_set_prefix)
+        pprint.pprint(dic_rloc_set_prefix[vp])
         logger.debug('\n\nIn {0}, there are {1} groups, in which one RLOC associated with different prefixes'.format(vp, len(dic_rloc_set_prefix[vp])))
-        logger.debug(dic_rloc_set_prefix)
+        logger.debug(dic_rloc_set_prefix[vp])
 
 
 

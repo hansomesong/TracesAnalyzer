@@ -10,6 +10,7 @@ from config.config import *
 from netaddr import *
 import pprint
 import logging
+import resolver_comparator as rc
 
 # 针对comparison_time_vp.csv中一行多个prefix的情况
 def rloc_associated_diff_prefix(tmp_list):
@@ -29,20 +30,21 @@ def rloc_associated_diff_prefix(tmp_list):
             if tmp_list[LOG_COLUMN['round_type']] == 'RoundNormal':
 
                 # 找出此map reply中有几个RLOC，由此可以遍历tmp_list[LOG_COLUMN[locator_id']]列及之后的(locator_count-1)列
-                for i in range(0, int(tmp_list[LOG_COLUMN['locator_count']])):
+                for rloc_addr in tmp_list[LOG_COLUMN['locator_id']:]:
                     prefix_current = tmp_list[LOG_COLUMN['mapping_entry']]
+                    eid_current = tmp_list[LOG_COLUMN['eid']]
                     # 因为tmp_list[LOG_COLUMN['locator_id']不是纯的ip地址值，所以需要把用不到的信息删除
-                    locator_id = IPAddress(tmp_list[LOG_COLUMN['locator_id'] + i].split(',')[1])
+                    locator_id = IPAddress(rloc_addr.split(',')[1])
 
                     # 如果当前这个RLOC还不是dic_rloc_prefixes中的key，则说明此RLOC还未添加
                     # 那就把此RLOC作为key，并添加相应的prefix作为value
                     if locator_id not in dic_rloc_prefixes.keys():
-                        dic_rloc_prefixes[locator_id] = [prefix_current]
+                        dic_rloc_prefixes[locator_id] = [(prefix_current, eid_current)]
                     # 如果当前这个RLOC已经是dic_rloc_prefixes中的key了的话，只要给此key添加不重复的value即可
                     else:
                         # 如果要添加的value是新值的话再进行添加
                         if prefix_current not in dic_rloc_prefixes[locator_id]:
-                            dic_rloc_prefixes[locator_id].append(prefix_current)
+                            dic_rloc_prefixes[locator_id].append((prefix_current, eid_current))
 
     return dic_rloc_prefixes
 
@@ -63,9 +65,34 @@ def rlocs_associated_one_prefix(tmp_list):
     #         = [tmp_list[LOG_TIME_COLUMN['mapping_entry']].split(',')[0].replace("(",'').replace("'",'')]
 
     for rloc_addr in tmp_list[LOG_TIME_COLUMN['RLOC_set']:]:
-        dic_rloc_prefixes[IPAddress(rloc_addr.replace('\r\n', ''))] = [tmp_list[LOG_TIME_COLUMN['mapping_entry']].split(',')[0].replace("(",'').replace("'",'')]
+        dic_rloc_prefixes[IPAddress(rloc_addr.replace('\r\n', ''))] = \
+            [(tmp_list[LOG_TIME_COLUMN['mapping_entry']].split(',')[0].replace("(",'').replace("'",''),
+              tmp_list[LOG_TIME_COLUMN['eid']])]
 
     return dic_rloc_prefixes
+
+
+
+
+# 此函数将调用 resolver_comparator 里的is_coherent_for_given_date(log_file_list, eid, logger)函数，
+# 去比较所给log是否coherent并返回True或False
+def is_conherent_in_group(vp, eid_list):
+    # 根据输入的 vp 和 eid_list 确定 log_file_list
+    consistent_result_list = []
+    for eid in eid_list:
+        log_file_list = []
+        for mr in MR_LIST:
+            log_file_list.append(os.path.join(PLANET_CSV_DIR, vp,
+                                              '{0}-EID-{1}-MR-{2}.log.csv'.format(LOG_PREFIX[vp], eid, mr)))
+        consistent_result_list.append(rc.is_coherent_for_given_date(log_file_list, eid, logger)['coherent'])
+
+    # 得到类似于 consistent_result_list ＝ [True, True, False] 的list，如果其中有一个为False，则几组之间的比较结果肯定也为False
+    # 只有全为True，则整体比较才可能是True
+    if False in consistent_result_list:
+        return False
+    else:
+        return True
+
 
 
 
@@ -97,6 +124,7 @@ if __name__ == '__main__':
 
     # 创建一个总字典，存储每个vantage对应的子字典
     dic_rloc_prefix = {}
+    consistent_result_list = {}
     for vp in VP_LIST:
         dic_rloc_prefix[vp] = {}
         with open(os.path.join(CSV_FILE_DESTDIR, 'comparison_time_{0}.csv'.format(vp))) as f_handler:
@@ -144,6 +172,15 @@ if __name__ == '__main__':
         pprint.pprint(dic_rloc_prefix[vp])
         logger.debug('\n\nIn {0}, there are {1} groups, in which one RLOC associated with different prefixes'.format(vp, len(dic_rloc_prefix[vp])))
         logger.debug(dic_rloc_prefix[vp])
+
+        # 在此调用函数 is_coherent()，并存在
+        consistent_result_list[vp] = []
+        for key, value in dic_rloc_prefix[vp].iteritems():
+            eid_list = [i[1] for i in value]
+            consistent_result_list[vp].append(is_conherent_in_group(vp, eid_list))
+
+        # 将几组之间consistent的最终结果打印出来
+        print "Consistent result in", vp, "---->", consistent_result_list[vp]
 
 
 
