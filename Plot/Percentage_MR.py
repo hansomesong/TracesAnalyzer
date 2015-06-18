@@ -44,13 +44,11 @@ plt.ylim(82,88)
 # plt.yticks((0,1), ('0', '1'))
 rect = plt.bar(indexs, percentageTrueList, bar_width, color='b')
 autolabel(rect)
-# savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Percentage_consistency_5VP_MR.pdf")
-savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Percentage_consistency_5VP_MR.eps", dpi=300, transparent=True)
-plt.savefig(
-    os.path.join(PLOT_DIR, 'Percentage_consistency_5VP_MR.eps'),
-    dpi=300,
-    transparent=True
-)
+# plt.savefig(
+#     os.path.join(PLOT_DIR, 'Percentage_consistency_5VP_MR.eps'),
+#     dpi=300,
+#     transparent=True
+# )
 
 plt.tight_layout()
 plt.show()

@@ -43,6 +43,18 @@ def merge_all_prefixes(prefix_list):
 
 
 
+# 此method可以统计出每一个类似于 IPNetwork('37.77.56.48/28')的prefix下有多少个IP地址，即2的(32-28)次方个IP地址
+# 在 netaddr中调用 IPNetwork('37.77.56.48/28').size 即可
+# input为已经merge过的smallest possible subnets 的list，逐一统计出每个prefix的size，然后求合
+# output即为在某一vp下，一共有多少个可用IP地址
+def prefix_size(merged_prefix_list):
+    prefix_size_total = 0
+    for prefix in merged_prefix_list:
+        prefix_size_total = prefix_size_total + prefix.size
+
+    return prefix_size_total
+
+
 
 # Main
 if __name__ == '__main__':
@@ -50,7 +62,7 @@ if __name__ == '__main__':
 
     logging.basicConfig(
         filename=os.path.join(os.getcwd(), '{0}.log'.format(__file__)),
-        level=logging.INFO,
+        level=logging.DEBUG,
         filemode='w',
         format='%(asctime)s - %(levelname)s: %(message)s'
     )
