@@ -95,6 +95,35 @@ def is_conherent_in_group(vp, eid_list):
 
 
 
+# 此函数用来统计整个这次实验所产生的不同RLOC的个数
+def rloc_number_counter(vp):
+    csv_file = os.path.join(CSV_FILE_DESTDIR, "comparison_time_{0}.csv".format(vp))
+    rloc_list = []
+
+    with open(csv_file) as f_handler:
+        next(f_handler)
+        for line in f_handler:
+            tmp_list = line.split(';')
+
+            # 开始逐行提取RLOC，如果此行回复包含 Normal Map Reply，才有处理的必要
+            if 'RoundNormal' in tmp_list[LOG_TIME_COLUMN['round_type_set']]:
+                for rloc in tmp_list[LOG_TIME_COLUMN['RLOC_set']:]:
+                    # 有的RLOC末尾是带 '\r\n' 的，所以都剔除掉
+                    rloc_list.append(rloc.replace('\r\n', ''))
+
+    # 去掉重复项
+    rloc_set_list = list(set(rloc_list))
+
+    # 直接返回 rloc_set_list 的长度即为整个这个csv文件的不同rloc个数
+    return len(rloc_set_list)
+
+
+
+
+
+
+
+
 
 # Main
 if __name__ == '__main__':
@@ -125,6 +154,7 @@ if __name__ == '__main__':
     # 创建一个总字典，存储每个vantage对应的子字典
     dic_rloc_prefix = {}
     consistent_result_list = {}
+    rloc_number = {}
     for vp in VP_LIST:
         dic_rloc_prefix[vp] = {}
         with open(os.path.join(CSV_FILE_DESTDIR, 'comparison_time_{0}.csv'.format(vp))) as f_handler:
@@ -189,6 +219,11 @@ if __name__ == '__main__':
                                                      len(consistent_result_list[vp])))
         print "Consistent result in", vp, "---->", consistent_result_list[vp]
         logger.debug("Consistent result in {0} ----> {1}".format(vp, consistent_result_list[vp]))
+
+        # 调用函数 rloc_number_counter(vp) 已得到在此vp下可产生的不同的rloc的总个数
+        rloc_number[vp] = rloc_number_counter(vp)
+        print "In", vp, "there are", rloc_number[vp], "different RLOCs"
+        logger.debug("In {0}, there are {1} different RLOCs".format(vp, rloc_number[vp]))
 
 
 

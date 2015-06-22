@@ -21,9 +21,9 @@ def autolabel(rects):
     for rect in rects:
         height = rect.get_height()
         print "height:", height
-        plt.text(rect.get_x()+rect.get_width()/2-0.1, 1.001*height, '%s' % round(height,2))
+        plt.text(rect.get_x()+rect.get_width()/2-0.1, 1.002*height, '%s' % round(height,2))
 
-opacity = 0.6
+opacity = 0.5
 rects1 = plt.bar(index, percentage_1st_day, bar_width,alpha=opacity, color='b',label= 'First day')
 rects2 = plt.bar(index + bar_width, percentage_means, bar_width,alpha=opacity,color='r',label='Means')
 rects3 = plt.bar(index + 2*bar_width, percentage_18th_day, bar_width,alpha=opacity,color='y',label='Last day')
@@ -31,7 +31,7 @@ rects3 = plt.bar(index + 2*bar_width, percentage_18th_day, bar_width,alpha=opaci
 plt.xlabel('Classification', fontsize=16)
 plt.ylabel('Percentage (%)', fontsize=16)
 plt.title('Percentage of every classification', fontsize=18)
-plt.xticks(index + bar_width, ('New Deployment', 'Reconfiguration', 'RLOC Madness',
+plt.xticks(index + 1.5*bar_width, ('New Deployment', 'Reconfiguration', 'RLOC Madness',
                                'Neg+RLOC by MR', 'RLOC1+RLOC2 by MR', 'Neg+RLOC by VP', 'RLOC1+RLOC2 by VP'))
 plt.ylim(0,101)
 plt.legend()
