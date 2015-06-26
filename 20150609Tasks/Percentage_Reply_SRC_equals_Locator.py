@@ -9,6 +9,7 @@ import os
 import timeit
 import re
 import numpy as np
+import matplotlib.pyplot as plt
 
 # 首先定义一个method，它针对一个csv文件进行处理，返回值为Reply_SRC是Map Reply中的one of RLOC的percentage
 def percentage_yes_in_one_csv(csv_file):
@@ -89,7 +90,47 @@ if __name__ == '__main__':
     print "overall_percentage_yes", overall_percentage_yes
 
 
-
+    # # 此处画个图，把5个vp得到的percentage画成柱状图，overall percentage画成一条横虚线
+    # # 画图所需数据为此script算得的数据，直接给出用以画图，否则太慢了
+    # y_list = [89.23, 88.10, 89.45, 88.54, 88.70]
+    # x_overall_list = [-0.3, 4.7]
+    # y_overall_list = [88.8, 88.8]
+    #
+    # n_groups = 5
+    # indexs = np.arange(n_groups)
+    # bar_width = 0.35
+    #
+    # plt.grid(True)
+    #
+    # def autolabel(rects):
+    #     for rect in rects:
+    #         height = rect.get_height()
+    #         print "height:", height
+    #         plt.text(rect.get_x()+rect.get_width()/2-0.15, 1.0003*height, '%s' % round(height,2))
+    #
+    # # Control the opacity of the bar color
+    # # opacity = 0.4
+    # # rects1 = plt.bar(index, percentageFalseList, bar_width, alpha=opacity, color='b',label='Men')
+    #
+    #
+    # plt.xlabel('vantage point',fontsize=16)
+    # plt.ylabel('percentage(%)', fontsize=16)
+    # plt.title('Percentage of Reply_SRC equals one of RLOC set', fontsize=18)
+    # plt.xticks(indexs + bar_width/2, ('1', '2', '3', '4', '5'), fontsize=16)
+    # plt.plot(x_overall_list, y_overall_list, '--', color='r', label='overall')
+    # plt.xlim(-0.3, 4.7)
+    # plt.ylim(85,90)
+    # rect = plt.bar(indexs, y_list, bar_width, color='b')
+    # autolabel(rect)
+    # plt.legend(loc='upper right')
+    #
+    # plt.savefig(
+    #     os.path.join(PLOT_DIR, 'Percentage_Reply_SRC_equals_Locator.eps'),
+    #     dpi=300,
+    #     transparent=True
+    # )
+    #
+    # plt.show()
 
 
 

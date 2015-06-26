@@ -61,7 +61,7 @@ if __name__ == '__main__':
 
     # 以下循环，是本脚本的关键部分
     # 基本想法是： 因为诸如comparison_time_<VANTAGE_NAME>.csv之类的文件中，已经记录了每个文件中发生new deployement的时刻
-    # 现在需要统计每一个MP resolver，在5个vantage下，613个EID中所有的new deployment的时刻
+    # 现在需要统计每一个MR，在5个vantage下，613个EID中所有的new deployment的时刻
     # 最理想的情况就是，在任一时刻，13个MR观察到的new deployment数目是一致的
     for vantage_name, log_file in input_logs.iteritems():
         # print vantage_name, log_file
@@ -72,7 +72,7 @@ if __name__ == '__main__':
                 # 不考虑时间的秒位
                 mp_resolver = tmp[LOG_TIME_COLUMN['resolver']]
                 change_time = [datetime.datetime.strptime(x, "%d/%m/%Y %H:%M:%S").strftime("%d/%m/%Y %H:%M")
-                               for x in tmp[LOG_TIME_COLUMN['change_time']].split(",") if x != '0']
+                               for x in tmp[LOG_TIME_COLUMN['case1_change_time']].split(",") if x != '0']
                                # strptime把字符串格式改写成datatime格式；strftime把datatime格式改写成字符串格式
                 change_time = [datetime.datetime.strptime(x, "%d/%m/%Y %H:%M")
                                for x in change_time]
@@ -154,6 +154,8 @@ if __name__ == '__main__':
     # mean_2std_blue = list(map(lambda x: x[0]+2*x[1], zip(mean_means, mean_stds)))
     print "mean_2std_blue:", mean_2std_blue
 
+
+
     # 快速傅立叶变换，要变换的原始信号为means
     sig = means
     #最先确定的是采样率，采样率确定意味着两方面的事情。
@@ -190,25 +192,23 @@ if __name__ == '__main__':
     # print len(fft_sig), "fft_sig:", fft_sig
 
     # #画出时间域的幅度图
-    # figure_name_FFT = pl.figure('Period_verified_by_FFT.eps')
     # pl.subplot(211)
-    # pl.plot(np.arange(1,N+1),sig,'blue', label='means')
+    # pl.plot(np.arange(1,N+1),sig,'blue')
     # pl.xlabel("Experiment number")
-    # pl.ylabel("Mean of numbers of change")
+    # pl.ylabel("Mean")
     # pl.xlim(0,len(sig))
     # pl.legend()
-    # pl.title("Waveform for mean of numbers of change")
+    # pl.title("Time waveform for mean of overall change number")
     #
     #
     # #画出频域图,你会发现你的横坐标无从下手？虽然你懂了后面的东西后可以返回来解决，但是现在就非常迷惑。现在只能原封不懂的画出频率图
     # pl.subplot(212)
     #
-    # pl.plot(freq,2*np.abs(fft_sig),'red',label='Frequency')#如果用db作单位则20*np.log10(2*np.abs(fft_sig))
+    # pl.plot(freq,2*np.abs(fft_sig),'red')#如果用db作单位则20*np.log10(2*np.abs(fft_sig))
     # pl.xlabel('Frequency(Hz)')
     # pl.ylabel('Proportion')
     # pl.xlim(0,Freq_max)
-    # pl.legend()
-    # pl.title('Frenquency spectrum for mean of numbers of change')
+    # pl.title('Frenquency spectrum for mean of overall change number')
     # pl.show()
 
 
@@ -231,10 +231,10 @@ if __name__ == '__main__':
     print "np.arange(1,N) length:", len(np.arange(1,N))
     print "correlation_result length:", len(correlation_result)
     plt.plot(np.arange(1,N), correlation_result)
-    plt.xlabel("Order from 1 to (experiment number-1)")
-    plt.ylabel("Range of Auto-correlation")
-    pl.title('Auto-correlation for mean of numbers of change')
-    figure_name_Autocorrelation = pl.figure('Period_verified_by_Autocorrelation.eps')
+    plt.xlim(1, len(np.arange(1,N))/2)
+    plt.xlabel("Order from 1 to n/2-1")
+    plt.ylabel("Coefficient of Auto-correlation")
+    pl.title('Auto-correlation for mean of overall change number')
 
 
 
@@ -261,8 +261,8 @@ if __name__ == '__main__':
 
     # os.path.dirname(__file__) # 用来求得 当前文件所在的路径
     # os.path.join() # 用以生成存储所得图像路径
-    # plt.savefig(os.path.join(os.path.dirname(__file__), 'Plot', 'Plot_variable_time', figure_name_FFT))
-    # plt.savefig(os.path.join(os.path.dirname(__file__), 'Plot', 'Plot_variable_time', figure_name_Autocorrelation))
+    # plt.savefig(os.path.join(os.path.dirname(__file__), 'Plot', 'Period_verified_by_FFT.eps'))
+    plt.savefig(os.path.join(os.path.dirname(__file__), 'Plot', 'Period_verified_by_Autocorrelation.eps'))
     plt.show()
 
 
