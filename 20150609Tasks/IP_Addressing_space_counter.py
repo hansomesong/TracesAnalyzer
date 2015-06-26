@@ -24,11 +24,12 @@ def prefix_finder_given_time(csv_file, given_date):
             if tmp_list[LOG_COLUMN['round_type']] != 'RoundNoReply':
 
                 # 在指定时间范围内进行处理
-                if re.search(given_date, tmp_list[LOG_COLUMN['date']]):
+                if re.search(given_date, tmp_list[LOG_COLUMN['date']]) and \
+                        (IPAddress(tmp_list[LOG_COLUMN['eid']]) in IPNetwork(tmp_list[LOG_COLUMN['mapping_entry']])):
                     # print tmp_list[LOG_COLUMN['date']], tmp_list[LOG_COLUMN['mapping_entry']]
                     prefix_given_time.append(tmp_list[LOG_COLUMN['mapping_entry']])
 
-    # print "method", [prefix_tmp for prefix_tmp in set(prefix_given_time)]
+    logger.debug('In method prefix_finder_given_time, set(prefix) = {0}'.format([prefix_tmp for prefix_tmp in set(prefix_given_time)]))
     return [prefix_tmp for prefix_tmp in set(prefix_given_time)]
 
 
@@ -81,18 +82,36 @@ if __name__ == '__main__':
 
 
     given_date_list = ["2013-07-02", "2013-07-18"]
+    prefix_size_dic = {}
 
     for given_date in given_date_list:
+        prefix_size_dic[given_date] = {}
         prefix_list_given_time_tmp = []
         for vp in VP_LIST:
-            # 遍历此vp下的所有csv file
-            for file_name in os.listdir(os.path.join(PLANET_CSV_DIR, vp)):
-                csv_file = os.path.join(PLANET_CSV_DIR, vp, file_name)
-                logger.debug(csv_file)
+            # 打开5个comparison_time_vp.csv先进行第一次筛选，如果某一行只有No Map Reply就没有必要再打开那个log文件了
+            with open(os.path.join(CSV_FILE_DESTDIR, 'comparison_time_{0}.csv'.format(vp))) as f_handler:
+                next(f_handler)
+                for line in f_handler:
+                    tmp_list = line.split(';')
 
-                # 得到了所有文件路径和given_time之后即可调用prefix_finder_given_time(csv_file, given_date)来获得prefix_list
-                prefix_list_given_time_tmp.extend(prefix_finder_given_time(csv_file, given_date))
-                logger.debug(prefix_list_given_time_tmp)
+                    # 如果是RoundNoReply则没有必要处理此行
+                    if tmp_list[LOG_TIME_COLUMN['round_type_set']] != 'RoundNoReply':
+                        csv_file = os.path.join(PLANET_CSV_DIR, vp, '{0}-EID-{1}-MR-{2}.log.csv'.format(LOG_PREFIX[vp],
+                                                                                                        tmp_list[LOG_TIME_COLUMN['eid']], tmp_list[LOG_TIME_COLUMN['resolver']]))
+
+                        logger.debug(csv_file)
+                        prefix_list_given_time_tmp.extend(prefix_finder_given_time(csv_file, given_date))
+                        logger.debug('prefix_list_given_time_tmp ----> {0}'.format(prefix_list_given_time_tmp))
+
+
+            # # 遍历此vp下的所有csv file (已被上面一段code顶替)
+            # for file_name in os.listdir(os.path.join(PLANET_CSV_DIR, vp)):
+            #     csv_file = os.path.join(PLANET_CSV_DIR, vp, file_name)
+            #     logger.debug(csv_file)
+            #
+            #     # 得到了所有文件路径和given_time之后即可调用prefix_finder_given_time(csv_file, given_date)来获得prefix_list
+            #     prefix_list_given_time_tmp.extend(prefix_finder_given_time(csv_file, given_date))
+            #     logger.debug('prefix_list_given_time_tmp ----> {0}'.format(prefix_list_given_time_tmp))
 
 
             # 将得到的prefix_list_given_time_tmp取set，以消除重复项
@@ -104,8 +123,11 @@ if __name__ == '__main__':
             print "There are {0} CIDR subnets in {1}".format(len(merged_prefix_list_given_time), vp)
             pprint.pprint(merged_prefix_list_given_time)
 
-
-
+            # 计算给定的一组merged list of prefixes，去求它们size的总和
+            prefix_size_dic[given_date][vp] = prefix_size(merged_prefix_list_given_time)
+            print 'prefix_size_dic[', given_date, '][', vp, '] ='
+            pprint.pprint(prefix_size_dic[given_date][vp])
+            logger.debug('prefix_size_dic[{0}][{1}] = {2}'.format(given_date, vp, prefix_size_dic[given_date][vp]))
 
     stop_time = timeit.default_timer()
     print "Execution time (in unit of second) of this script: ", stop_time - start_time
