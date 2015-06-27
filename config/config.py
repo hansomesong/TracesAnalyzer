@@ -30,6 +30,7 @@ except KeyError:
 CSV_ALL_FILE = os.path.join(CSV_FILE_DESTDIR, 'statistic_all.csv')
 
 VP_LIST = ["liege", "temple", "ucl", "umass", "wiilab"]
+# VP_LIST = ["wiilab"]
 
 TRACES_LOG=\
 {

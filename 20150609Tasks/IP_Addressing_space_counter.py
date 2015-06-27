@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 __author__ = 'yueli'
 # 此脚本用来查看指定某天的IP Addressing Space个数
+# 性能优化测试：
+# 测试平台： MacAir 2014 4G RAM, 128G SSD硬盘
+# 参考指标： 优化前对 wiilab的测试结果为，89 seconds
+# 优化手段1：将re.search()函数直接替换为 string equability test, 速度提升至74 seconds
+# 优化手段2：将logger记录信息的level变为INFO，速度继续提升至 64 seconds
 
 
 import timeit
@@ -24,7 +29,8 @@ def prefix_finder_given_time(csv_file, given_date):
             if tmp_list[LOG_COLUMN['round_type']] != 'RoundNoReply':
 
                 # 在指定时间范围内进行处理
-                if re.search(given_date, tmp_list[LOG_COLUMN['date']]) and \
+                # S. 直接比较 两个字符串是否相等，速度要优于 re.serach()方法
+                if given_date == tmp_list[LOG_COLUMN['date']].split(' ')[0] and \
                         (IPAddress(tmp_list[LOG_COLUMN['eid']]) in IPNetwork(tmp_list[LOG_COLUMN['mapping_entry']])):
                     # print tmp_list[LOG_COLUMN['date']], tmp_list[LOG_COLUMN['mapping_entry']]
                     prefix_given_time.append(tmp_list[LOG_COLUMN['mapping_entry']])
