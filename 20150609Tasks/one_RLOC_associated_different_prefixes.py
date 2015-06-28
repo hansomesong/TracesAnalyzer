@@ -28,25 +28,35 @@ def rloc_associated_diff_prefix(tmp_list):
 
             # 只有Round Type是Normal时才予以考虑
             if tmp_list[LOG_COLUMN['round_type']] == 'RoundNormal':
+                if (IPAddress(tmp_list[LOG_COLUMN['eid']]) in IPNetwork(tmp_list[LOG_COLUMN['mapping_entry']])):
+                    # 找出此map reply中有几个RLOC，由此可以遍历tmp_list[LOG_COLUMN[locator_id']]列及之后的(locator_count-1)列
+                    for rloc_addr in tmp_list[LOG_COLUMN['locator_id']:]:
+                        prefix_current = tmp_list[LOG_COLUMN['mapping_entry']]
+                        eid_current = tmp_list[LOG_COLUMN['eid']]
+                        # 因为tmp_list[LOG_COLUMN['locator_id']不是纯的ip地址值，所以需要把用不到的信息删除
+                        locator_id = IPAddress(rloc_addr.split(',')[1])
 
-                # 找出此map reply中有几个RLOC，由此可以遍历tmp_list[LOG_COLUMN[locator_id']]列及之后的(locator_count-1)列
-                for rloc_addr in tmp_list[LOG_COLUMN['locator_id']:]:
-                    prefix_current = tmp_list[LOG_COLUMN['mapping_entry']]
-                    eid_current = tmp_list[LOG_COLUMN['eid']]
-                    # 因为tmp_list[LOG_COLUMN['locator_id']不是纯的ip地址值，所以需要把用不到的信息删除
-                    locator_id = IPAddress(rloc_addr.split(',')[1])
-
-                    # 如果当前这个RLOC还不是dic_rloc_prefixes中的key，则说明此RLOC还未添加
-                    # 那就把此RLOC作为key，并添加相应的prefix作为value
-                    if locator_id not in dic_rloc_prefixes.keys():
-                        dic_rloc_prefixes[locator_id] = [(prefix_current, eid_current)]
-                    # 如果当前这个RLOC已经是dic_rloc_prefixes中的key了的话，只要给此key添加不重复的value即可
-                    else:
-                        # 如果要添加的value是新值的话再进行添加
-                        if prefix_current not in dic_rloc_prefixes[locator_id]:
-                            dic_rloc_prefixes[locator_id].append((prefix_current, eid_current))
+                        # 如果当前这个RLOC还不是dic_rloc_prefixes中的key，则说明此RLOC还未添加
+                        # 那就把此RLOC作为key，并添加相应的prefix作为value
+                        if locator_id not in dic_rloc_prefixes.keys():
+                            dic_rloc_prefixes[locator_id] = [(prefix_current, eid_current)]
+                        # 如果当前这个RLOC已经是dic_rloc_prefixes中的key了的话，只要给此key添加不重复的value即可
+                        else:
+                            # 如果要添加的value是新值的话再进行添加
+                            if prefix_current not in dic_rloc_prefixes[locator_id]:
+                                dic_rloc_prefixes[locator_id].append((prefix_current, eid_current))
 
     return dic_rloc_prefixes
+
+def mapping_entry_list_generator(mapping_entries):
+    """
+        input: mapping entry string with format such as: "('0.0.0.0/0', 752),('1.0.0.0/0', 742)"
+        output: a list of mapping entry
+    """
+    tmp_list = mapping_entries.replace('(', '').replace(')', '').replace("'", "").split(',')
+    # 我们只把 下标为偶数的 元素放入最终返回的list中
+    mapping_entry_list = [element for x, element in enumerate(tmp_list) if x % 2 == 0]
+    return mapping_entry_list
 
 
 # 此函数用来针对某一行构造一个字典
@@ -65,11 +75,13 @@ def rlocs_associated_one_prefix(tmp_list):
     #         = [tmp_list[LOG_TIME_COLUMN['mapping_entry']].split(',')[0].replace("(",'').replace("'",'')]
 
     for rloc_addr in tmp_list[LOG_TIME_COLUMN['RLOC_set']:]:
-        dic_rloc_prefixes[IPAddress(rloc_addr.replace('\r\n', ''))] = \
-            [(tmp_list[LOG_TIME_COLUMN['mapping_entry']].split(',')[0].replace("(",'').replace("'",''),
-              tmp_list[LOG_TIME_COLUMN['eid']])]
+        if (IPAddress(tmp_list[LOG_TIME_COLUMN['eid']]) in IPNetwork(mapping_entry_list_generator(tmp_list[LOG_TIME_COLUMN['mapping_entry']])[0])):
+            dic_rloc_prefixes[IPAddress(rloc_addr.replace('\r\n', ''))] = \
+                [(tmp_list[LOG_TIME_COLUMN['mapping_entry']].split(',')[0].replace("(",'').replace("'",''),
+                  tmp_list[LOG_TIME_COLUMN['eid']])]
 
     return dic_rloc_prefixes
+
 
 
 
@@ -194,8 +206,16 @@ if __name__ == '__main__':
 
 
         # 去重。。。
-        for key, value in dic_rloc_prefix[vp].iteritems():
-            dic_rloc_prefix[vp][key] = list(set(value))
+        # for key, value in dic_rloc_prefix[vp].iteritems():
+        #     tmp_value = list(set(value))
+        #     if len(tmp_value) > 1:
+        #         dic_rloc_prefix[vp][key] = tmp_value
+        #     else:
+
+        dic_rloc_prefix[vp] = {key : list(set(value)) for key, value in dic_rloc_prefix[vp].iteritems() if len(list(set(value))) != 1 }
+
+
+
 
 
         print '\n\nIn', vp, ', there are', len(dic_rloc_prefix[vp]), 'groups, in which one RLOC associated with different prefixes'
