@@ -11,6 +11,8 @@ from netaddr import *
 import pprint
 import logging
 import resolver_comparator as rc
+import numpy as np
+import matplotlib.pyplot as plt
 
 # 针对comparison_time_vp.csv中一行多个prefix的情况
 def rloc_associated_diff_prefix(tmp_list):
@@ -160,91 +162,114 @@ if __name__ == '__main__':
               "the definition about this variable is not taken into account."
         print "If PROJECT_LOG_DIR is well defined, restart Pycharm to try again!"
 
-    # 在5个csv文件中直接逐行读取数值
+    # # 在5个csv文件中直接逐行读取数值
+    #
+    #
+    # # 创建一个总字典，存储每个vantage对应的子字典
+    # dic_rloc_prefix = {}
+    # consistent_result_list = {}
+    # rloc_number = {}
+    # for vp in VP_LIST:
+    #     dic_rloc_prefix[vp] = {}
+    #     with open(os.path.join(CSV_FILE_DESTDIR, 'comparison_time_{0}.csv'.format(vp))) as f_handler:
+    #         next(f_handler)
+    #         for line in f_handler:
+    #             tmp_list = line.split(';')
+    #
+    #             # 只有当LOG_TIME_COLUMN['round_type_set']中含有RoundNormal时予以考虑
+    #             if re.search('RoundNormal', tmp_list[LOG_TIME_COLUMN['round_type_set']]):
+    #                 # 如果 LOG_TIME_COLUMN['mapping_entry']只含有一个元素时，为节省时间，则可直接创建字典：
+    #                 # 由于LOG_TIME_COLUMN['mapping_entry']列的显示格式是 ('37.77.58.0/23', 537),('37.77.58.0/26', 71)
+    #                 # 所以用 .split(',')之后的list个数为实际prefix个数的2倍
+    #                 if len(tmp_list[LOG_TIME_COLUMN['mapping_entry']].split(','))/2 == 1:
+    #                     # 此处可调用函数 rlocs_associated_one_prefix(tmp_list) 来实现
+    #                     # 用此语法合并2个字典即可：dictMerged = dict(dict1, **dict2)
+    #                     # dict1相当于main函数里最终结果的字典，dict2相当于每次调用函数时返回的字典
+    #                     # 即：dictMerged = dic_rloc_prefix_liege （和dict1为同一个字典）
+    #                     # dict1 ＝ dic_rloc_prefix_liege
+    #                     # dict2 ＝ rlocs_associated_one_prefix(tmp_list)
+    #                     tmp_dict = rlocs_associated_one_prefix(tmp_list)
+    #                     for key, value in tmp_dict.iteritems():
+    #                         if key in dic_rloc_prefix[vp].keys():
+    #                             dic_rloc_prefix[vp][key].extend(value)
+    #                         else:
+    #                             dic_rloc_prefix[vp][key] = value
+    #                 # 当 LOG_TIME_COLUMN['mapping_entry'] 的个数不为一时，则必须得遍历原 PlanetLab_CSV 文件已确定哪个RLOC对应哪个prefix，
+    #                 # 即调用函数 rloc_associated_diff_prefix(csv_file)
+    #                 else:
+    #                     tmp_dict = rloc_associated_diff_prefix(tmp_list)
+    #                     for key, value in tmp_dict.iteritems():
+    #                         if key in dic_rloc_prefix[vp].keys():
+    #                             dic_rloc_prefix[vp][key].extend(value)
+    #                         else:
+    #                             dic_rloc_prefix[vp][key] = value
+    #
+    #                     # dic_rloc_prefix[vp] = dict(dic_rloc_prefix_liege, **rloc_associated_diff_prefix(tmp_list))
+    #
+    #
+    #     # 去重。。。
+    #     # for key, value in dic_rloc_prefix[vp].iteritems():
+    #     #     tmp_value = list(set(value))
+    #     #     if len(tmp_value) > 1:
+    #     #         dic_rloc_prefix[vp][key] = tmp_value
+    #     #     else:
+    #
+    #     dic_rloc_prefix[vp] = {key : list(set(value)) for key, value in dic_rloc_prefix[vp].iteritems() if len(list(set(value))) != 1 }
+    #
+    #
+    #
+    #
+    #
+    #     print '\n\nIn', vp, ', there are', len(dic_rloc_prefix[vp]), 'groups, in which one RLOC associated with different prefixes'
+    #     pprint.pprint(dic_rloc_prefix[vp])
+    #     logger.debug('\n\nIn {0}, there are {1} groups, in which one RLOC associated with different prefixes'.format(vp, len(dic_rloc_prefix[vp])))
+    #     logger.debug(dic_rloc_prefix[vp])
+    #
+    #     # 在此调用函数 is_conherent_in_group()，并存在
+    #     consistent_result_list[vp] = []
+    #     for key, value in dic_rloc_prefix[vp].iteritems():
+    #         eid_list = [i[1] for i in value]
+    #         consistent_result_list[vp].append(is_conherent_in_group(vp, eid_list))
+    #
+    #     # 将几组之间consistent的最终结果打印出来
+    #     print "There are", consistent_result_list[vp].count(True), "True over", len(consistent_result_list[vp]), "groups in total,"
+    #     print "and", consistent_result_list[vp].count(False), "False over", len(consistent_result_list[vp])
+    #     logger.debug("There are {0} True over {1} groups in total, "
+    #                  "and {2} False over {3}".format(consistent_result_list[vp].count(True),
+    #                                                  len(consistent_result_list[vp]),
+    #                                                  consistent_result_list[vp].count(False),
+    #                                                  len(consistent_result_list[vp])))
+    #     print "Consistent result in", vp, "---->", consistent_result_list[vp]
+    #     logger.debug("Consistent result in {0} ----> {1}".format(vp, consistent_result_list[vp]))
+    #
+    #     # 调用函数 rloc_number_counter(vp) 已得到在此vp下可产生的不同的rloc的总个数
+    #     rloc_number[vp] = rloc_number_counter(vp)
+    #     print "In", vp, "there are", rloc_number[vp], "different RLOCs"
+    #     logger.debug("In {0}, there are {1} different RLOCs".format(vp, rloc_number[vp]))
 
 
-    # 创建一个总字典，存储每个vantage对应的子字典
-    dic_rloc_prefix = {}
-    consistent_result_list = {}
-    rloc_number = {}
-    for vp in VP_LIST:
-        dic_rloc_prefix[vp] = {}
-        with open(os.path.join(CSV_FILE_DESTDIR, 'comparison_time_{0}.csv'.format(vp))) as f_handler:
-            next(f_handler)
-            for line in f_handler:
-                tmp_list = line.split(';')
+    n_groups = 5
+    x = [1, 2, 3, 4, 5]
+    total_number = (23, 23, 23, 23, 23)
+    true_number = (6, 2, 12, 9, 12)
 
-                # 只有当LOG_TIME_COLUMN['round_type_set']中含有RoundNormal时予以考虑
-                if re.search('RoundNormal', tmp_list[LOG_TIME_COLUMN['round_type_set']]):
-                    # 如果 LOG_TIME_COLUMN['mapping_entry']只含有一个元素时，为节省时间，则可直接创建字典：
-                    # 由于LOG_TIME_COLUMN['mapping_entry']列的显示格式是 ('37.77.58.0/23', 537),('37.77.58.0/26', 71)
-                    # 所以用 .split(',')之后的list个数为实际prefix个数的2倍
-                    if len(tmp_list[LOG_TIME_COLUMN['mapping_entry']].split(','))/2 == 1:
-                        # 此处可调用函数 rlocs_associated_one_prefix(tmp_list) 来实现
-                        # 用此语法合并2个字典即可：dictMerged = dict(dict1, **dict2)
-                        # dict1相当于main函数里最终结果的字典，dict2相当于每次调用函数时返回的字典
-                        # 即：dictMerged = dic_rloc_prefix_liege （和dict1为同一个字典）
-                        # dict1 ＝ dic_rloc_prefix_liege
-                        # dict2 ＝ rlocs_associated_one_prefix(tmp_list)
-                        tmp_dict = rlocs_associated_one_prefix(tmp_list)
-                        for key, value in tmp_dict.iteritems():
-                            if key in dic_rloc_prefix[vp].keys():
-                                dic_rloc_prefix[vp][key].extend(value)
-                            else:
-                                dic_rloc_prefix[vp][key] = value
-                    # 当 LOG_TIME_COLUMN['mapping_entry'] 的个数不为一时，则必须得遍历原 PlanetLab_CSV 文件已确定哪个RLOC对应哪个prefix，
-                    # 即调用函数 rloc_associated_diff_prefix(csv_file)
-                    else:
-                        tmp_dict = rloc_associated_diff_prefix(tmp_list)
-                        for key, value in tmp_dict.iteritems():
-                            if key in dic_rloc_prefix[vp].keys():
-                                dic_rloc_prefix[vp][key].extend(value)
-                            else:
-                                dic_rloc_prefix[vp][key] = value
+    fig, ax = plt.subplots()
+    index = np.arange(n_groups)
+    bar_width = 0.35
 
-                        # dic_rloc_prefix[vp] = dict(dic_rloc_prefix_liege, **rloc_associated_diff_prefix(tmp_list))
+    # opacity = 0.4
+    rects1 = plt.bar(index, total_number, bar_width, color='yellow',label='Inconsistent')
+    rects2 = plt.bar(index, true_number, bar_width, color='b',label='Consistent')
 
-
-        # 去重。。。
-        # for key, value in dic_rloc_prefix[vp].iteritems():
-        #     tmp_value = list(set(value))
-        #     if len(tmp_value) > 1:
-        #         dic_rloc_prefix[vp][key] = tmp_value
-        #     else:
-
-        dic_rloc_prefix[vp] = {key : list(set(value)) for key, value in dic_rloc_prefix[vp].iteritems() if len(list(set(value))) != 1 }
-
-
-
-
-
-        print '\n\nIn', vp, ', there are', len(dic_rloc_prefix[vp]), 'groups, in which one RLOC associated with different prefixes'
-        pprint.pprint(dic_rloc_prefix[vp])
-        logger.debug('\n\nIn {0}, there are {1} groups, in which one RLOC associated with different prefixes'.format(vp, len(dic_rloc_prefix[vp])))
-        logger.debug(dic_rloc_prefix[vp])
-
-        # 在此调用函数 is_conherent_in_group()，并存在
-        consistent_result_list[vp] = []
-        for key, value in dic_rloc_prefix[vp].iteritems():
-            eid_list = [i[1] for i in value]
-            consistent_result_list[vp].append(is_conherent_in_group(vp, eid_list))
-
-        # 将几组之间consistent的最终结果打印出来
-        print "There are", consistent_result_list[vp].count(True), "True over", len(consistent_result_list[vp]), "groups in total,"
-        print "and", consistent_result_list[vp].count(False), "False over", len(consistent_result_list[vp])
-        logger.debug("There are {0} True over {1} groups in total, "
-                     "and {2} False over {3}".format(consistent_result_list[vp].count(True),
-                                                     len(consistent_result_list[vp]),
-                                                     consistent_result_list[vp].count(False),
-                                                     len(consistent_result_list[vp])))
-        print "Consistent result in", vp, "---->", consistent_result_list[vp]
-        logger.debug("Consistent result in {0} ----> {1}".format(vp, consistent_result_list[vp]))
-
-        # 调用函数 rloc_number_counter(vp) 已得到在此vp下可产生的不同的rloc的总个数
-        rloc_number[vp] = rloc_number_counter(vp)
-        print "In", vp, "there are", rloc_number[vp], "different RLOCs"
-        logger.debug("In {0}, there are {1} different RLOCs".format(vp, rloc_number[vp]))
-
+    plt.xlabel('Vantage point', fontsize=16)
+    plt.ylabel('Number', fontsize=16)
+    plt.title('Number of RLOC associated with different prefixes', fontsize=20)
+    plt.xticks(index + bar_width, ('1', '2', '3', '4', '5'))
+    # plt.yticks(np.arange(0,50,10), ('', '', '200', '', '4*10exp10', ''))
+    plt.ylim(0,28)
+    plt.legend()
+    plt.savefig(os.path.join(PLOT_DIR, 'Number_RLOC_different_prefixes.eps'), dpi=300, transparent=True)
+    plt.show()
 
 
     stop_time = timeit.default_timer()
