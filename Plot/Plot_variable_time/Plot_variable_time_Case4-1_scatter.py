@@ -42,17 +42,16 @@ for line in open(rawCSV_file):
             noMapReply.append(99)
 
 # Plot begins here
-plt.scatter(time, rloc1, color="blue", label="RLOCset1", s=1)
-plt.scatter(time, rloc2, color="red", label="RLOCset2", s=1)
-plt.scatter(time, noMapReply, color="green", label="NoMapReply", s=1)
+plt.scatter(time, rloc1, color="blue", label="RLOCset1", s=20)
+plt.scatter(time, rloc2, color="red", label="RLOCset2", s=20)
+plt.scatter(time, noMapReply, color="green", label="NoMapReply", s=20)
 
-plt.xlabel("Experiment number")
-plt.ylabel("Response from MR")
-plt.title("Response from MR-149.20.48.61 for EID-153.16.47.16 over time in VP1")
-plt.yticks([0, 1, 2], ['No Map Reply', '195.59.156.123', '195.59.156.124'])
+plt.xlabel("experiment number", fontsize=20)
+plt.ylabel("response from MR", fontsize=20)
+# plt.title("Response from MR-149.20.48.61 for EID-153.16.47.16 over time in VP1")
+plt.yticks([0, 1, 2], ['No Map-\nReply', 'RLOC1', 'RLOC2'])
 plt.xlim(0,801)
 plt.ylim(-0.2, 2.2)
 
-# plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_time', 'Case4-1_scatter.eps'),
-#             dpi=300, transparent=True)
+plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_time', 'Case4-1_scatter.eps'), dpi=300)
 plt.show()

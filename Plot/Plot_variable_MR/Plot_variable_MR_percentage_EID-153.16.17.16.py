@@ -97,10 +97,10 @@ percentage98 = np.linspace(737.94, 753, 3)
 
 plt.bar(mr, listResult_trans[3], bar_width, color="lightskyblue", label="No Map Reply")
 plt.bar(mr, listResult_trans[2], bar_width, color="green", label="Negative Reply")
-plt.bar(mr, listResult_trans[0], bar_width, color="yellow", label="RLOC-24.94.15.214")
+plt.bar(mr, listResult_trans[0], bar_width, color="yellow", label="RLOC1")
 plt.xlabel('13 map resolvers')
 plt.ylabel('percentage of every Map Reply (%)')
-plt.title('Percentage of different Map Replies for EID-153.16.17.16 from 13 MRs')
+# plt.title('Percentage of different Map Replies for EID-153.16.17.16 from 13 MRs')
 # plt.yticks(percentage, ('0', '10', '20', '30', '40', '50', '60', '70', '80', '90', '100'))
 # plt.yticks(percentage90, ('90', '91', '92', '93', '94', '95', '96', '97', '98', '99', '100'))
 # plt.yticks(percentage95, ('95', '96', '97', '98', '99', '100'))
@@ -112,8 +112,7 @@ plt.xlim(0, 13)
 # plt.ylim(715.35, 753)
 plt.ylim(737.94, 753)
 plt.legend(loc='lower right')
-# plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_MR/Plot_variable_MR_percentage98_EID-153_16_17_16.pdf")
-plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_MR', 'Plot_variable_MR_percentage98_EID-153_16_17_16.eps'),
-            dpi=300, transparent=True)
+# plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_MR', 'Plot_variable_MR_percentage98_EID-153_16_17_16.eps'),
+#             dpi=300, transparent=True)
 plt.show()
 

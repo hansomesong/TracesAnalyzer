@@ -34,12 +34,12 @@ plt.scatter(time, plotData, color='blue', s=25)
 
 plt.xlabel("Experiment number", fontsize=16)
 plt.ylabel("Numbers of Locator", fontsize=16)
-plt.title("Response from MR-149.20.48.61 for EID-37.77.57.64 over time in VP1", fontsize=18)
+# plt.title("Response from MR-149.20.48.61 for EID-37.77.57.64 over time in VP1", fontsize=18)
 plt.yticks([2, 3], ['2 Locators', '3 Locators'], fontsize=12)
 plt.xlim(0,755)
 plt.ylim(1.5, 3.5)
 
-plt.annotate('2013/07/10 02:30',xy=(375,3),xytext=(375,3.1),arrowprops=dict(arrowstyle="->"))
+# plt.annotate('2013/07/10 02:30',xy=(375,3),xytext=(375,3.1),arrowprops=dict(arrowstyle="->"))
 
 # plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_time', 'Case3-2.eps'),
 #             dpi=300, transparent=True)

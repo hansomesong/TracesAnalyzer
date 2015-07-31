@@ -35,8 +35,8 @@ plt.scatter(time, plotData, color='blue', s=30)
 
 plt.xlabel("Experiment number", fontsize=16)
 plt.ylabel("Response from MR", fontsize=16)
-plt.title("Response from MR-173.36.254.164 for EID-153.16.44.144 over time in VP1", fontsize=18)
-plt.yticks([0, 1, 2], ['No Map Reply', '85.0.211.101', '178.194.96.228'], fontsize=12)
+# plt.title("Response from MR-173.36.254.164 for EID-153.16.44.144 over time in VP1", fontsize=18)
+plt.yticks([0, 1, 2], ['No Map Reply', 'RLOC1', 'RLOC2'], fontsize=12)
 plt.xlim(0,801)
 plt.ylim(-0.2, 2.2)
 

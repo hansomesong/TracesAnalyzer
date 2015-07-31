@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 __author__ = 'yueli'
 from pylab import *
 import matplotlib.pyplot as plt
@@ -21,6 +22,10 @@ n_groups = 5
 indexs = np.arange(n_groups)
 bar_width = 0.35
 
+# 画 overall 的红色虚线
+x_overall_list = [-0.3, 4.7]
+y_overall = average(percentageTrueList)
+y_overall_list = [y_overall, y_overall]
 plt.grid(True)
 
 def autolabel(rects):
@@ -34,21 +39,23 @@ def autolabel(rects):
 # rects1 = plt.bar(index, percentageFalseList, bar_width, alpha=opacity, color='b',label='Men')
 
 
-plt.xlabel('vantage point',fontsize=16)
-plt.ylabel('percentage of consistency (%)', fontsize=16)
-plt.title('Percentage of consistency for 5 vantage points', fontsize=18)
+plt.xlabel('vantage point',fontsize=20)
+plt.ylabel('percentage of consistency (%)', fontsize=20)
+# plt.title('Percentage of consistency for 5 vantage points', fontsize=18)
 plt.xticks(indexs + bar_width/2, ('1', '2', '3', '4', '5'), fontsize=16)
+plt.plot(x_overall_list, y_overall_list, '--', color='r', label='overall')
 plt.xlim(-0.3, 4.7)
 plt.ylim(82,88)
 # plt.ylim(0,1)
 # plt.yticks((0,1), ('0', '1'))
 rect = plt.bar(indexs, percentageTrueList, bar_width, color='b')
+plt.legend(loc='upper left')
 autolabel(rect)
-# plt.savefig(
-#     os.path.join(PLOT_DIR, 'Percentage_consistency_5VP_MR.eps'),
-#     dpi=300,
-#     transparent=True
-# )
+plt.savefig(
+    os.path.join(PLOT_DIR, 'Percentage_consistency_5VP_MR.eps'),
+    dpi=300,
+    transparent=True
+)
 
 plt.tight_layout()
 plt.show()

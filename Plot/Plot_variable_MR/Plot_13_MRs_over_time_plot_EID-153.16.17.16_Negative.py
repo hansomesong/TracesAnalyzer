@@ -82,13 +82,14 @@ for responseList in responseLists:
 response = np.linspace(1, 13, 13)
 plt.xlabel("Experiment numbers", fontsize=16)
 plt.ylabel("MRs", fontsize=16)
-plt.title("Negative Reply from 13 different MRs for EID-153.16.17.16 over time", fontsize=16)
+# plt.title("Negative Reply from 13 different MRs for EID-153.16.17.16 over time", fontsize=16)
 plt.xlim(0, 753)
 plt.ylim(0, 14)
 plt.yticks(response, ('MR1', 'MR2', 'MR3', 'MR4', 'MR5', 'MR6', 'MR7', 'MR8', 'MR9', 'MR10', 'MR11', 'MR12', 'MR13'))
 plt.grid(True)
 
-# plt.savefig("/Users/yueli/Documents/Codes/TracesAnalyzer/Plot/Plot_variable_MR/Negatives_from_13_different_MRs_for_EID-153_16_17_16_over_time.pdf")
+# plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_MR', 'Negatives_from_13_different_MRs_for_EID-153_16_17_16_over_time.eps'),
+#             dpi=300, transparent=True)
 plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_MR', 'Negatives_from_13_different_MRs_for_EID-153_16_17_16_over_time.eps'),
-            dpi=300, transparent=True)
+            dpi=300)
 plt.show()

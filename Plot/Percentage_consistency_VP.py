@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 __author__ = 'yueli'
 import os
 import matplotlib.pyplot as plt
@@ -29,7 +30,7 @@ if __name__ == "__main__":
     #   ...
     # }
     mp_nb_dict = {}
-    with open(os.path.join(LOG_DIR, TARGET_FILE_NAME)) as f_handler:
+    with open(os.path.join(LOG_DIR, 'comparison_VP', TARGET_FILE_NAME)) as f_handler:
         next(f_handler)
         for line in f_handler:
             tmp_list = line.split(";")[0].replace("('", "").replace("')", "").replace("'", '').replace(" ", "")\
@@ -46,20 +47,27 @@ if __name__ == "__main__":
     X_axis = np.arange(13)
     Y_axis = [(613-float(value))/613*100 for value in mp_nb_dict.values()]
     bar_width = 0.5
+    plt.grid(True)
 
-    print "Overall average of consistency by the variable of VP:", np.average(Y_axis)
+    # 画 overall 的红色虚线
+    x_overall_list = [-0.4, 12.8]
+    y_overall = np.average(Y_axis)
+    y_overall_list = [y_overall, y_overall]
+
+    print "Overall average of consistency by the variable of VP:", y_overall
 
     rect = plt.bar(X_axis, Y_axis, bar_width, color='b')
     autolabel(rect)
 
-    plt.xlabel('Map Resolver',fontsize=16)
-    plt.ylabel('percentage of consistent mappings (%)', fontsize=16)
-    plt.title('Percentage of consistency for 13 MRs', fontsize=18)
+    plt.xlabel('map resolver',fontsize=20)
+    plt.ylabel('percentage of consistent mappings (%)', fontsize=20)
+    # plt.title('Percentage of consistency for 13 MRs', fontsize=18)
     plt.xticks(X_axis + bar_width/2, X_axis + 1, fontsize=16)
+    plt.plot(x_overall_list, y_overall_list, '--', color='r', label='overall')
+    plt.legend(loc='upper right')
     plt.xlim(-0.4, 12.8)
     plt.ylim(80, 100)
     plt.grid(True)
 
-    plt.savefig(os.path.join(PLOT_DIR, 'Percentage_consistency_13MR_VP.eps'),
-                dpi=300, transparent=True)
+    plt.savefig(os.path.join(PLOT_DIR, 'Percentage_consistency_13MR_VP.eps'), dpi=300)
     plt.show()

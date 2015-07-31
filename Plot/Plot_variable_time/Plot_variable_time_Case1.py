@@ -21,9 +21,9 @@ for line in open(rawCSV_file):
         elif lines[0] == "NegativeReply":
             plotData.append(-1)
         elif lines[0] == "RoundNormal":
-            if lines[15] == "24.51.210.242":
+            if lines[14].split(',')[1] == "24.51.210.242":
                 plotData.append(1)
-            elif lines[15] == "24.51.218.201":
+            elif lines[14].split(',')[1] == "24.51.218.201":
                 plotData.append(2)
             else:
                 plotData.append(99)
@@ -38,14 +38,13 @@ plt.xlim(-50, 850)
 
 plt.xlabel("Experiment number", fontsize=16)
 plt.ylabel("Response from MR", fontsize=16)
-plt.title("Response from MR-149.20.48.61 for EID-153.16.30.160 over time in VP1", fontsize=18)
-plt.yticks([-1, 0, 1, 2], ['Negative Reply', 'No Map Reply', '24.51.210.242', '24.51.218.201'], fontsize=12)
+# plt.title("Response from MR-149.20.48.61 for EID-153.16.30.160 over time in VP1", fontsize=18)
+plt.yticks([-1, 0, 1, 2], ['Negative Reply', 'No Map Reply', 'RLOC1', 'RLOC2'], fontsize=12)
 plt.xlim(0,801)
 plt.ylim(-1.5, 2.5)
 # plt.figure(figsize=(100,100))
 # plt.gif().set_size_inches(18.5,10.5)
 
-plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_time', 'Case1.eps'),
-            dpi=300, transparent=True)
+# plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_time', 'Case1.eps'), dpi=300, transparent=True)
 plt.show()
 

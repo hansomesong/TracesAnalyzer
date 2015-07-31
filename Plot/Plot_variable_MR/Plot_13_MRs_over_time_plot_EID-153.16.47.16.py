@@ -129,7 +129,7 @@ plt.ylim(0.9, 2.1)
 # plt.yticks([-1, 0], ('Negative Reply', 'No Map Reply'))
 # plt.yticks(response, ('Negative Reply', 'No Map Reply', '82.121.231.67', '192.168.1.66', '132.227.85.231'))
 
-plt.legend()
+# plt.legend()
 
 # plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_MR', 'Responses_from_13_different_MRs_for_EID-153_16_47_16_over_time.eps'),
 #             dpi=300, transparent=True)

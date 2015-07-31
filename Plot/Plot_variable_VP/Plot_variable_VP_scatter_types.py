@@ -178,7 +178,7 @@ plt.scatter(time, rlocSet5_2, color='blue', marker='+', s=100)
 response = np.linspace(-1, 14, 16)
 plt.xlabel("Experiment numbers", fontsize=18)
 plt.ylabel("Different Map Replies", fontsize=18)
-plt.title("Map Replies over time for EID-153.16.22.216 from MR-149.20.48.61 in 5 VPs", fontsize=22)
+# plt.title("Map Replies over time for EID-153.16.22.216 from MR-149.20.48.61 in 5 VPs", fontsize=22)
 plt.xlim(0,750)
 # plt.yticks([-1, 0], ('Negative Reply', 'No Map Reply'))
 # plt.yticks(response, ('Negative Reply', 'No Map Reply', '192.168.1.66', '132.227.85.238',
@@ -196,7 +196,7 @@ plt.legend()
 plt.savefig(
     os.path.join(PLOT_DIR, 'Plot_variable_VP', 'Plot_variable_VP_different_types.eps'),
     dpi=300,
-    transparent=True
+    # transparent=True
 )
 plt.show()
 

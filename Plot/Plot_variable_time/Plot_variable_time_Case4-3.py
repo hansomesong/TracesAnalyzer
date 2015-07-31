@@ -14,20 +14,20 @@ i = -1
 for line in open(rawCSV_file):
     i = i + 1
     lines = line.split(";")
-    if lines[0] == "Round Type":
+    if lines[LOG_COLUMN['round_type']] == "Round Type":
         continue
     else:
         #time.append(i)
-        if lines[0] == "RoundNoReply":
+        if lines[LOG_COLUMN['round_type']] == "RoundNoReply":
             if "0.0.0.0" in unsortedRlocList:
                 continue
             else:
                 unsortedRlocList.append("0.0.0.0")
-        elif int(lines[9]) == 1:
-            if lines[14].split(',')[1] in unsortedRlocList:
+        elif int(lines[LOG_COLUMN['locator_count']]) == 1:
+            if lines[LOG_COLUMN['locator_id']].split(',')[1] in unsortedRlocList:
                 continue
             else:
-                unsortedRlocList.append(lines[14].split(',')[1])
+                unsortedRlocList.append(lines[LOG_COLUMN['locator_id']].split(',')[1])
         else:
             if "-999.999.999.999" in unsortedRlocList:
                 continue
@@ -54,14 +54,14 @@ rlocList = []
 for line1 in open(rawCSV_file):
     j = j + 1
     lines1 = line1.split(";")
-    if lines1[0] == "Round Type":
+    if lines1[LOG_COLUMN['round_type']] == "Round Type":
         continue
     else:
         time.append(j)
-        if lines1[0] == "RoundNoReply":
+        if lines1[LOG_COLUMN['round_type']] == "RoundNoReply":
             rlocList.append(sortedRlocList.index("0.0.0.0"))
-        elif int(lines1[9]) == 1:
-            rlocList.append(sortedRlocList.index(lines[14].split(',')[1]))
+        elif int(lines1[LOG_COLUMN['locator_count']]) == 1:
+            rlocList.append(sortedRlocList.index(lines1[LOG_COLUMN['locator_id']].split(',')[1]))
         else:
             rlocList.append(sortedRlocList.index("-999.999.999.999"))
 
@@ -77,12 +77,12 @@ plt.scatter(time, rlocList, color="blue", label="RLOCset", s=5)
 plt.xlim(-50,800)
 plt.ylim(-5,75)
 
-plt.xlabel("Experiment number")
-plt.ylabel("Responses from MR")
-plt.title("Response from MR-217.8.98.46 for EID-153.16.18.176 over time in VP1")
+plt.xlabel("experiment number", fontsize=20)
+plt.ylabel("responses from MR", fontsize=20)
+# plt.title("Response from MR-217.8.98.46 for EID-153.16.18.176 over time in VP1")
+plt.yticks(np.linspace(0, 70, 8), ['No Map-\nReply', 'RLOC10', 'RLOC20', 'RLOC30', 'RLOC40', 'RLOC50', 'RLOC60', 'RLOC70'], fontsize=12)
 
-plt.annotate('No Map Reply',xy=(300,0),xytext=(300,4),arrowprops=dict(arrowstyle="->"))
+# plt.annotate('No Map Reply',xy=(300,0),xytext=(300,4),arrowprops=dict(arrowstyle="->"))
 
-# plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_time', 'Case4-3.eps'),
-#             dpi=300, transparent=True)
+plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_time', 'Case4-3.eps'), dpi=300)
 plt.show()
