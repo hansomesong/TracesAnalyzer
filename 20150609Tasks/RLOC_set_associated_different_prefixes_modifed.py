@@ -10,7 +10,8 @@ from config.config import *
 from netaddr import *
 import pprint
 import logging
-import resolver_comparator as rc
+import numpy as np
+import matplotlib.pyplot as plt
 
 # 2015-06-22: All the following codes are used to generate a dictionary whose key is RLOC set and value is
 # a list of prefix. To reduce the execution time, first iterate the "comparison_time_<VANTAGE>.csv" file, we only look
@@ -164,6 +165,35 @@ if __name__ == '__main__':
     for vp, vp_dict in result_dict.iteritems():
         one2one_nb = sum([1 for element in vp_dict.values() if len(element) == 1])
         print "One to One pair number in", vp, "is", one2one_nb, "among", len(vp_dict), "pairs."
+
+
+    # 此处开始画图，input应当为上段代码的输出，但为加速直接把数据输入
+    n_groups = 5
+
+    total_number = (14, 14, 14, 14, 14)
+    consistent_number = (4, 2, 8, 4, 8)
+
+    fig, ax = plt.subplots()
+    index = np.arange(n_groups)
+    bar_width = 0.25
+
+
+    rects1 = plt.bar(index, total_number, bar_width, color='yellow',label= 'inconsistent')
+    rects2 = plt.bar(index, consistent_number, bar_width, color='blue',label= 'consistent')
+
+    plt.xlabel('vantage point', fontsize=16)
+    plt.ylabel('number', fontsize=16)
+    # plt.title('Number of RLOC set associated with different prefixes')
+    plt.xticks(index + 0.5*bar_width, index + 1)
+    plt.ylim(0,18)
+    plt.legend()
+    plt.savefig(
+        os.path.join(PLOT_DIR, 'Number_RLOC_set_different_prefixes.eps'),
+        dpi=300,
+        transparent=True
+    )
+
+    plt.show()
 
     stop_time = timeit.default_timer()
     print "Execution time (in unit of second) of this script: ", stop_time - start_time

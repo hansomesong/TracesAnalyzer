@@ -182,7 +182,7 @@ if __name__ == '__main__':
 
     for X in X_axis:
         NegativeReply_list.append(num_different_response[X]['NegativeReply'])
-        RoundNormal_list.append(num_different_response[X]['RoundNormal'])
+        RoundNormal_list.append(num_different_response[X]['RoundNormal'] + num_different_response[X]['PrintSkipped'])
         PrintSkipped_list.append(num_different_response[X]['PrintSkipped'])
         NoMapReply_list.append(num_different_response[X]['RoundNoReply'])
         totalReply_list.append(num_different_response[X]['NegativeReply'] + num_different_response[X]['RoundNormal']
@@ -190,14 +190,15 @@ if __name__ == '__main__':
 
     plt.plot(X_axis, NegativeReply_list, color = 'blue', label = 'Negative Reply', linewidth = 2)
     plt.plot(X_axis, RoundNormal_list, color = 'red', label = 'Normal Map Reply', linewidth = 2)
-    plt.plot(X_axis, PrintSkipped_list, color = 'black', label = 'PrintSkipped', linewidth = 2)
+    # plt.plot(X_axis, PrintSkipped_list, color = 'black', label = 'PrintSkipped', linewidth = 2)
     plt.plot(X_axis, NoMapReply_list, color = 'orange', label = 'No Map Reply', linewidth = 2)
     plt.plot(X_axis, totalReply_list, color = 'gray', ls = '--', label = 'Total Reply', linewidth = 2)
 
     plt.legend(loc="center right")
     plt.xlabel("Date (from 02/07/2013 - 18/07/2013)", fontsize = 16)
     plt.ylabel("EID-prefix number", fontsize = 16)
-    plt.title("EID-prefix number of different types of mapping per day", fontsize = 18)
+    # plt.title("EID-prefix number of different types of mapping per day", fontsize = 18)
+    plt.ylim(0, 613)
 
     # plt.savefig(os.path.join(PLOT_DIR, 'EID_number_counter.eps'), dpi=300, transparent=True)
 

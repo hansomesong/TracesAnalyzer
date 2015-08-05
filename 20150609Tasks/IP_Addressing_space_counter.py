@@ -14,6 +14,8 @@ from config.config import *
 from netaddr import *
 import pprint
 import logging
+import numpy as np
+import matplotlib.pyplot as plt
 
 
 # 定义一个method，input为指定的csv file和指定的时间范围，output为在此时间范围内可以得到的所有mapping entry(prefix)
@@ -134,6 +136,41 @@ if __name__ == '__main__':
             print 'prefix_size_dic[', given_date, '][', vp, '] ='
             pprint.pprint(prefix_size_dic[given_date][vp])
             logger.debug('prefix_size_dic[{0}][{1}] = {2}'.format(given_date, vp, prefix_size_dic[given_date][vp]))
+
+
+
+    # Modify the size and dpi of picture, default size is (8,6), default dpi is 80
+    plt.gcf().set_size_inches(8,6)
+    plt.gcf().set_dpi(300)
+
+    # 此处开始画图，input应当为上段代码的输出，但为加速直接把数据输入
+    n_groups = 5
+
+    ip_addr_number_1st_day = (40.57, 40.73, 40.73, 40.73, 40.73)
+    ip_addr_number_18th_day = (37.54, 37.74, 40.27, 37.70, 37.70)
+    prefix_number_1st_day = (17.3, 17.3, 17.3, 17.3, 17.3)
+    prefix_number_18th_day = (20.7, 20.8, 20.6, 20.7, 20.7)
+
+    fig, ax = plt.subplots()
+    index = np.arange(n_groups)
+    bar_width = 0.2
+
+    rects1 = plt.bar(index, prefix_number_1st_day, bar_width, color='blue',label= 'aggregated prefixes')
+    rects2 = plt.bar(index + bar_width, ip_addr_number_1st_day, bar_width, color='yellow',label= 'covered IP space')
+    rects3 = plt.bar(index + 2*bar_width, prefix_number_18th_day, bar_width, color='blue')
+    rects4 = plt.bar(index + 3*bar_width, ip_addr_number_18th_day, bar_width, color='yellow')
+
+    plt.xlabel('vantage point', fontsize=28)
+    # plt.ylabel('number', fontsize=28)
+    # plt.title('Prefix number and possible IP address number')
+    plt.xticks(index + 2*bar_width, index + 1)
+    plt.yticks(10*index, ['', '', '200', '', '4*10exp10'], fontsize=18)
+    plt.xlim(0, 4+4*bar_width)
+    plt.ylim(0, 50)
+    plt.legend()
+    # plt.savefig(os.path.join(PLOT_DIR, 'Prefix_and_IP_addr_number.eps'),
+    #             dpi=300)
+    plt.show()
 
     stop_time = timeit.default_timer()
     print "Execution time (in unit of second) of this script: ", stop_time - start_time

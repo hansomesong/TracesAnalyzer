@@ -248,27 +248,35 @@ if __name__ == '__main__':
     #     logger.debug("In {0}, there are {1} different RLOCs".format(vp, rloc_number[vp]))
 
 
+    # Modify the size and dpi of picture, default size is (8,6), default dpi is 80
+    plt.gcf().set_size_inches(8,6)
+    plt.gcf().set_dpi(300)
+
+    # 此处开始画图，input应当为上段代码的输出，但为加速直接把数据输入
     n_groups = 5
-    x = [1, 2, 3, 4, 5]
+
     total_number = (23, 23, 23, 23, 23)
-    true_number = (6, 2, 12, 9, 12)
+    consistent_number = (6, 2, 12, 9, 12)
 
     fig, ax = plt.subplots()
     index = np.arange(n_groups)
-    bar_width = 0.35
+    bar_width = 0.25
 
-    # opacity = 0.4
-    rects1 = plt.bar(index, total_number, bar_width, color='yellow',label='Inconsistent')
-    rects2 = plt.bar(index, true_number, bar_width, color='b',label='Consistent')
 
-    plt.xlabel('Vantage point', fontsize=16)
-    plt.ylabel('Number', fontsize=16)
-    plt.title('Number of RLOC associated with different prefixes', fontsize=20)
-    plt.xticks(index + bar_width, ('1', '2', '3', '4', '5'))
-    # plt.yticks(np.arange(0,50,10), ('', '', '200', '', '4*10exp10', ''))
+    rects1 = plt.bar(index, total_number, bar_width, color='yellow',label= 'uncorrelated groups')
+    rects2 = plt.bar(index, consistent_number, bar_width, color='blue',label= 'correlated groups')
+
+    plt.xlabel('vantage point', fontsize=22)
+    # plt.ylabel('number', fontsize=22)
+    # plt.title('Number of RLOC associated with different prefixes')
+    plt.xticks(index + 0.5*bar_width, index + 1)
     plt.ylim(0,28)
     plt.legend()
-    plt.savefig(os.path.join(PLOT_DIR, 'Number_RLOC_different_prefixes.eps'), dpi=300, transparent=True)
+    plt.savefig(
+            os.path.join(PLOT_DIR, 'Number_RLOC_different_prefixes.eps'),
+            dpi=300
+        )
+
     plt.show()
 
 

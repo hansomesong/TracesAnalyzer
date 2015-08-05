@@ -33,11 +33,11 @@ rects1 = plt.bar(index, percentage_1st_day, bar_width,alpha=opacity, color='b',l
 rects2 = plt.bar(index + bar_width, percentage_means, bar_width,alpha=opacity,color='r',label='Overall')
 rects3 = plt.bar(index + 2*bar_width, percentage_18th_day, bar_width,alpha=opacity,color='y',label='Last day')
 
-plt.xlabel('Classification', fontsize=22)
-plt.ylabel('Percentage (%)', fontsize=22)
+plt.xlabel('classification', fontsize=22)
+plt.ylabel('percentage (%)', fontsize=22)
 # plt.title('Percentage of every classification', fontsize=24)
-plt.xticks(index + 1.5*bar_width, ('New \n Deployment', 'Reconfiguration', 'RLOC \n Madness',
-                               'Neg+RLOC \n by MR', 'RLOC1+RLOC2 \n by MR', 'Neg+RLOC \n by VP', 'RLOC1+RLOC2 \n by VP'), fontsize=14)
+plt.xticks(index + 1.5*bar_width, ('New\nDeployment', 'Reconfiguration', 'RLOC\nMadness',
+                               'Map-Reply Type\nby MR', 'RLOC set\nby MR', 'Map-Reply Type\nby VP', 'RLOC set\nby VP'), fontsize=14)
 plt.ylim(0,100)
 plt.legend()
 
