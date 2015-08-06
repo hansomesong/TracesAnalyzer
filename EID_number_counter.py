@@ -188,20 +188,21 @@ if __name__ == '__main__':
         totalReply_list.append(num_different_response[X]['NegativeReply'] + num_different_response[X]['RoundNormal']
                                + num_different_response[X]['PrintSkipped'] + num_different_response[X]['RoundNoReply'])
 
-    plt.plot(X_axis, NegativeReply_list, color = 'blue', label = 'Negative Reply', linewidth = 2)
-    plt.plot(X_axis, RoundNormal_list, color = 'red', label = 'Normal Map Reply', linewidth = 2)
+    plt.plot(X_axis, NegativeReply_list, color = 'blue', label = 'Negative Map-Reply', linewidth = 2)
+    plt.plot(X_axis, RoundNormal_list, color = 'red', label = 'LISP Map-Reply', linewidth = 2)
     # plt.plot(X_axis, PrintSkipped_list, color = 'black', label = 'PrintSkipped', linewidth = 2)
-    plt.plot(X_axis, NoMapReply_list, color = 'orange', label = 'No Map Reply', linewidth = 2)
-    plt.plot(X_axis, totalReply_list, color = 'gray', ls = '--', label = 'Total Reply', linewidth = 2)
+    plt.plot(X_axis, NoMapReply_list, color = 'orange', label = 'No Map-Reply', linewidth = 2)
+    plt.plot(X_axis, totalReply_list, color = 'gray', ls = '--', label = 'Total', linewidth = 2)
 
     plt.legend(loc="center right")
-    plt.xlabel("Date (from 02/07/2013 - 18/07/2013)", fontsize = 16)
+    plt.xlabel("experiment day", fontsize = 16)
     plt.ylabel("EID-prefix number", fontsize = 16)
     # plt.title("EID-prefix number of different types of mapping per day", fontsize = 18)
     plt.ylim(0, 613)
+    plt.xticks(range(2, 19), range(1, 18))
 
     # plt.savefig(os.path.join(PLOT_DIR, 'EID_number_counter.eps'), dpi=300, transparent=True)
-
+    plt.show()
 
 
     stop_time = timeit.default_timer()
@@ -211,4 +212,3 @@ if __name__ == '__main__':
     print "avr Nor:", np.average(RoundNormal_list)
     print "avr Total:", np.average(totalReply_list)
     print "avr Nor / avr Total:", float(np.average(RoundNormal_list))/float(np.average(totalReply_list))
-    plt.show()
