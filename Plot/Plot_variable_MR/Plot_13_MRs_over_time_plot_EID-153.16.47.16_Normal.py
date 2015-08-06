@@ -97,16 +97,59 @@ for rawCSV_file in rawCSV_files:
                         responseList2.append(-10)
             else:
                 responseList2.append(-10)
-    print "responseList2:", responseList2
-    print "responseList2.len:", len(responseList2)
+    # print "responseList2:", responseList2
+    # print "responseList2.len:", len(responseList2)
     responseLists2.append(responseList2)
     mr2 = mr2 + 1
-
 
 
 time = []
 time = getTime(rawCSV_file1)
 print "time.len", len(time)
+
+
+# 消除consistent列
+response_list = []
+inconsistent_list = []
+for rawCSV_file in rawCSV_files:
+    i = -1
+    response_mr_list = []
+    for line in open(rawCSV_file):
+        i = i + 1
+        lines = line.split(";")
+        if lines[0] == "Round Type":
+            continue
+        else:
+            if lines[0] == ("NegativeReply" or "RoundNoReply"):
+                response_mr_list.append(lines[0])
+            elif lines[0] == "RoundNormal":
+                if int(lines[9]) == 1:
+                    response_mr_list.append(lines[14].split(",")[1])
+            else:
+                response_mr_list.append("MultiRLOCs")
+    response_list.append(response_mr_list)
+
+
+
+for t in time:
+    response_compare = []
+    for i in range(0,13):
+        response_compare.append(response_list[i][t-1])
+    if len(set(response_compare)) == 1:
+        inconsistent_list.append(0) #用于plot
+        # inconsistent_list.append(-99) #用于scatter
+    else:
+        inconsistent_list.append(1) #如果set的长度大于1，说明13个MRs的结果不一致
+
+print "length of inconsistent_list:", len(inconsistent_list)
+print inconsistent_list
+
+for t in range(0, 800):
+    if inconsistent_list[t] == 0: # 如果全是consistent
+        for i in range(0,13):
+            responseLists1[i][t] = -10
+            responseLists2[i][t] = -10
+
 
 # Modify the size and dpi of picture, default size is (8,6), default dpi is 80
 plt.gcf().set_size_inches(8,6)
@@ -135,6 +178,10 @@ plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, borderaxespad=0.)
 
 # plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_MR', 'Normal_from_13_different_MRs_for_EID-153_16_47_16_over_time.eps'),
 #             dpi=300)
-plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_MR', 'Normal_from_13_different_MRs_for_EID-153_16_47_16_over_time_label_zoom.eps'),
+# plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_MR', 'Normal_from_13_different_MRs_for_EID-153_16_47_16_over_time_inconsistent.eps'),
+#             dpi=300)
+# plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_MR', 'Normal_from_13_different_MRs_for_EID-153_16_47_16_over_time_label_zoom.eps'),
+#             dpi=300)
+plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_MR', 'Normal_from_13_different_MRs_for_EID-153_16_47_16_over_time_label_inconsistent_zoom.eps'),
             dpi=300)
 plt.show()

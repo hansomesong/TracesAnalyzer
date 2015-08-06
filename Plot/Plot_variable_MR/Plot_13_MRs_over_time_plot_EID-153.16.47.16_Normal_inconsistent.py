@@ -101,5 +101,5 @@ plt.ylim(0.5, 1.5)
 plt.yticks([0.5,1,1.5], ('','incon-\nsistent',''))
 
 # plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_MR', 'Normal_from_13_different_MRs_for_EID-153_16_47_16_over_time_inconsistency_plot.eps'))
-plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_MR', 'Normal_from_13_different_MRs_for_EID-153_16_47_16_over_time_inconsistency_scatter.eps'))
+# plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_MR', 'Normal_from_13_different_MRs_for_EID-153_16_47_16_over_time_inconsistency_scatter.eps'))
 plt.show()
