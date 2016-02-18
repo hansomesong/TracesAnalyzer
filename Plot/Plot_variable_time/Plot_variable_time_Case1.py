@@ -30,21 +30,25 @@ for line in open(rawCSV_file):
         else:
             plotData.append(99)
 
+# Modify the size and dpi of picture, default size is (8,6), default dpi is 80
+plt.gcf().set_size_inches(26, 14)
+
 # Plot begins here, "-1" means Negative, "0" means No Map Reply, "1" means have 1 RLOC set, "2" means have 2 RLOC sets
-plt.scatter(time, plotData, color='blue', s=30)
+plt.scatter(time, plotData, color='black', s=200)
 
 plt.xlim(-50, 850)
 #plt.ylim(-1.5,2.5)
 
-plt.xlabel("Experiment number", fontsize=16)
-plt.ylabel("Response from MR", fontsize=16)
+plt.xlabel("experiment number", fontsize=50)
+plt.ylabel("response from MR", fontsize=50)
 # plt.title("Response from MR-149.20.48.61 for EID-153.16.30.160 over time in VP1", fontsize=18)
-plt.yticks([-1, 0, 1, 2], ['Negative Reply', 'No Map Reply', 'RLOC1', 'RLOC2'], fontsize=12)
+plt.xticks(fontsize=35)
+plt.yticks([-1, 0, 1, 2], ['Negative\nMap-Reply', 'No Map-\nReply', 'RLOC1', 'RLOC2'], fontsize=32)
 plt.xlim(0,801)
 plt.ylim(-1.5, 2.5)
 # plt.figure(figsize=(100,100))
 # plt.gif().set_size_inches(18.5,10.5)
 
-# plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_time', 'Case1.eps'), dpi=300, transparent=True)
-plt.show()
+plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_time', 'Case1.eps'), dpi=300, transparent=True)
+# plt.show()
 

@@ -32,22 +32,23 @@ for line in open(rawCSV_file):
                 dataplot.append(1)
 
 # Modify the size and dpi of picture, default size is (8,6), default dpi is 80
-plt.gcf().set_size_inches(8,6)
+plt.gcf().set_size_inches(22, 14)
 
 # Plot begins here, "0" means No Map Reply, "1" means the RLOC set is "166.149.122.123", "2" means the RLOC set is
 # "166.149.122.124", "2" means the RLOC set is "166.149.122.125"
-plt.plot(time, dataplot, color="blue")
+plt.plot(time, dataplot, color="black")
 
 print len(time)
 
 plt.xlim(0, len(time))
 plt.ylim(-0.2, 2.2)
 
-plt.xlabel("experiment number", fontsize=20)
-plt.ylabel("response from MR", fontsize=20)
+plt.xlabel("experiment number", fontsize=50)
+plt.ylabel("response from MR", fontsize=50)
 # plt.title("Response from MR-193.162.145.50 for EID-153.16.14.0 over time in VP1", fontsize=18)
-plt.yticks([0, 1, 2], ['No Map-\nReply', 'RLOC1,\nRLOC2', 'RLOC3'], fontsize=12)
+plt.xticks(fontsize=35)
+plt.yticks([0, 1, 2], ['No Map-\nReply', 'RLOC1,\nRLOC2', 'RLOC3'], fontsize=32)
 # plt.legend()
 
 plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_time', 'Case4-2_plot.eps'), dpi=300)
-plt.show()
+# plt.show()

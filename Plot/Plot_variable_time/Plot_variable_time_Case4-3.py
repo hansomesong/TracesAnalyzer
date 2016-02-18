@@ -70,19 +70,22 @@ print "rlocList:", rlocList
 print "rlocList.__len__():", rlocList.__len__()
 
 
+# Modify the size and dpi of picture, default size is (8,6), default dpi is 80
+plt.gcf().set_size_inches(22, 14)
 
 #Plot begins here
-plt.scatter(time, rlocList, color="blue", label="RLOCset", s=5)
+plt.scatter(time, rlocList, color="black", label="RLOCset", s=5)
 
 plt.xlim(-50,800)
 plt.ylim(-5,75)
 
-plt.xlabel("experiment number", fontsize=20)
-plt.ylabel("responses from MR", fontsize=20)
+plt.xlabel("experiment number", fontsize=50)
+plt.ylabel("responses from MR", fontsize=50)
 # plt.title("Response from MR-217.8.98.46 for EID-153.16.18.176 over time in VP1")
-plt.yticks(np.linspace(0, 70, 8), ['No Map-\nReply', 'RLOC10', 'RLOC20', 'RLOC30', 'RLOC40', 'RLOC50', 'RLOC60', 'RLOC70'], fontsize=12)
+plt.xticks(fontsize=35)
+plt.yticks(np.linspace(0, 70, 8), ['No Map-\nReply', 'RLOC10', 'RLOC20', 'RLOC30', 'RLOC40', 'RLOC50', 'RLOC60', 'RLOC70'], fontsize=32)
 
 # plt.annotate('No Map Reply',xy=(300,0),xytext=(300,4),arrowprops=dict(arrowstyle="->"))
 
-plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_time', 'Case4-3.eps'), dpi=300)
-plt.show()
+plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_time', 'Case4-3.eps'), dpi=300, transparent=True)
+# plt.show()

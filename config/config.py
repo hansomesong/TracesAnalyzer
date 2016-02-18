@@ -24,7 +24,7 @@ except KeyError:
           "the definition about this variable is not taken into account."
     print "If PLANETLAB is well defined, restart Pycharm to try again!"
 
-# # csv_file_destDir = '/Users/qsong/Documents/TracesAnalyzer/log/'
+# csv_file_destDir = '/Users/qsong/Documents/TracesAnalyzer/log/'
 # csv_file_destDir = '/Users/yueli/Documents/Codes/TracesAnalyzer/log/'
 
 CSV_ALL_FILE = os.path.join(CSV_FILE_DESTDIR, 'statistic_all.csv')

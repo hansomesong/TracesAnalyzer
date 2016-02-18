@@ -29,17 +29,25 @@ for line in open(rawCSV_file):
         else:
             plotData.append(99)
 
+
+# Modify the size and dpi of picture, default size is (8,6), default dpi is 80
+plt.gcf().set_size_inches(22, 14)
+
 # Plot begins here
+# Modify the size and dpi of picture, default size is (8,6), default dpi is 80
+# plt.gcf().set_size_inches(8,6)
+# plt.gcf().set_dpi(300)
 
-plt.scatter(time, plotData, color='blue', s=30)
+plt.scatter(time, plotData, color='black', s=200)
 
-plt.xlabel("Experiment number", fontsize=16)
-plt.ylabel("Response from MR", fontsize=16)
+plt.xlabel("experiment number", fontsize=50)
+plt.ylabel("response from MR", fontsize=50)
 # plt.title("Response from MR-173.36.254.164 for EID-153.16.44.144 over time in VP1", fontsize=18)
-plt.yticks([0, 1, 2], ['No Map Reply', 'RLOC1', 'RLOC2'], fontsize=12)
+plt.xticks(fontsize=35)
+plt.yticks([0, 1, 2], ['No Map-\nReply', 'RLOC1', 'RLOC2'], fontsize=32)
 plt.xlim(0,801)
 plt.ylim(-0.2, 2.2)
 
-# plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_time', 'Case3-1.eps'),
-#             dpi=300, transparent=True)
-plt.show()
+plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_time', 'Case3-1.eps'),
+            dpi=300, transparent=True)
+# plt.show()

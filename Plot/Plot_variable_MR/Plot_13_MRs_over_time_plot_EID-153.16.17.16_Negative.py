@@ -73,23 +73,27 @@ time = getTime(rawCSV_file1)
 print "time.len", len(time)
 
 
-
 # To Scatter all 13 Map Replies from 13 MRs
 # To scatter the results
+
+# Modify the size and dpi of picture, default size is (8,6), default dpi is 80
+plt.gcf().set_size_inches(18,14)
+
 for responseList in responseLists:
-     plt.scatter(time, responseList, s=100)
+     plt.scatter(time, responseList, color="black", s=500)
 
 response = np.linspace(1, 13, 13)
-plt.xlabel("Experiment numbers", fontsize=16)
-plt.ylabel("MRs", fontsize=16)
+plt.xlabel("experiment number", fontsize=50)
+plt.ylabel("MRs", fontsize=50)
 # plt.title("Negative Reply from 13 different MRs for EID-153.16.17.16 over time", fontsize=16)
 plt.xlim(0, 753)
 plt.ylim(0, 14)
-plt.yticks(response, ('MR1', 'MR2', 'MR3', 'MR4', 'MR5', 'MR6', 'MR7', 'MR8', 'MR9', 'MR10', 'MR11', 'MR12', 'MR13'))
+plt.xticks(fontsize=35)
+plt.yticks(response, ('MR1', 'MR2', 'MR3', 'MR4', 'MR5', 'MR6', 'MR7', 'MR8', 'MR9', 'MR10', 'MR11', 'MR12', 'MR13'), fontsize=32)
 plt.grid(True)
 
 # plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_MR', 'Negatives_from_13_different_MRs_for_EID-153_16_17_16_over_time.eps'),
 #             dpi=300, transparent=True)
 plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_MR', 'Negatives_from_13_different_MRs_for_EID-153_16_17_16_over_time.eps'),
             dpi=300)
-plt.show()
+# plt.show()

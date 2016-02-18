@@ -23,6 +23,8 @@ for line in open(rawCSV_file):
         else:
             plotData.append(10)
 print plotData
+
+
 # Plot begins here, "2" means !!!! LCAF AFI print skipped !!!!; "0" means No map-reply received
 plt.scatter(time, plotData, color='blue', s=5)
 

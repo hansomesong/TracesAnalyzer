@@ -72,7 +72,10 @@ if __name__ == '__main__':
                 # 不考虑时间的秒位
                 mp_resolver = tmp[LOG_TIME_COLUMN['resolver']]
                 change_time = [datetime.datetime.strptime(x, "%d/%m/%Y %H:%M:%S").strftime("%d/%m/%Y %H:%M")
+                               # 如果只计算 New Deployment 则用第76行而注释掉第78行
                                for x in tmp[LOG_TIME_COLUMN['case1_change_time']].split(",") if x != '0']
+                               # 如果要计算所有的变化个数，则用第78行而注释掉第76行
+                               # for x in ",".join([tmp[LOG_TIME_COLUMN['case1_change_time']], tmp[LOG_TIME_COLUMN['case3_4_change_time']]]).split(",") if x != '0']
                                # strptime把字符串格式改写成datatime格式；strftime把datatime格式改写成字符串格式
                 change_time = [datetime.datetime.strptime(x, "%d/%m/%Y %H:%M")
                                for x in change_time]
@@ -155,8 +158,8 @@ if __name__ == '__main__':
     print "mean_2std_blue:", mean_2std_blue
 
 
-
-    # 快速傅立叶变换，要变换的原始信号为means
+    print "############### means ##############", means
+    # 快速傅立叶变换，要变换的原始信号为means series
     sig = means
     #最先确定的是采样率，采样率确定意味着两方面的事情。
     #1.时间轴：确定每隔多久对信号采样一次，即离散化的时域轴的间隔确定，但是总长没定。
@@ -191,50 +194,64 @@ if __name__ == '__main__':
     # print len(freq), "freq:", freq
     # print len(fft_sig), "fft_sig:", fft_sig
 
-    # #画出时间域的幅度图
+    # Modify the size and dpi of picture, default size is (8,6), default dpi is 80
+    plt.gcf().set_size_inches(14, 12)
+    plt.gcf().set_dpi(300)
+
+    #画出时间域的幅度图
     # pl.subplot(211)
-    # pl.plot(np.arange(1,N+1),sig,'blue')
-    # pl.xlabel("Experiment number")
-    # pl.ylabel("Mean")
-    # pl.xlim(0,len(sig))
-    # pl.legend()
+    pl.plot(np.arange(1,N+1),sig,'black')
+    pl.xlabel("experiment number", fontsize=50)
+    pl.ylabel("change number", fontsize=50)
+    plt.xticks(fontsize=25)
+    plt.yticks(fontsize=25)
+    pl.xlim(0,len(sig))
+    pl.legend()
     # pl.title("Time waveform for mean of overall change number")
-    #
-    #
+
+
     # #画出频域图,你会发现你的横坐标无从下手？虽然你懂了后面的东西后可以返回来解决，但是现在就非常迷惑。现在只能原封不懂的画出频率图
-    # pl.subplot(212)
-    #
-    # pl.plot(freq,2*np.abs(fft_sig),'red')#如果用db作单位则20*np.log10(2*np.abs(fft_sig))
-    # pl.xlabel('Frequency(Hz)')
-    # pl.ylabel('Proportion')
+    # # pl.subplot(212)
+    # #
+    # pl.plot(freq,2*np.abs(fft_sig),'black')#如果用db作单位则20*np.log10(2*np.abs(fft_sig))
+    # pl.xlabel('frequency(Hz)', fontsize=50)
+    # pl.ylabel('proportion', fontsize=50)
     # pl.xlim(0,Freq_max)
-    # pl.title('Frenquency spectrum for mean of overall change number')
-    # pl.show()
+    # # 用于 New Deployment
+    # # pl.ylim(0, 0.3)
+    # # 用于所有 change number
+    # pl.ylim(0, 0.5)
+    # plt.xticks(fontsize=25)
+    # plt.yticks(fontsize=25)
+    # # pl.title('Frenquency spectrum for mean of overall change number')
 
 
 
-    # Autocorrelation
-    def autocorrelation(x,lags): #计算lags阶以内的自相关系数，返回lags个值，分别计算序列均值，标准差
-        n = len(x)
-        x = np.array(x)
-        result = [np.correlate(x[i:]-x[i:].mean(),x[:n-i]-x[:n-i].mean())[0]\
-            /(x[i:].std()*x[:n-i].std()*(n-i)) \
-            for i in range(1,lags+1)]
-        return result
-
-    # 计算从k＝1 到 k＝experiment number-1 阶的auto-correlation，
-    # 因为 k＝experiment number-1 时计算的已是X(1)和X(n)间的相关性了，
-    # k ＝ experiment number的相关性不存在或无法计算，
-    # 但实际看几阶相关，周期为几时只看 experiment number/2 即可，后半程无意义，因为2个X序列已无交集
-    correlation_result = autocorrelation(means, fft_size-1)
-    print "correlation_result:", correlation_result
-    print "np.arange(1,N) length:", len(np.arange(1,N))
-    print "correlation_result length:", len(correlation_result)
-    plt.plot(np.arange(1,N), correlation_result)
-    plt.xlim(1, len(np.arange(1,N))/2)
-    plt.xlabel("Order from 1 to n/2-1")
-    plt.ylabel("Coefficient of Auto-correlation")
-    pl.title('Auto-correlation for mean of overall change number')
+    # # Autocorrelation
+    # def autocorrelation(x,lags): #计算lags阶以内的自相关系数，返回lags个值，分别计算序列均值，标准差
+    #     n = len(x)
+    #     x = np.array(x)
+    #     result = [np.correlate(x[i:]-x[i:].mean(),x[:n-i]-x[:n-i].mean())[0]\
+    #         /(x[i:].std()*x[:n-i].std()*(n-i)) \
+    #         for i in range(1,lags+1)]
+    #     return result
+    #
+    # # 计算从k＝1 到 k＝experiment number-1 阶的auto-correlation，
+    # # 因为 k＝experiment number-1 时计算的已是X(1)和X(n)间的相关性了，
+    # # k ＝ experiment number的相关性不存在或无法计算，
+    # # 但实际看几阶相关，周期为几时只看 experiment number/2 即可，后半程无意义，因为2个X序列已无交集
+    # correlation_result = autocorrelation(means, fft_size-1)
+    # print "correlation_result:", correlation_result
+    # print "np.arange(1,N) length:", len(np.arange(1,N))
+    # print "correlation_result length:", len(correlation_result)
+    # plt.plot(np.arange(1,N), correlation_result, 'black')
+    # plt.xlim(1, len(np.arange(1,N))/2)
+    # plt.ylim(-0.4, 0.61)
+    # plt.xlabel("order from 1 to n/2-1", fontsize=50)
+    # plt.ylabel("coefficient of Auto-correlation", fontsize=50)
+    # plt.xticks(fontsize=25)
+    # plt.yticks(fontsize=25)
+    # # pl.title('Auto-correlation for mean of overall change number')
 
 
 
@@ -261,9 +278,10 @@ if __name__ == '__main__':
 
     # os.path.dirname(__file__) # 用来求得 当前文件所在的路径
     # os.path.join() # 用以生成存储所得图像路径
-    # plt.savefig(os.path.join(os.path.dirname(__file__), 'Plot', 'Period_verified_by_FFT.eps'))
-    plt.savefig(os.path.join(os.path.dirname(__file__), 'Plot', 'Period_verified_by_Autocorrelation.eps'))
-    plt.show()
+    plt.savefig(os.path.join(PLOT_DIR, 'Plot_periodicity', 'Change_number_by_exp_num.eps'), dpi = 300)
+    # plt.savefig(os.path.join(PLOT_DIR, 'Plot_periodicity', 'Period_verified_by_FFT.eps'), dpi = 300)
+    # plt.savefig(os.path.join(PLOT_DIR, 'Plot_periodicity', 'Period_verified_by_Autocorrelation.eps'), dpi = 300)
+    # plt.show()
 
 
 

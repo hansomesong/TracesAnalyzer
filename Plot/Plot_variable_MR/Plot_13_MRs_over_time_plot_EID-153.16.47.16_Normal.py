@@ -152,28 +152,29 @@ for t in range(0, 800):
 
 
 # Modify the size and dpi of picture, default size is (8,6), default dpi is 80
-plt.gcf().set_size_inches(8,6)
+plt.gcf().set_size_inches(18, 14)
 plt.gcf().set_dpi(300)
 
 # To Scatter all 13 Map Replies from 13 MRs, for循环里的才是正经要画的
 # 最开始这两条命令只是为了画图出现图例，如果在for循环里加label会导致出现13个重复的RLOC1图例和RLOC2图例
-plt.scatter(time, responseLists1[0], marker="*", color='orange', label = "RLOC1")
-plt.scatter(time, responseLists2[0], marker="+", color='green', label = "RLOC2")
+plt.scatter(time, responseLists1[0], marker=".", s=500, color='black', label = "RLOC1")
+plt.scatter(time, responseLists2[0], marker="*", s=400, color='gray', label = "RLOC2")
 
 for responseList in responseLists1:
-     plt.scatter(time, responseList, marker="*", color='orange')
+     plt.scatter(time, responseList, marker=".", s=500, color='black')
 
 for responseList in responseLists2:
-     plt.scatter(time, responseList, marker="+", color='green')
+     plt.scatter(time, responseList, marker="*", s=400, color='gray')
 
 response = np.linspace(1, 13, 13)
-plt.xlabel("experiment numbers", fontsize=16)
-plt.ylabel("MRs", fontsize=16)
+plt.xlabel("experiment numbers", fontsize=50)
+plt.ylabel("MRs", fontsize=50)
 # plt.title("Normal Reply from 13 different MRs for EID-153.16.47.16 over time", fontsize=16)
 # plt.xlim(0, 801)
 plt.xlim(0, 50)
 plt.ylim(0.5, 13.5)
-plt.yticks(response, ('MR1', 'MR2', 'MR3', 'MR4', 'MR5', 'MR6', 'MR7', 'MR8', 'MR9', 'MR10', 'MR11', 'MR12', 'MR13'))
+plt.xticks(fontsize=35)
+plt.yticks(response, ('MR1', 'MR2', 'MR3', 'MR4', 'MR5', 'MR6', 'MR7', 'MR8', 'MR9', 'MR10', 'MR11', 'MR12', 'MR13'), fontsize=32)
 plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, borderaxespad=0.)
 
 # plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_MR', 'Normal_from_13_different_MRs_for_EID-153_16_47_16_over_time.eps'),
@@ -184,4 +185,4 @@ plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, borderaxespad=0.)
 #             dpi=300)
 plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_MR', 'Normal_from_13_different_MRs_for_EID-153_16_47_16_over_time_label_inconsistent_zoom.eps'),
             dpi=300)
-plt.show()
+# plt.show()

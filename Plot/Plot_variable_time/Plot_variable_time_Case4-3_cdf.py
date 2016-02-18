@@ -125,11 +125,14 @@ print "cdf:", cdf
 print "length of cdf:", cdf.__len__()
 
 
-
 #Plot begins here
+
+# Modify the size and dpi of picture, default size is (8,6), default dpi is 80
+plt.gcf().set_size_inches(16,14)
+
 duration = np.linspace(0, pdf.__len__(), pdf.__len__())
 # plt.scatter(duration, cdf, color="blue", label="RLOCset", s=5)
-plt.plot(duration, cdf, color="blue", linewidth=3)
+plt.plot(duration, cdf, color="black", linewidth=5)
 
 
 plt.xlim(0,230)
@@ -138,11 +141,14 @@ plt.ylim(50,101)
 # plt.xlim(0,60)
 # plt.ylim(50,100)
 
-plt.xlabel("number of experiment", fontsize=20)
-plt.ylabel("cdf (%)", fontsize=20)
+plt.xlabel("number of consecutive round", fontsize=50)
+plt.ylabel("cdf (%)", fontsize=50)
+plt.xticks(fontsize=35)
+plt.yticks(fontsize=35)
+
 # plt.title("Cdf of the duration in which the same RLOC is used")
 plt.grid(True)
 
 
 plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_time', 'Case4-3_cdf_plot.eps'), dpi=300)
-plt.show()
+# plt.show()

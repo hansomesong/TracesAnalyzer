@@ -29,19 +29,24 @@ for line in open(rawCSV_file):
             plotData.append(0)
 
 print len(time)
-# Plot begins here, "2" means have 2 RLOC sets, "3" means have 3 RLOC sets
-plt.scatter(time, plotData, color='blue', s=25)
 
-plt.xlabel("Experiment number", fontsize=16)
-plt.ylabel("Numbers of Locator", fontsize=16)
+# Modify the size and dpi of picture, default size is (8,6), default dpi is 80
+plt.gcf().set_size_inches(22, 14)
+
+# Plot begins here, "2" means have 2 RLOC sets, "3" means have 3 RLOC sets
+plt.scatter(time, plotData, color='black', s=200)
+
+plt.xlabel("experiment number", fontsize=50)
+plt.ylabel("number of locator", fontsize=50)
 # plt.title("Response from MR-149.20.48.61 for EID-37.77.57.64 over time in VP1", fontsize=18)
-plt.yticks([2, 3], ['2 Locators', '3 Locators'], fontsize=12)
+plt.xticks(fontsize=35)
+plt.yticks([2, 3], ['2\nLocators', '3\nLocators'], fontsize=32)
 plt.xlim(0,755)
 plt.ylim(1.5, 3.5)
 
 # plt.annotate('2013/07/10 02:30',xy=(375,3),xytext=(375,3.1),arrowprops=dict(arrowstyle="->"))
 
-# plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_time', 'Case3-2.eps'),
-#             dpi=300, transparent=True)
-plt.show()
+plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_time', 'Case3-2.eps'),
+            dpi=300, transparent=True)
+# plt.show()
 

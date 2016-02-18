@@ -30,17 +30,18 @@ for line in open(rawCSV_file):
             dataPlot.append(99)
 
 # Modify the size and dpi of picture, default size is (8,6), default dpi is 80
-plt.gcf().set_size_inches(8,6)
+plt.gcf().set_size_inches(22, 14)
 
 # Plot begins here
-plt.plot(time, dataPlot, color="blue")
+plt.plot(time, dataPlot, color="black")
 
-plt.xlabel("experiment number", fontsize=20)
-plt.ylabel("response from MR", fontsize=20)
+plt.xlabel("experiment number", fontsize=50)
+plt.ylabel("response from MR", fontsize=50)
 # plt.title("Response from MR-149.20.48.61 for EID-153.16.47.16 over time in VP1", fontsize=18)
-plt.yticks([0, 1, 2], ['No Map-\nReply', 'RLOC1', 'RLOC2'], fontsize=12)
+plt.xticks(fontsize=35)
+plt.yticks([0, 1, 2], ['No Map-\nReply', 'RLOC1', 'RLOC2'], fontsize=32)
 plt.xlim(0,801)
 plt.ylim(-0.2, 2.2)
 
 plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_time', 'Case4-1_plot.eps'), dpi=300)
-plt.show()
+# plt.show()

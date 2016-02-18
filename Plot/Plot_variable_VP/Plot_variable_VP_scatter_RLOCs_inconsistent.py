@@ -136,6 +136,6 @@ plt.ylim(0, 2)
 plt.yticks([0,1,2], ('','incon-\nsistent',''))
 
 # plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_VP', 'Plot_variable_VP_different_RLOCs_inconsistent_plot.eps'))
-plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_VP', 'Plot_variable_VP_different_RLOCs_inconsistent_scatter.eps'))
+# plt.savefig(os.path.join(PLOT_DIR, 'Plot_variable_VP', 'Plot_variable_VP_different_RLOCs_inconsistent_scatter.eps'))
 
 plt.show()

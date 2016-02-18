@@ -105,22 +105,25 @@ print "rlocSet4:", rlocSet4.__len__()
 rlocSet5 = getRlocSet(rawCSV_file5)
 print "rlocSet5:", rlocSet5.__len__()
 
+# Modify the size and dpi of picture, default size is (8,6), default dpi is 80
+plt.gcf().set_size_inches(24, 14)
 
-plt.scatter(time, rlocSet1, color='purple', marker="o", label="VP1", s=100)
-plt.scatter(time, rlocSet2, color='green', marker='>', label="VP2", s=100)
-plt.scatter(time, rlocSet3, color='red', marker=(5,0), label = "VP3", s=100)
-plt.scatter(time, rlocSet4, color='orange', marker='*', label = "VP4", s=100)
-plt.scatter(time, rlocSet5, color='blue', marker='+', label = "VP5", s=100)
+plt.scatter(time, rlocSet1, color='purple', marker="o", label="VP1", s=200)
+plt.scatter(time, rlocSet2, color='green', marker='>', label="VP2", s=200)
+plt.scatter(time, rlocSet3, color='red', marker=(5,0), label = "VP3", s=200)
+plt.scatter(time, rlocSet4, color='orange', marker='*', label = "VP4", s=200)
+plt.scatter(time, rlocSet5, color='blue', marker='+', label = "VP5", s=200)
 
 
 response = np.linspace(-1, 2, 4)
-plt.xlabel("experiment numbers", fontsize=16)
-plt.ylabel("different Map-Replies", fontsize=16)
+plt.xlabel("experiment numbers", fontsize=50)
+plt.ylabel("different Map-Replies", fontsize=50)
 # plt.title("Map Replies over time for EID-153.16.47.16 from MR-198.6.255.37 in 5 VPs", fontsize=20)
-# plt.xlim(0,798)
-plt.xlim(550, 600)
+plt.xlim(0,798)
+# plt.xlim(550, 600)
 plt.ylim(-2, 3)
-plt.yticks(response, ('Negative\nMap-Reply', 'No Map-\nReply', 'RLOC 1', 'RLOC 2'), fontsize=12)
+plt.xticks(fontsize=35)
+plt.yticks(response, ('Negative\nMap-Reply', 'No Map-\nReply', 'RLOC 1', 'RLOC 2'), fontsize=28)
 
 # loc=1 makes legend locating at right-up;
 # loc=2 makes legend locating at left-up;
@@ -129,6 +132,6 @@ plt.yticks(response, ('Negative\nMap-Reply', 'No Map-\nReply', 'RLOC 1', 'RLOC 2
 plt.legend(loc=4)
 
 plt.savefig(
-    os.path.join(PLOT_DIR, 'Plot_variable_VP', 'Plot_variable_VP_different_RLOCs_zoom.eps'),dpi=300)
+    os.path.join(PLOT_DIR, 'Plot_variable_VP', 'Plot_variable_VP_different_RLOCs.eps'),dpi=300)
 
-plt.show()
+# plt.show()
