@@ -131,7 +131,66 @@ if __name__ == "__main__":
     START_TIME = datetime.datetime(2013, 7, 2, 0, 0) # namley 2013/07/02
     END_TIME = datetime.datetime(2013, 7, 18, 0, 0) # namley 2013/07/18
 
-    pprint.pprint(avergae_statistics(rawCSV_files, START_TIME, END_TIME))
+    total_num = avergae_statistics(rawCSV_files, START_TIME, END_TIME)
+    pprint.pprint(total_num)
+
+    case1_list = []
+    case3_list = []
+    case4_list = []
+    for i in total_num.values()[0]:
+        case1_list.append(i[1]*1000/5.0/13.0/613.0/48.0)
+
+    for i in total_num.values()[1]:
+        case3_list.append(i[1]*1000/5.0/13.0/613.0/48.0)
+
+    for i in total_num.values()[2]:
+        case4_list.append(i[1]*1000/5.0/13.0/613.0/48.0)
+
+    print case1_list
+    print case3_list
+    print case4_list
+
+
+    # Plot part
+    # Modify the size and dpi of picture, default size is (8,6), default dpi is 80
+    plt.gcf().set_size_inches(9, 7)
+
+    n_groups = len(case1_list)
+    indexs = np.arange(n_groups)
+    bar_width = 0.9
+
+
+    plt.grid(True)
+
+    def autolabel(rects):
+        for rect in rects:
+            height = rect.get_height()
+            print "height:", height
+            plt.text(rect.get_x()+rect.get_width()/2-0.5, 1.01*height, '%s' % round(height,2))
+
+
+    # Define font
+    font_label = {
+        'fontname'   : 'Times New Roman',
+        'color'      : 'black',
+        'fontsize'   : 26.5
+           }
+
+    plt.xlabel('experiment day', font_label)
+    plt.ylabel(u'normalized number of\nRLOC Madness (\u2030)', font_label)
+    plt.xticks(indexs + bar_width/2, indexs+1, fontsize=16, fontname='Times New Roman')
+    plt.yticks(fontsize=16, fontname='Times New Roman')
+    rect = plt.bar(indexs, case3_list, bar_width, color='gray')
+    autolabel(rect)
+    plt.xlim(-0.1, 17)
+    # plt.ylim(0, 10.5)
+    # plt.savefig(os.path.join(PLOT_DIR, 'Plot_newSize', 'Normalized_number_of_New_Deployment.eps'),
+    #             dpi=300, transparent=True)
+    # plt.savefig(os.path.join(PLOT_DIR, 'Plot_newSize', 'Normalized_number_of_Reconfiguration.eps'),
+    #             dpi=300, transparent=True)
+    plt.savefig(os.path.join(PLOT_DIR, 'Plot_newSize', 'Normalized_number_of_Madness.eps'),
+                dpi=300, transparent=True)
+    plt.show()
 
 
 
