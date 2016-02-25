@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-__author__ = 'qsong'
+__author__ = 'yueli'
 
 import os
 import logging
@@ -8,10 +8,10 @@ import csv
 import glob
 import datetime
 from utility.REPattern_opt import *
+from config.config import *
 
 
 class Round(object):
-
     # 根究CSV文件中的每一列，生成一个Round类型的对象
     # csv_row 可能的形式有：
     # 'RoundNormal',
@@ -106,6 +106,180 @@ def is_all_resolver_coherent_for_eid(output_file, csv_files, logger):
 
                 ])
 
+def incon_ocur_counter_inter_vp(eid, mr, logger):
+    '''
+        对于给定的VP，EID，通过对比针对13个不同的MR的日志文件，统计inconsistency发生的次数
+    '''
+    # 读取环境变量PLANETLAB_CSV
+    try:
+        # debug的时候 使用 PLANETLAB_DEBUG
+        # 工作的时候 用 PLANETLAB_CSV
+        PLANETLAB = os.environ['PLANETLAB_CSV']
+    except KeyError:
+        print "Environment variable PLANETLAB_CSV is not properly defined or the definition about this variable is not" \
+              "taken into account."
+        print "If PLANETLAB is well defined, restart Pycharm to try again!"
+
+
+    # 变量MR_LIST以及LOG_PREFIX定义在config文件夹之下的config.py文件之中
+    # 构造 在一个给定的VP，EID的情况下，13个需要比对的文件的list.
+    files = [os.path.join(PLANETLAB, vp_name, "{0}-EID-{1}-MR-{2}.log.csv".format(LOG_PREFIX[vp_name], eid, mr))
+             for vp_name in VP_LIST]
+    # print files
+    # 将每一个对应的CSV格式的文件 构造成LogFile类型的对象
+    log_file_list = [LogFile(x) for x in files]
+
+    incon_occur, round_number = count_incon_among_files(eid, log_file_list, logger)
+
+    return incon_occur*100.0/round_number
+
+
+def count_incon_among_files(eid, log_file_list, logger):
+    """
+        input: a list of LogFile object
+        output: True or false
+    """
+    # 变量 result 用于记录 13个文件对比之后， inconsistence ocurrence，默认值是 0
+    result = 0
+
+    error_message = {
+        'type': 'The type of 5 rounds for eid resolver pair {0} at time {1} is not coherent. Reason: {2}',
+        'auth': 'The auth attirbute of 5 rounds for eid resolver pair {0} at time {1} is not coherent. Reason: {2}',
+        'mobile': 'The mobile attirbute of rounds for eid resolver pair {0} at time {1} is not coherent. Reason: {2}',
+        'locator_count': 'The locator_count attirbute of 5 rounds for eid resolver pair {0} at time {1} is not coherent. Reason: {2}',
+        'RLOC address': 'The RLOC address of 5 rounds for eid resolver pair {0} at time {1} is not coherent. Reason: {2}',
+        'TE': 'The traffic engineering related attributes for eid resolver pair {0} at time {1} is not coherent. Reason: {2}'
+    }
+    # 首先要判断 type是不是一致, 如果不一致，则将coherent改为False
+    # 我们需要对比每一个时刻的round的类型，如果在某一时刻不一致，立即退出循环
+
+    # 同时我们也需要确保 每一个log文件含有的round数量是一致的，否则立即退出 因为比较没有意义！！
+
+
+    # 将所有logfile中的round合并到一个round_list中，并且按时间顺序排序
+    all_rounds = []
+
+    for log_file in log_file_list:
+        all_rounds.extend(log_file.rounds)
+
+    # 貌似这个排序队性能没啥提升
+    all_rounds = sorted(all_rounds, key=lambda item: item.date)
+
+    # Retrieve all present datetime in currently processed five LogFile object
+    all_datetime = list({round_obj.date for round_obj in all_rounds})
+    # Sort all datetime object in ascending order
+    all_datetime = sorted(all_datetime)
+
+    rounds_date_dict = {}
+
+    for date in all_datetime:
+        rounds_date_dict[date] = []
+
+
+    # Populate dictionary "round_date_dict", whose format is expected to be following:
+    # round_date_dict ={
+    #   datetime(2013,7,2,8,30): [round1, round2,....],
+    #   datetime(2013,7,2,9,30): [round1, round2,....],
+    #   ...
+    # }
+    for round_obj in all_rounds:
+        rounds_date_dict[round_obj.date].append(round_obj)
+
+    for date in sorted(rounds_date_dict.iterkeys()):
+        logger.debug("EID-Resolver pair: {0} Date:{1} Round length:{2}".format(
+            eid,
+            date,
+            len(rounds_date_dict[date]))
+        )
+
+    # Start to process the round group(at least one, at most five) corresponding to each datetime
+    for date in sorted(rounds_date_dict.iterkeys()):
+        round_group = rounds_date_dict[date]
+        if len(round_group) < 3:
+            # If at a certain time, round number is less than 3, record this as a warning
+            logging.warning("Process eid resolver pair {0} time: {1} including {2} round record".format(
+                eid,
+                str(date),
+                len(round_group))
+            )
+
+        # 首先比较 type是否一致
+        types_list = list(set(
+            [round_obj.type for round_obj in round_group if round_obj.type != 'RoundNoReply']
+            )
+        )
+        logging.debug("The reply type list for eid resolver pair {0} at time {1} is following:{2}".format(
+            eid,
+            str(date),
+            "|".join(types_list))
+        )
+
+        # 首先比较 round的类型，如果5个round的类型不一致，直接return，退出函数（这样节约时间。。。不继续比较了）
+        if len(types_list) != 1 and len(types_list) != 0:
+            reason = ",".join(list(types_list))
+            logger.warning(error_message['type'].format(eid, str(date), reason))
+            result += 1
+            continue
+
+
+        else:
+            # 如果进入这个 条件分支，则所有的比较进行完才返回return
+            # 其实这个时候 types_list 中也只含有 RoundNormal
+
+            if 'RoundNormal' in types_list:
+
+                tmp = list({round_obj.auth for round_obj in round_group if round_obj.type == 'RoundNormal'})
+                if len(tmp) != 1:
+                    logger.warning(error_message['auth'].format(eid, str(date), "|".join(tmp)))
+                    result += 1
+                    continue
+                # 判断 mobile
+                tmp = list({round_obj.mobile for round_obj in round_group if round_obj.type == 'RoundNormal'})
+                if len(tmp) != 1:
+                    logger.warning(error_message['mobile'].format(eid, str(date), "|".join(tmp)))
+                    result += 1
+                    continue
+
+                # 判断locator_count是不是一致
+                tmp = list({round_obj.locator_count for round_obj in round_group if round_obj.type == 'RoundNormal'})
+                logging.debug("The locator count for eid resolver pair {0} at time {1} is following:{2}".format(
+                    eid,
+                    str(date),
+                    "|".join(tmp))
+                )
+                if len(tmp) != 1:
+                    reason = "|".join(tmp)
+                    logger.warning(error_message['locator_count'].format(eid, str(date), reason))
+                    result += 1
+                    continue
+
+                # 判断 RLOC addreses是不是一致
+                tmp = list({round_obj.rloc_addrs for round_obj in round_group if round_obj.type == 'RoundNormal'})
+                logging.debug("The RLOC address set for eid resolver pair {0} at time {1} is following:{2}".format(
+                    eid,
+                    str(date),
+                    "|".join(tmp))
+                )
+                if len(tmp) != 1:
+                    reason = "|".join(tmp)
+                    logger.warning(error_message['RLOC address'].format(eid, str(date), reason))
+                    result += 1
+                    continue
+
+                # 判断 Traffic Engineering attributes是不是一致
+                tmp = list({round_obj.te_attrs for round_obj in round_group if round_obj.type == 'RoundNormal'})
+                logging.debug("The RLOC address set for eid resolver pair {0} at time {1} is following:{2}".format(
+                    eid,
+                    str(date),
+                    "|".join(tmp))
+                )
+                if len(tmp) != 1:
+                    reason = "|".join(tmp)
+                    logger.warning(error_message['TE'].format(eid, str(date), reason))
+                    result += 1
+                    continue
+
+    return result, len(all_datetime)
 
 
 # override this method in resolver_comparator
@@ -369,9 +543,9 @@ if __name__ == '__main__':
     for csv_file in all_csv_files:
         # EID_RESOVLER_P.findall(csv_file) returns a list of tuple
         # The result may be in format [('0.0.0.0', '193.162.145.50')]
-        eid_resolver_pair = EID_RESOVLER_P.findall(csv_file)[0]
-        if eid_resolver_pair:
-            csv_file_dict[eid_resolver_pair].append(LogFile(csv_file))
+        eid = EID_RESOVLER_P.findall(csv_file)[0]
+        if eid:
+            csv_file_dict[eid].append(LogFile(csv_file))
 
     is_all_resolver_coherent_for_eid(RESULT_FILE, csv_file_dict, logger)
 

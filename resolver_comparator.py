@@ -12,6 +12,7 @@ import datetime
 import multiprocessing as mp
 from operator import itemgetter, attrgetter
 from utility.REPattern_opt import *
+from config.config import *
 
 class Round(object):
     # 根究CSV文件中的每一列，生成一个Round类型的对象
@@ -348,6 +349,141 @@ def setup_logger(logger_name, log_file, level=logging.DEBUG):
     l.setLevel(level)
     l.addHandler(file_handler)
     l.addHandler(stream_handler)
+
+
+def incon_ocur_counter(eid, vp_name, logger):
+    '''
+        对于给定的VP，EID，通过对比针对13个不同的MR的日志文件，统计inconsistency发生的次数
+    '''
+
+    # 读取环境变量PLANETLAB_CSV
+    try:
+        # debug的时候 使用 PLANETLAB_DEBUG
+        # 工作的时候 用 PLANETLAB_CSV
+        PLANETLAB = os.environ['PLANETLAB_CSV']
+    except KeyError:
+        print "Environment variable PLANETLAB_CSV is not properly defined or the definition about this variable is not" \
+              "taken into account."
+        print "If PLANETLAB is well defined, restart Pycharm to try again!"
+
+
+    # 变量MR_LIST以及LOG_PREFIX定义在config文件夹之下的config.py文件之中
+    # 构造 在一个给定的VP，EID的情况下，13个需要比对的文件的list.
+    files = [os.path.join(PLANETLAB, vp_name, "{0}-EID-{1}-MR-{2}.log.csv".format(LOG_PREFIX[vp_name], eid, mr)) for mr in MR_LIST]
+    # print files
+    # 将每一个对应的CSV格式的文件 构造成LogFile类型的对象
+    log_file_list = [LogFile(x) for x in files]
+    incon_occur, round_number = count_incon_among_files(eid, log_file_list, logger)
+    return incon_occur*100.0/round_number
+
+def count_incon_among_files(eid, log_file_list, logger):
+    '''
+        接受一个 LogFile 对象的 list，按照experiment round顺序，比教list中文件的不同，最后返回不同的数目
+        (这个方法要被替代。。。)
+    '''
+
+    # 变量 result 用于记录 13个文件对比之后， inconsistence ocurrence，默认值是 0
+    result = 0
+    # 一旦13个logfile中包含的round数量是一样的，那么随便一个文件的round数量就是round_number
+    round_number = list({len(log_file.rounds) for log_file in log_file_list})[0]
+    logging.debug("The round number is {0}".format(round_number))
+    # 要对每一次round进行遍历处理
+    for i in range(round_number):
+        # 首先比较 type是否一致
+        types_list = list(
+            set(
+                [log_file.rounds[i].type for log_file in log_file_list
+                    if log_file.rounds[i].type != 'RoundNoReply' and log_file.rounds[i].type != 'PrintSkipped']
+            )
+        )
+        logging.debug("The type list for EID:{0} at {1}th trial is following:{2}".format(eid, i+1, "|".join(types_list)))
+
+        # 首先比较 round的类型，如果13个round的类型不一致，直接continue, 进入下一次循环
+        if len(types_list) != 1 and len(types_list) != 0:
+            reason = ",".join(list(types_list))
+            logger.warning(ERROR_MESSAGE['type'].format(eid, i+1, reason))
+            result += 1
+            continue
+
+        else:
+            # 如果进入这个 条件分支，则所有的比较进行完才返回return
+            # 其实这个时候 types_list 中也只含有 RoundNormal
+
+            if 'RoundNormal' in types_list:
+                # 如果13个回复都是 RoundNormal的话则需要继续比较 locators
+                rounds_list = [
+                    log_file.rounds[i] for log_file in log_file_list if log_file.rounds[i].type == 'RoundNormal'
+                ]
+                # 首先比较 13个回复是否一致, 如果时间都不一致，立即停止比较退出函数
+                if len({round_obj.date for round_obj in rounds_list}) != 1:
+                    result += 1
+                    logger.warning(ERROR_MESSAGE['reply_time'].format(eid, i+1))
+                    continue
+
+                if len({round_obj.auth for round_obj in rounds_list}) != 1:
+                    result += 1
+                    logger.warning(ERROR_MESSAGE['auth'].format(eid, i+1))
+                    continue
+
+                if len({round_obj.mobile for round_obj in rounds_list}) != 1:
+                    result += 1
+                    logger.warning(ERROR_MESSAGE['mobile'].format(eid, i+1))
+                    continue
+
+                # 判断locator_count是不是一致
+                tmp = list({round_obj.locator_count for round_obj in rounds_list})
+                logging.debug("The locator count for EID:{0} at {1}th trial is following:{2}".format(eid, i+1, "|".join(tmp)))
+
+                if len(tmp) != 1:
+                    reason = "|".join(tmp)
+                    result += 1
+                    logger.warning(ERROR_MESSAGE['locator_count'].format(eid, i+1, reason))
+                    continue
+
+                # 判断 RLOC addreses是不是一致
+                tmp = list({round_obj.rloc_addrs for round_obj in rounds_list})
+                logging.debug("The RLOC address set for EID:{0} at {1}th trial is following:{2}".format(eid, i+1, "|".join(tmp)))
+
+                if len(tmp) != 1:
+                    reason = "|".join(tmp)
+                    logger.warning(ERROR_MESSAGE['RLOC address'].format(eid, i+1, reason))
+                    result += 1
+                    continue
+
+                # 判断 Traffic Engineering attributes是不是一致
+                tmp = list({round_obj.te_attrs for round_obj in rounds_list})
+                logging.debug("The RLOC address set for EID:{0} at {1}th trial is following:{2}".format(eid, i+1, "|".join(tmp)))
+
+                if len(tmp) != 1:
+                    reason = "|".join(tmp)
+                    logger.warning(ERROR_MESSAGE['TE'].format(eid, i+1, reason))
+                    result += 1
+                    continue
+    return result, round_number
+
+
+
+def union_incon_eids():
+    '''
+        计算5个 comparison_map_resolver_in_<VP>.csv 文件，inconsistent EID 的并集
+    '''
+    result = []
+    try:
+        PROJECT_LOG_DIR = os.environ['PROJECT_LOG_DIR']
+        COM_MAP_RES_CSV_LIST = [os.path.join(PROJECT_LOG_DIR, "comparison_map_resolver_in_{0}.csv".format(vp))
+                                for vp in VP_LIST]
+    except KeyError:
+        print "Environment variable PROJECT_LOG_DIR is not properly defined or the definition about this variable is not" \
+              "taken into account."
+        print "If PROJECT_LOG_DIR is well defined, restart Pycharm to try again!"
+    for csv_file in COM_MAP_RES_CSV_LIST:
+        with open(csv_file) as f_handler:
+            f_handler.next()
+            result.extend([line.split(";")[0] for line in f_handler])
+
+    return list(set(result))
+
+
 
 
 # 工作线程，接受一个vantage，将处理结果写入到CSV文件中
