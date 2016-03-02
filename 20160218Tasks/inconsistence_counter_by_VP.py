@@ -18,7 +18,7 @@ if __name__ == "__main__":
     # 读取环境变量PROJECT_LOG_DIR
     try:
         PROJECT_LOG_DIR = os.environ['PROJECT_LOG_DIR']
-        COM_VP_CSV = os.path.join(PROJECT_LOG_DIR, "comparison_among_vantage_point.csv")
+        COM_VP_CSV = os.path.join(PROJECT_LOG_DIR, 'comparison_VP', "comparison_among_vantage_point.csv")
         logger.debug("The departure file is :{0}".format(COM_VP_CSV))
     except KeyError:
 

@@ -470,7 +470,7 @@ def union_incon_eids():
     result = []
     try:
         PROJECT_LOG_DIR = os.environ['PROJECT_LOG_DIR']
-        COM_MAP_RES_CSV_LIST = [os.path.join(PROJECT_LOG_DIR, "comparison_map_resolver_in_{0}.csv".format(vp))
+        COM_MAP_RES_CSV_LIST = [os.path.join(PROJECT_LOG_DIR, "comparison_MR", "comparison_map_resolver_in_{0}.csv".format(vp))
                                 for vp in VP_LIST]
     except KeyError:
         print "Environment variable PROJECT_LOG_DIR is not properly defined or the definition about this variable is not" \

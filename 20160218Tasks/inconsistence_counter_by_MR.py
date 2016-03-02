@@ -31,8 +31,9 @@ if __name__ == "__main__":
         try:
             # debug的时候 使用 PLANETLAB_DEBUG
             # 工作的时候 用 PLANETLAB_CSV
-            PROJECT_LOG_DIR = os.environ['PROJECT_LOG_DIR']
-            COM_MAP_RES_CSV = os.path.join(PROJECT_LOG_DIR, "comparison_map_resolver_in_{0}.csv".format(vp))
+            PROJECT_LOG_DIR = os.environ["PROJECT_LOG_DIR"]
+            print PROJECT_LOG_DIR
+            COM_MAP_RES_CSV = os.path.join(PROJECT_LOG_DIR, 'comparison_MR', "comparison_map_resolver_in_{0}.csv".format(vp))
 
         except KeyError:
 
@@ -57,5 +58,6 @@ if __name__ == "__main__":
 
     a = np.array(result_list)
 
-    print np.mean(a, axis=0)
+    result = [float(x) for x in np.mean(a, axis=0)]
+    print result
 
