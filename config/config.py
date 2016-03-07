@@ -3,6 +3,7 @@
 
 
 import os
+import datetime
 
 # 读取 环境变量 ‘PLANETLAB’ and 'PROJECT_LOG_DIR'
 # 上述 环境变量 定义在 工作目录下 .profile中 (也有可能定义在 .bashprofile中)
@@ -128,6 +129,10 @@ ERROR_MESSAGE = {
     'RLOC address': 'The RLOC address of rounds for EID:{0} at {1}th trial is not coherent. Reason: {2}',
     'TE': 'The traffic engineering related attributes for EID:{0} at {1}th trial is not coherent!!! Reason: {2}'
 }
+
+# 设定实验开始和结束的时间
+START_TIME = datetime.datetime.strptime("02/07/2013  07:30:23", "%d/%m/%Y %H:%M:%S")
+
 
 # if __name__ == 'main':
 #     print "Path of Planet log files directory:", PLANET_DIR

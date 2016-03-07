@@ -3,6 +3,7 @@ __author__ = 'yueli'
 from pylab import *
 import matplotlib.pyplot as plt
 from config.config import *
+import numpy as np
 
 # Modify the size and dpi of picture, default size is (8,6), default dpi is 80
 plt.gcf().set_size_inches(8, 6.5)
@@ -19,7 +20,7 @@ for TrueCount in trueCountList:
 
 print "Each consistent percentage of VP", percentageTrueList
 
-print "Average of the consistent percentage for 5VPs", average(percentageTrueList), "%"
+print "Average of the consistent percentage for 5VPs", np.average(percentageTrueList), "%"
 
 n_groups = 5
 indexs = np.arange(n_groups)
@@ -27,7 +28,7 @@ bar_width = 0.35
 
 # 画 overall 的红色虚线
 x_overall_list = [-0.3, 4.7]
-y_overall = average(percentageTrueList)
+y_overall = np.average(percentageTrueList)
 y_overall_list = [y_overall, y_overall]
 
 plt.grid(True)
@@ -58,7 +59,7 @@ plt.yticks(fontsize=16, fontname='Times New Roman')
 plt.xlim(-0.3, 4.7)
 plt.ylim(90.8, 91.8)
 rect = plt.bar(indexs, percentageTrueList, bar_width, color='gray')
-autolabel(rect)
+# autolabel(rect)
 plt.legend(loc='upper right')
 # plt.savefig(
 #     os.path.join(PLOT_DIR, 'Percentage_stability_5VP_time.eps'),

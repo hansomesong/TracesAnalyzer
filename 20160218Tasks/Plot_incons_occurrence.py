@@ -26,7 +26,7 @@ plt.gcf().set_size_inches(10,9)
 font_label = {
     'fontname'   : 'Times New Roman',
     'color'      : 'black',
-    'fontsize'   : 70
+    'fontsize'   : 40
        }
 
 
@@ -41,77 +41,18 @@ font_label = {
 # plt.plot(x_axis, y_axis_pdf, c='black', linewidth=3)
 # plt.xlim(0, 100)
 # plt.ylim(-5, 90)
-# plt.xlabel("inconsistent occurrence by MR (%)", fontsize=45, fontname='Times New Roman')
-# plt.ylabel("pdf (%)", fontsize=45, fontname='Times New Roman')
+# plt.xlabel("inconsistent occurrence by MR (%)", font_label)
+# plt.ylabel("pdf (%)", font_label)
 # plt.savefig(os.path.join(PLOT_DIR, 'Plot_newSize', 'pdf_incons_occur_MR.eps'), dpi=300, transparent=True)
 # plt.show()
 
 
-# Plot cdf 部分
-x_axis =  [i[0] for i in sorted((dict(Counter(output_int_MR)).items()))]
-x_axis.insert(0, 0.0)
-y_axis_pdf =  [i[1]/613.0*100 for i in sorted((dict(Counter(output_int_MR)).items()))]
-y_axis_pdf.insert(0, (613-len(output_int_MR))/613.0*100)
-
-y_axis_cdf = []
-for i in y_axis_pdf:
-    if not y_axis_cdf:
-        y_axis_cdf.append(i)
-    else:
-        y_axis_cdf.append(i + y_axis_cdf[-1])
-
-print "y_axis_pdf:", y_axis_pdf
-print "y_axis_cdf:", y_axis_cdf
-
-plt.scatter(x_axis, y_axis_cdf, c='black', s=200)
-plt.plot(x_axis, y_axis_cdf, c='black', linewidth=5)
-plt.xlim(-0.3, 100)
-plt.ylim(80, 100.05)
-plt.xlabel("inconsistent occurrence by MR (%)", fontsize=45, fontname='Times New Roman')
-plt.ylabel("cdf (%)", fontsize=45, fontname='Times New Roman')
-plt.savefig(os.path.join(PLOT_DIR, 'Plot_newSize', 'cdf_incons_occur_MR.eps'), dpi=300, transparent=True)
-plt.show()
-
-
-
-# ###################################### VP part ######################################
-# # 将 output 向上取整
-# output_int_VP = [math.ceil(i) for i in output_VP]
-# # 统计 output_int 落入以 1% 为区间的个数
-# output_int_count_VP = sorted((dict(Counter(output_int_VP)).items()))
-#
-# # Modify the size and dpi of picture, default size is (8,6), default dpi is 80
-# plt.gcf().set_size_inches(10,9)
-# # Define font
-# font_label = {
-#     'fontname'   : 'Times New Roman',
-#     'color'      : 'black',
-#     'fontsize'   : 70
-#        }
-#
-#
-# # # Plot pdf 部分
-# # x_axis =  [i[0] for i in sorted((dict(Counter(output_int_VP)).items()))]
-# # x_axis.insert(0, 0.0)
-# # y_axis_pdf =  [i[1]/613.0*100 for i in sorted((dict(Counter(output_int_VP)).items()))]
-# # y_axis_pdf.insert(0, (613-len(output_int_VP))/613.0*100)
-# # print "Consistency by VP:", (613-len(output_int_VP))/613.0*100
-# #
-# # plt.scatter(x_axis, y_axis_pdf, c='black', s=100)
-# # plt.plot(x_axis, y_axis_pdf, c='black', linewidth=3)
-# # plt.xlim(0, 100)
-# # plt.ylim(-5, 90)
-# # plt.xlabel("inconsistent occurrence by VP(%)", fontsize=45, fontname='Times New Roman')
-# # plt.ylabel("pdf (%)", fontsize=45, fontname='Times New Roman')
-# # plt.savefig(os.path.join(PLOT_DIR, 'Plot_newSize', 'pdf_incons_occur_VP.eps'), dpi=300, transparent=True)
-# # plt.show()
-#
-#
 # # Plot cdf 部分
-# x_axis =  [i[0] for i in sorted((dict(Counter(output_int_VP)).items()))]
+# x_axis =  [i[0] for i in sorted((dict(Counter(output_int_MR)).items()))]
 # x_axis.insert(0, 0.0)
-# y_axis_pdf =  [i[1]/613.0*100 for i in sorted((dict(Counter(output_int_VP)).items()))]
-# y_axis_pdf.insert(0, (613-len(output_int_VP))/613.0*100)
+# y_axis_pdf =  [i[1]/613.0*100 for i in sorted((dict(Counter(output_int_MR)).items()))]
+# print "output_int_MR =", len(output_int_MR)
+# y_axis_pdf.insert(0, (613-len(output_int_MR))/613.0*100)
 #
 # y_axis_cdf = []
 # for i in y_axis_pdf:
@@ -121,13 +62,79 @@ plt.show()
 #         y_axis_cdf.append(i + y_axis_cdf[-1])
 #
 # print "y_axis_pdf:", y_axis_pdf
-# print "y_axis_cdf:", y_axis_cdf
+# print "y_axis_cdf_MR:", y_axis_cdf
 #
-# plt.scatter(x_axis, y_axis_cdf, c='black', s=200)
+# # plt.scatter(x_axis, y_axis_cdf, c='black', s=200)
 # plt.plot(x_axis, y_axis_cdf, c='black', linewidth=5)
-# plt.xlim(-0.3, 100)
-# plt.ylim(80, 100.05)
-# plt.xlabel("inconsistent occurrence by VP (%)", fontsize=45, fontname='Times New Roman')
-# plt.ylabel("cdf (%)", fontsize=45, fontname='Times New Roman')
-# plt.savefig(os.path.join(PLOT_DIR, 'Plot_newSize', 'cdf_incons_occur_VP.eps'), dpi=300, transparent=True)
+# plt.xlim(0, 100)
+# plt.ylim(82, 100)
+# plt.xlabel("inconsistent occurrence by MR (%)", font_label)
+# plt.ylabel("cdf (%)", font_label)
+# plt.xticks(fontsize=16)
+# plt.yticks(fontsize=16)
+# plt.savefig(os.path.join(PLOT_DIR, 'Plot_newSize', 'cdf_incons_occur_MR.eps'), dpi=300, transparent=True)
 # plt.show()
+
+
+
+# ###################################### VP part ######################################
+# 将 output 向上取整
+output_int_VP = [math.ceil(i) for i in output_VP]
+# 统计 output_int 落入以 1% 为区间的个数
+output_int_count_VP = sorted((dict(Counter(output_int_VP)).items()))
+
+# Modify the size and dpi of picture, default size is (8,6), default dpi is 80
+plt.gcf().set_size_inches(10,9)
+# Define font
+font_label = {
+    'fontname'   : 'Times New Roman',
+    'color'      : 'black',
+    'fontsize'   : 40
+       }
+
+
+# # Plot pdf 部分
+x_axis =  [i[0] for i in sorted((dict(Counter(output_int_VP)).items()))]
+x_axis.insert(0, 0.0)
+y_axis_pdf =  [i[1]/613.0*100 for i in sorted((dict(Counter(output_int_VP)).items()))]
+print "y_axis_pdf_VP =", y_axis_pdf
+# y_axis_pdf.insert(0, (613-len(output_int_VP))/613.0*100)
+print "Consistency by VP:", (613-len(output_int_VP))/613.0*100
+#
+print "x_axis_VP =", x_axis
+# plt.scatter(x_axis, y_axis_pdf, c='black', s=100)
+# plt.plot(x_axis, y_axis_pdf, c='black', linewidth=3)
+# plt.xlim(0, 100)
+# plt.ylim(-5, 90)
+# plt.xlabel("inconsistent occurrence by VP(%)", fontsize=45, fontname='Times New Roman')
+# plt.ylabel("pdf (%)", fontsize=45, fontname='Times New Roman')
+# plt.savefig(os.path.join(PLOT_DIR, 'Plot_newSize', 'pdf_incons_occur_VP.eps'), dpi=300, transparent=True)
+# plt.show()
+
+
+# # Plot cdf 部分
+x_axis =  [i[0] for i in sorted((dict(Counter(output_int_VP)).items()))]
+x_axis.insert(0, 0.0)
+y_axis_pdf =  [i[1]/613.0*100 for i in sorted((dict(Counter(output_int_VP)).items()))]
+y_axis_pdf.insert(0, (613-len(output_int_VP))/613.0*100)
+
+y_axis_cdf = []
+for i in y_axis_pdf:
+    if not y_axis_cdf:
+        y_axis_cdf.append(i)
+    else:
+        y_axis_cdf.append(i + y_axis_cdf[-1])
+
+print "y_axis_pdf:", y_axis_pdf
+print "y_axis_cdf_VP:", y_axis_cdf
+
+# plt.scatter(x_axis, y_axis_cdf, c='black', s=200)
+plt.plot(x_axis, y_axis_cdf, c='black', linewidth=5)
+plt.xlim(0, 66)
+plt.ylim(81, 100)
+plt.xlabel("inconsistent occurrence by VP (%)", font_label)
+plt.ylabel("cdf (%)", font_label)
+plt.xticks(fontsize=16)
+plt.yticks(fontsize=16)
+plt.savefig(os.path.join(PLOT_DIR, 'Plot_newSize', 'cdf_incons_occur_VP.eps'), dpi=300, transparent=True)
+plt.show()

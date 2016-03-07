@@ -138,17 +138,17 @@ if __name__ == "__main__":
     case3_list = []
     case4_list = []
     for i in total_num.values()[0]:
-        case1_list.append(i[1]*1000/5.0/13.0/613.0/48.0)
+        case1_list.append(i[1]*1000/5.0/13.0/6.13/48.0/8.0)
 
     for i in total_num.values()[1]:
-        case3_list.append(i[1]*1000/5.0/13.0/613.0/48.0)
+        case3_list.append(i[1]*1000/5.0/13.0/613.0/48.0*40)
 
     for i in total_num.values()[2]:
-        case4_list.append(i[1]*1000/5.0/13.0/613.0/48.0)
+        case4_list.append(i[1]*1000/5.0/13.0/613.0/48.0/2.0)
 
-    print case1_list
-    print case3_list
-    print case4_list
+    print "mean =", np.mean(case1_list)
+    print "mean =", np.mean(case3_list)
+    print "mean =", np.mean(case4_list)
 
 
     # Plot part
@@ -177,19 +177,16 @@ if __name__ == "__main__":
            }
 
     plt.xlabel('experiment day', font_label)
-    plt.ylabel(u'normalized number of\nRLOC Madness (\u2030)', font_label)
+    plt.ylabel(u'normalized number of\nStatistical outliers (%)', font_label)
     plt.xticks(indexs + bar_width/2, indexs+1, fontsize=16, fontname='Times New Roman')
     plt.yticks(fontsize=16, fontname='Times New Roman')
-    rect = plt.bar(indexs, case3_list, bar_width, color='gray')
-    autolabel(rect)
+    rect = plt.bar(indexs, case1_list, bar_width, color='gray')
+    # autolabel(rect)
     plt.xlim(-0.1, 17)
     # plt.ylim(0, 10.5)
-    # plt.savefig(os.path.join(PLOT_DIR, 'Plot_newSize', 'Normalized_number_of_New_Deployment.eps'),
-    #             dpi=300, transparent=True)
-    # plt.savefig(os.path.join(PLOT_DIR, 'Plot_newSize', 'Normalized_number_of_Reconfiguration.eps'),
-    #             dpi=300, transparent=True)
-    plt.savefig(os.path.join(PLOT_DIR, 'Plot_newSize', 'Normalized_number_of_Madness.eps'),
-                dpi=300, transparent=True)
+    plt.savefig(os.path.join(PLOT_DIR, 'Plot_newSize', 'Normalized_number_of_New_Deployment.eps'), dpi=300, transparent=True)
+    # plt.savefig(os.path.join(PLOT_DIR, 'Plot_newSize', 'Normalized_number_of_Reconfiguration.eps'), dpi=300, transparent=True)
+    # plt.savefig(os.path.join(PLOT_DIR, 'Plot_newSize', 'Normalized_number_of_Statistical_outliers.eps'), dpi=300, transparent=True)
     plt.show()
 
 

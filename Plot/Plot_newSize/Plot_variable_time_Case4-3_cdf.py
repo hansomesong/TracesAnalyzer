@@ -143,7 +143,7 @@ plt.plot(duration, cdf, color="black", linewidth=5)
 
 
 plt.xlim(0,230)
-plt.ylim(50,101)
+plt.ylim(50,100)
 # To plot the zoom
 # plt.xlim(0,60)
 # plt.ylim(50,100)

@@ -54,6 +54,7 @@ if __name__ == '__main__':
 
     # 遍历VP_LIST里的5个vp
     for vp in VP_LIST:
+    # for vp in ["wiilab"]:
         # Creat a CSV file 来存储 SRC_reply != Locator 的情况
         target_file = os.path.join(CSV_FILE_DESTDIR, 'comparison_time_{0}.csv'.format(vp))
         print target_file
@@ -69,7 +70,7 @@ if __name__ == '__main__':
     print "stable_file_num =", stable_file_num
     # 此处默认每次实验次数都是 802
     # change_num_total_counter = Counter((i/802.0*100.0) for i in change_num_total_list)
-    print "change_num_total_list =", [math.ceil((i/802.0*100.0)) for i in change_num_total_list]
+    print "change_num_total_list =", len([math.ceil((i/802.0*100.0)) for i in change_num_total_list])
     change_num_total_counter = Counter(math.ceil((i/802.0*100.0)) for i in change_num_total_list)
     tmp =sorted(change_num_total_counter.items(), key=lambda x:x[0])
 
@@ -93,26 +94,28 @@ if __name__ == '__main__':
     font_label = {
     'fontname'   : 'Times New Roman',
     'color'      : 'black',
-    'fontsize'   : 70
+    'fontsize'   : 40
        }
     plt.grid(True)
 
-    # Plot pdf
-    plt.plot(pdf_x_axis, pdf_y_axis, c='black', linewidth=3)
-    plt.scatter(pdf_x_axis, pdf_y_axis, c='black', s=80)
-    plt.xlabel("Instability occurrence (%)", fontsize=45, fontname='Times New Roman')
-    plt.ylabel("pdf (%)", fontsize=45, fontname='Times New Roman')
-    plt.xlim(0, 50)
-    plt.ylim(0, 8)
-    plt.savefig(os.path.join(PLOT_DIR, 'Plot_newSize', 'pdf_instability_occur.eps'), dpi=300, transparent=True)
-    plt.show()
-
-    # # Plot cdf
-    # plt.plot(pdf_x_axis, cdf_y_axis, c='black', linewidth=3)
-    # plt.scatter(pdf_x_axis, cdf_y_axis, c='black', s=80)
-    # plt.xlabel("Instability occurrence (%)", fontsize=45, fontname='Times New Roman')
-    # plt.ylabel("cdf (%)", fontsize=45, fontname='Times New Roman')
+    # # Plot pdf
+    # plt.plot(pdf_x_axis, pdf_y_axis, c='black', linewidth=3)
+    # plt.scatter(pdf_x_axis, pdf_y_axis, c='black', s=80)
+    # plt.xlabel("instability frequency (%)", fontsize=45, fontname='Times New Roman')
+    # plt.ylabel("pdf (%)", fontsize=45, fontname='Times New Roman')
     # plt.xlim(0, 50)
-    # plt.ylim(90, 100)
-    # plt.savefig(os.path.join(PLOT_DIR, 'Plot_newSize', 'cdf_instability_occur.eps'), dpi=300, transparent=True)
+    # plt.ylim(0, 8)
+    # plt.savefig(os.path.join(PLOT_DIR, 'Plot_newSize', 'pdf_instability_occur.eps'), dpi=300, transparent=True)
     # plt.show()
+
+    # Plot cdf
+    plt.plot(pdf_x_axis, cdf_y_axis, c='black', linewidth=5)
+    # plt.scatter(pdf_x_axis, cdf_y_axis, c='black', s=50)
+    plt.xlabel("instability frequency (%)", font_label)
+    plt.ylabel("cdf (%)", font_label)
+    plt.xticks(fontsize=16)
+    plt.yticks(fontsize=16)
+    plt.xlim(0, 50)
+    plt.ylim(91, 100)
+    plt.savefig(os.path.join(PLOT_DIR, 'Plot_newSize', 'cdf_instability_occur.eps'), dpi=300, transparent=True)
+    plt.show()

@@ -67,7 +67,7 @@ if __name__ == "__main__":
     print "Overall average of consistency by the variable of VP:", y_overall
 
     rect = plt.bar(X_axis, Y_axis, bar_width, color='gray')
-    autolabel(rect)
+    # autolabel(rect)
 
     plt.xlabel('map resolver', font_label)
     plt.ylabel('percentage of consistent mappings (%)', font_label)
