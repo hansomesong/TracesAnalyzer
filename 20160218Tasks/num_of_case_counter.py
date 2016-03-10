@@ -177,7 +177,7 @@ if __name__ == "__main__":
            }
 
     plt.xlabel('experiment day', font_label)
-    plt.ylabel(u'normalized number of\nStatistical outliers (%)', font_label)
+    plt.ylabel(u'normalized number of\nNew Deployment (%)', font_label)
     plt.xticks(indexs + bar_width/2, indexs+1, fontsize=16, fontname='Times New Roman')
     plt.yticks(fontsize=16, fontname='Times New Roman')
     rect = plt.bar(indexs, case1_list, bar_width, color='gray')

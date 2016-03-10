@@ -64,10 +64,10 @@ if __name__ == '__main__':
         print "Unstable number =", len(change_num_list)
 
     print "change_num_total_list =", change_num_total_list
-    # 计算 stable file 的数量有多少
-    print "file_total_num =", file_total_num
-    stable_file_num = file_total_num - len(change_num_total_list)
-    print "stable_file_num =", stable_file_num
+    # # 计算 stable file 的数量有多少
+    # print "file_total_num =", file_total_num
+    # stable_file_num = file_total_num - len(change_num_total_list)
+    # print "stable_file_num =", stable_file_num
     # 此处默认每次实验次数都是 802
     # change_num_total_counter = Counter((i/802.0*100.0) for i in change_num_total_list)
     print "change_num_total_list =", len([math.ceil((i/802.0*100.0)) for i in change_num_total_list])
@@ -75,9 +75,9 @@ if __name__ == '__main__':
     tmp =sorted(change_num_total_counter.items(), key=lambda x:x[0])
 
     pdf_x_axis = [list(i)[0] for i in tmp]
-    pdf_x_axis.insert(0, 0.0)
+    # pdf_x_axis.insert(0, 0.0)
     pdf_y_axis = [list(i)[1]/float(file_total_num)*100 for i in tmp]
-    pdf_y_axis.insert(0, float(stable_file_num)/float(file_total_num)*100)
+    # pdf_y_axis.insert(0, float(stable_file_num)/float(file_total_num)*100)
     cdf_y_axis = cdf(pdf_y_axis)
 
 
@@ -115,7 +115,6 @@ if __name__ == '__main__':
     plt.ylabel("cdf (%)", font_label)
     plt.xticks(fontsize=16)
     plt.yticks(fontsize=16)
-    plt.xlim(0, 50)
-    plt.ylim(91, 100)
-    plt.savefig(os.path.join(PLOT_DIR, 'Plot_newSize', 'cdf_instability_occur.eps'), dpi=300, transparent=True)
+    plt.xlim(1, 50)
+    # plt.savefig(os.path.join(PLOT_DIR, 'Plot_newSize', 'cdf_instability_occur.eps'), dpi=300, transparent=True)
     plt.show()
