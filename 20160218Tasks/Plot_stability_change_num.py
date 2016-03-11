@@ -16,11 +16,15 @@ def change_num_counter(target_file):
         for line in f_handler:
             tmp_list = line.split(';')
             file_num_counter = file_num_counter + 1
+            file_path = tmp_list[LOG_TIME_COLUMN['log_file_name']]
+            nb_observation = 0.0
+            with open(file_path) as tmp_handler:
+                nb_observation = sum(1 for line in tmp_handler)-1.0
             if tmp_list[15] != '0':
-                change_num_list.append(len(tmp_list[15].split(',')))
+                change_num_list.append(len(tmp_list[15].split(','))/nb_observation*100.0)
             else:
                 if tmp_list[18] != '0':
-                    change_num_list.append(len(tmp_list[18].split(',')))
+                    change_num_list.append(len(tmp_list[18].split(','))/nb_observation*100.0)
 
     return file_num_counter, change_num_list
 
@@ -70,9 +74,9 @@ if __name__ == '__main__':
     # print "stable_file_num =", stable_file_num
     # 此处默认每次实验次数都是 802
     # change_num_total_counter = Counter((i/802.0*100.0) for i in change_num_total_list)
-    print "change_num_total_list =", len([math.ceil((i/802.0*100.0)) for i in change_num_total_list])
-    change_num_total_counter = Counter(math.ceil((i/802.0*100.0)) for i in change_num_total_list)
-    tmp =sorted(change_num_total_counter.items(), key=lambda x:x[0])
+    print "change_num_total_list =", len([math.ceil(i) for i in change_num_total_list])
+    change_num_total_counter = Counter(math.ceil(i) for i in change_num_total_list)
+    tmp =sorted(change_num_total_counter.items(), key=lambda x: x[0])
 
     pdf_x_axis = [list(i)[0] for i in tmp]
     # pdf_x_axis.insert(0, 0.0)
