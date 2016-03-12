@@ -133,6 +133,47 @@ ERROR_MESSAGE = {
 # 设定实验开始和结束的时间
 START_TIME = datetime.datetime.strptime("02/07/2013  07:30:23", "%d/%m/%Y %H:%M:%S")
 
+# Plot part
+from pylab import *
+
+font = {
+    'fontname'   : 'Roman',
+    'color'      : 'k',
+    'fontsize'   : 70
+       }
+
+fontText = {
+    'fontname'   : 'Roman',
+    'color'      : 'k',
+    'fontsize'   : 40
+       }
+
+font3D = {
+    'fontname'   : 'Roman',
+    'color'      : 'k',
+    'fontsize'   : 52
+       }
+
+pathdata = '/Users/benoit/Research/Lisp/results/measurements/'
+
+def getElements(file, index):
+   tab = loadtxt(file, unpack=True, usecols=(index, index))
+   return tab #[:,index]
+
+def read_cdf(file):
+        x = getElements(file, 0)
+        y = getElements(file, 3)
+        return x, y
+
+def read_cdf_damien(file):
+        x = getElements(file, 0)
+        y = getElements(file, 1)
+        return x, y
+def read_col(file, index1, index2):
+        x = getElements(file, index1)
+        y = getElements(file, index2)
+        return x, y
+
 
 # if __name__ == 'main':
 #     print "Path of Planet log files directory:", PLANET_DIR
