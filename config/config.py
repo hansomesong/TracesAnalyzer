@@ -91,7 +91,6 @@ LOG_COLUMN ={
     'locator_state': 16,
     'locator_priority': 17,
     'locator_weight': 18
-
 }
 
 MR_LIST = [
