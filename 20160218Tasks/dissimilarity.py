@@ -7,6 +7,12 @@ import numpy as np
 from collections import Counter
 import math
 
+
+import matplotlib as mpl
+
+mpl.rcParams['text.usetex'] = True
+mpl.rcParams.update({'figure.autolayout': True})
+
 # From the obtained original path file in column B of statistic_all.csv to compute the dissimilarity of its
 # corresponding <EID,MR,VP>, and then return the result
 # input = original file path
@@ -109,19 +115,19 @@ if __name__ == '__main__':
     # # ############### Plot Part
     # #  Modify the size and dpi of picture, default size is (8,6), default dpi is 80
     # or this command to set the figure size: plt.figure(figsize=(12, 9))
-    plt.gcf().set_size_inches(11,9)
+    # plt.gcf().set_size_inches(11,9)
     FONT_LABEL = {
     'fontname'   : 'Times New Roman',
     'color'      : 'black',
-    'fontsize'   : 40
+    'fontsize'   : 70
        }
     plt.plot(x_values, y_cdf, c='black', linewidth=5)
     # plt.scatter(x_values, y_cdf, c='black', s=50)
-    plt.xlabel('dissimilarity', FONT_LABEL)
-    plt.ylabel('cdf (%)', FONT_LABEL)
-    plt.xticks(range(0,101,10), [float(i)/10for i in range(0,11)], fontsize=16, fontname = 'Times New Roman')
-    plt.yticks(fontsize=16, fontname = 'Times New Roman')
-    plt.xlim(x_values[0],100)
+    plt.xlabel(r'dissimilarity', FONT_LABEL)
+    plt.ylabel(r'cdf (\%)', FONT_LABEL)
+    plt.xticks(range(0, 101, 10), ["${0}$".format(str(float(i)/10)) for i in range(0, 11)], fontsize=40, fontname = 'Times New Roman')
+    plt.yticks(fontsize=40, fontname ='Times New Roman')
+    plt.xlim(x_values[0], 100)
     # plt.ylim(91,100)
     plt.grid(True)
 
